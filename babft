@@ -140,11 +140,11 @@ local function TCYBBVV_fake_script() -- Main.LocalScript
 	local col = _G.col
 	local team = 1 -- = White
 	local old = Vector3.new(-52.366, 63.225, -348.407) -- White team
-	local TeamPosition = game.Workspace:WaitForChild(tostring(game.Players.LocalPlayer.TeamColor).."Team").Baseplate.Position
 	-- Code
 	init()
 	local function regen()
-    	local size = Vector3.new(tonumber(script.Parent.Siz.Text:split(",")[1]),tonumber(script.Parent.Siz.Text:split(",")[2]),tonumber(script.Parent.Siz.Text:split(",")[3]))
+	    local TeamPosition = game.Workspace:WaitForChild(tostring(game.Players.LocalPlayer.TeamColor).."Team").Baseplate.Position
+    	    local size = Vector3.new(tonumber(script.Parent.Siz.Text:split(",")[1]),tonumber(script.Parent.Siz.Text:split(",")[2]),tonumber(script.Parent.Siz.Text:split(",")[3]))
 	    local position = Vector3.new(tonumber(script.Parent.Pos.Text:split(",")[1]),tonumber(script.Parent.Pos.Text:split(",")[2]),tonumber(script.Parent.Pos.Text:split(",")[3]))
 	    local rotation = Vector3.new(tonumber(script.Parent.Rot.Text:split(",")[1]),tonumber(script.Parent.Rot.Text:split(",")[2]),tonumber(script.Parent.Rot.Text:split(",")[3]))
 		local part = Instance.new("Part")

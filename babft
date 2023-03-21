@@ -1,52 +1,191 @@
--- Init
-local lookFor = workspace:FindFirstChild("TestFolder")
-if lookFor then
-    lookFor:Destroy()
+-- Instances
+
+local BABBuildHelper = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local TextButton = Instance.new("TextButton")
+local TextButton_2 = Instance.new("TextButton")
+local TextButton_3 = Instance.new("TextButton")
+local Siz = Instance.new("TextBox")
+local Rot = Instance.new("TextBox")
+local Pos = Instance.new("TextBox")
+local Exec = Instance.new("TextButton")
+
+-- Properties
+
+BABBuildHelper.Name = "BABBuildHelper"
+BABBuildHelper.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+BABBuildHelper.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Main.Name = "Main"
+Main.Parent = BABBuildHelper
+Main.BackgroundColor3 = Color3.new(0, 0, 0)
+Main.BackgroundTransparency = 0.5
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.0108352648, 0, 0.573177993, 0)
+Main.Size = UDim2.new(0.148321629, 0, 0.358208954, 0)
+
+TextButton.Parent = Main
+TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton.BackgroundTransparency = 1
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.0842105299, 0, 0.0297618434, 0)
+TextButton.Size = UDim2.new(0.614200652, 0, 0.105137356, 0)
+TextButton.Font = Enum.Font.SourceSans
+TextButton.Text = "SIZE"
+TextButton.TextColor3 = Color3.new(1, 1, 1)
+TextButton.TextSize = 14
+TextButton.TextXAlignment = Enum.TextXAlignment.Left
+
+TextButton_2.Parent = Main
+TextButton_2.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_2.BackgroundTransparency = 1
+TextButton_2.BorderSizePixel = 0
+TextButton_2.Position = UDim2.new(0.0736842081, 0, 0.326058149, 0)
+TextButton_2.Size = UDim2.new(0.624726892, 0, 0.105137356, 0)
+TextButton_2.Font = Enum.Font.SourceSans
+TextButton_2.Text = "POSITION"
+TextButton_2.TextColor3 = Color3.new(1, 1, 1)
+TextButton_2.TextSize = 14
+TextButton_2.TextXAlignment = Enum.TextXAlignment.Left
+
+TextButton_3.Parent = Main
+TextButton_3.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton_3.BackgroundTransparency = 1
+TextButton_3.BorderSizePixel = 0
+TextButton_3.Position = UDim2.new(0.0736842081, 0, 0.645502567, 0)
+TextButton_3.Size = UDim2.new(0.624726892, 0, 0.105137356, 0)
+TextButton_3.Font = Enum.Font.SourceSans
+TextButton_3.Text = "ROTATION"
+TextButton_3.TextColor3 = Color3.new(1, 1, 1)
+TextButton_3.TextSize = 14
+TextButton_3.TextXAlignment = Enum.TextXAlignment.Left
+
+Siz.Name = "Siz"
+Siz.Parent = Main
+Siz.BackgroundColor3 = Color3.new(1, 1, 1)
+Siz.BackgroundTransparency = 1
+Siz.Position = UDim2.new(0.0736842081, 0, 0.134899139, 0)
+Siz.Size = UDim2.new(0.621052623, 0, 0.189814821, 0)
+Siz.Font = Enum.Font.SourceSans
+Siz.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
+Siz.PlaceholderText = "PASTE LIST HERE"
+Siz.Text = ""
+Siz.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Siz.TextSize = 14
+Siz.TextXAlignment = Enum.TextXAlignment.Left
+Siz.TextYAlignment = Enum.TextYAlignment.Top
+
+Rot.Name = "Rot"
+Rot.Parent = Main
+Rot.BackgroundColor3 = Color3.new(1, 1, 1)
+Rot.BackgroundTransparency = 1
+Rot.Position = UDim2.new(0.0736842081, 0, 0.750639856, 0)
+Rot.Size = UDim2.new(0.621052623, 0, 0.199074075, 0)
+Rot.Font = Enum.Font.SourceSans
+Rot.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
+Rot.PlaceholderText = "PASTE LIST HERE"
+Rot.Text = ""
+Rot.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Rot.TextSize = 14
+Rot.TextXAlignment = Enum.TextXAlignment.Left
+Rot.TextYAlignment = Enum.TextYAlignment.Top
+
+Pos.Name = "Pos"
+Pos.Parent = Main
+Pos.BackgroundColor3 = Color3.new(1, 1, 1)
+Pos.BackgroundTransparency = 1
+Pos.Position = UDim2.new(0.0736842081, 0, 0.431195438, 0)
+Pos.Size = UDim2.new(0.621052623, 0, 0.21296297, 0)
+Pos.Font = Enum.Font.SourceSans
+Pos.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
+Pos.PlaceholderText = "PASTE LIST HERE"
+Pos.Text = ""
+Pos.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
+Pos.TextSize = 14
+Pos.TextXAlignment = Enum.TextXAlignment.Left
+Pos.TextYAlignment = Enum.TextYAlignment.Top
+
+Exec.Name = "Exec"
+Exec.Parent = Main
+Exec.BackgroundColor3 = Color3.new(0, 0, 0)
+Exec.BackgroundTransparency = 0.5
+Exec.BorderSizePixel = 0
+Exec.Position = UDim2.new(-0.00526317814, 0, 1.03902102, 0)
+Exec.Size = UDim2.new(1.00526321, 0, 0.10976699, 0)
+Exec.Font = Enum.Font.SourceSans
+Exec.Text = "PREVIEW"
+Exec.TextColor3 = Color3.new(1, 1, 1)
+Exec.TextSize = 14
+
+-- Scripts
+
+local function TCYBBVV_fake_script() -- Main.LocalScript 
+	local script = Instance.new('LocalScript', Main)
+
+	-- Init
+	local folder
+	local function init()
+		local lookFor = workspace:FindFirstChild("TestFolder")
+		if lookFor then
+			lookFor:Destroy()
+		end
+		folder = Instance.new("Folder")
+		folder.Name = "TestFolder"
+		folder.Parent = workspace
+	end
+	local UIS = game:GetService("UserInputService")
+	
+	-- Changables 
+	local mat = _G.mat
+	local col = _G.col
+	local team = 1 -- = White
+	local old = Vector3.new(-52.366, 63.225, -348.407) -- White team
+	local TeamPosition = game.Workspace:WaitForChild(tostring(game.Players.LocalPlayer.TeamColor).."Team").Baseplate.Position
+	-- Code
+	init()
+	local function regen()
+    	local size = Vector3.new(tonumber(script.Parent.Siz.Text:split(",")[1]),tonumber(script.Parent.Siz.Text:split(",")[2]),tonumber(script.Parent.Siz.Text:split(",")[3]))
+	    local position = Vector3.new(tonumber(script.Parent.Pos.Text:split(",")[1]),tonumber(script.Parent.Pos.Text:split(",")[2]),tonumber(script.Parent.Pos.Text:split(",")[3]))
+	    local rotation = Vector3.new(tonumber(script.Parent.Rot.Text:split(",")[1]),tonumber(script.Parent.Rot.Text:split(",")[2]),tonumber(script.Parent.Rot.Text:split(",")[3]))
+		local part = Instance.new("Part")
+		part.Anchored = true
+		part.Transparency = 0.5
+		part.Material = Enum.Material.ForceField
+		part.BrickColor = BrickColor.new("Neon green")
+		if _G.UseOldPos or _G.UseOldPos == nil then
+			part.CFrame = CFrame.new(old)
+		else
+			part.CFrame = CFrame.new(TeamPosition)
+		end
+		part.Orientation = rotation
+		part.CFrame += position
+		part.Size = size
+		part.Parent = workspace.TestFolder
+		part.Name = "Part"
+	end
+	
+	UIS.InputBegan:Connect(function(key)
+		if key.KeyCode == Enum.KeyCode.RightShift then
+			for i,v in pairs(folder:GetChildren()) do
+				v.Transparency = 1
+			end
+		end
+	end)
+	
+	UIS.InputEnded:Connect(function(key)
+		if key.KeyCode == Enum.KeyCode.RightShift then
+			for i,v in pairs(folder:GetChildren()) do
+				v.Transparency = 0.5
+			end
+		end
+		if key.KeyCode == Enum.KeyCode.Delete then
+			script.Parent.Parent:Destroy()
+		end
+	end)
+	
+	script.Parent.Exec.MouseButton1Up:Connect(function()
+		init()
+		regen()
+	end)
 end
-local folder = Instance.new("Folder")
-folder.Name = "TestFolder"
-folder.Parent = workspace
-local UIS = game:GetService("UserInputService")
-
--- Changables 
-local size = _G.size
-local position =_G.position
-local rotation = _G.rotation
-local mat = _G.mat
-local col = _G.col
-local team = 1 -- = White
-
-local TeamPositions = {
-    Vector3.new(-52.366, 63.225, -348.407), -- White = 1
-}
--- Code
-
-for i = 1, #size do
-    local part = Instance.new("Part")
-    part.Anchored = true
-    part.Transparency = 0.5
-    part.Material = mat[i]
-    part.BrickColor = col[i]
-    part.CFrame = CFrame.new(TeamPositions[team])
-    part.Orientation = rotation[i]
-    part.CFrame += position[i] 
-    part.Size = size[i]
-    part.Parent = workspace.TestFolder
-    part.Name = "Part"..i
-end
-
-UIS.InputBegan:Connect(function(key)
-    if key.KeyCode == Enum.KeyCode.RightShift then
-        for i,v in pairs(folder:GetChildren()) do
-            v.Transparency = 1
-        end
-    end
-end)
-
-UIS.InputEnded:Connect(function(key)
-    if key.KeyCode == Enum.KeyCode.RightShift then
-        for i,v in pairs(folder:GetChildren()) do
-            v.Transparency = 0.5
-        end
-    end
-end)
+coroutine.wrap(TCYBBVV_fake_script)()

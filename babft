@@ -1,0 +1,52 @@
+-- Init
+local lookFor = workspace:FindFirstChild("TestFolder")
+if lookFor then
+    lookFor:Destroy()
+end
+local folder = Instance.new("Folder")
+folder.Name = "TestFolder"
+folder.Parent = workspace
+local UIS = game:GetService("UserInputService")
+
+-- Changables 
+local size = _G.size
+local position =_G.position
+local rotation = _G.rotation
+local mat = _G.mat
+local col = _G.col
+local team = 1 -- = White
+
+local TeamPositions = {
+    Vector3.new(-52.366, 63.225, -348.407), -- White = 1
+}
+-- Code
+
+for i = 1, #size do
+    local part = Instance.new("Part")
+    part.Anchored = true
+    part.Transparency = 0.5
+    part.Material = mat[i]
+    part.BrickColor = col[i]
+    part.CFrame = CFrame.new(TeamPositions[team])
+    part.Orientation = rotation[i]
+    part.CFrame += position[i] 
+    part.Size = size[i]
+    part.Parent = workspace.TestFolder
+    part.Name = "Part"..i
+end
+
+UIS.InputBegan:Connect(function(key)
+    if key.KeyCode == Enum.KeyCode.RightShift then
+        for i,v in pairs(folder:GetChildren()) do
+            v.Transparency = 1
+        end
+    end
+end)
+
+UIS.InputEnded:Connect(function(key)
+    if key.KeyCode == Enum.KeyCode.RightShift then
+        for i,v in pairs(folder:GetChildren()) do
+            v.Transparency = 0.5
+        end
+    end
+end)

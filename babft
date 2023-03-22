@@ -74,12 +74,11 @@ else
 			end
 			whiteBase *= CFrame.Angles(math.rad(v.Orientation.X), math.rad(v.Orientation.Y), math.rad(v.Orientation.Z))
 			BlockToChoose = MaterialList[_G.material[i]]
-			Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data[BlockToChoose].Value, workspace.WhiteZone, whiteBase, true);
+			Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value, workspace.WhiteZone, whiteBase, true);
 			Scale:InvokeServer(ScalePart, v.Size, ScalePart.PPart.CFrame)
 			Paint:InvokeServer({{ScalePart, v.Color}})
 		end
 	end
 end
-
 
 Model:Destroy()

@@ -61,7 +61,7 @@ if HighlightMode then
 		end
 		BlockToChoose = MaterialList[_G.material[i]]
 		whiteBase *= CFrame.Angles(math.rad(_G.rotation[i].X), math.rad(_G.rotation[i].Y), math.rad(_G.rotation[i].Z))
-		Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data[BlockToChoose].Value, workspace.WhiteZone, whiteBase, true);
+		Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value, workspace.WhiteZone, whiteBase, true);
 		Scale:InvokeServer(ScalePart, _G.size[i], ScalePart.PPart.CFrame)
 		Paint:InvokeServer({{ScalePart, _G.color[i]}})
 	end
@@ -73,12 +73,13 @@ else
 				whiteBase = CFrame.new(BlobOld + v.Position)
 			end
 			whiteBase *= CFrame.Angles(math.rad(v.Orientation.X), math.rad(v.Orientation.Y), math.rad(v.Orientation.Z))
-			BlockToChoose = MaterialList[_G.material[i]]
+			BlockToChoose = MaterialList[v.Material]
 			Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value, workspace.WhiteZone, whiteBase, true);
 			Scale:InvokeServer(ScalePart, v.Size, ScalePart.PPart.CFrame)
 			Paint:InvokeServer({{ScalePart, v.Color}})
 		end
 	end
 end
+
 
 Model:Destroy()

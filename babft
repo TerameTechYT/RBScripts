@@ -1,191 +1,85 @@
--- Instances
+local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
+local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
+local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
+local InsertService = game:GetService("InsertService")
+local modelId = _G.modelId
+local Model = game:GetObjects('rbxassetid://'..modelId)[1]
+local BlobOld = Vector3.new(-52.366, 63.225, -348.407)
+local HighlightMode = _G.HighlightMode
+local BlockToChoose = "WoodBlock"
+local ScalePart
 
-local BABBuildHelper = Instance.new("ScreenGui")
-local Main = Instance.new("Frame")
-local TextButton = Instance.new("TextButton")
-local TextButton_2 = Instance.new("TextButton")
-local TextButton_3 = Instance.new("TextButton")
-local Siz = Instance.new("TextBox")
-local Rot = Instance.new("TextBox")
-local Pos = Instance.new("TextBox")
-local Exec = Instance.new("TextButton")
+local MaterialList = {
+	[Enum.Material.Asphalt] = "ConcreteBlock",
+	[Enum.Material.Basalt] = "CoalBlock",
+	[Enum.Material.Brick] = "BrickBlock",
+	[Enum.Material.Cobblestone] = "StoneBlock",
+	[Enum.Material.Concrete] = "ConcreteBlock",
+	[Enum.Material.CorrodedMetal] = "RustedBlock",
+	[Enum.Material.CrackedLava] = "ObsidianBlock",
+	[Enum.Material.DiamondPlate] = "TitaniumBlock",
+	[Enum.Material.Fabric] = "FabricBlock",
+	[Enum.Material.Foil] = "BouncyBlock",
+	[Enum.Material.ForceField] = "Glass",
+	[Enum.Material.Glass] = "GoldBlock",
+	[Enum.Material.Granite] = "ObsidianBlock",
+	[Enum.Material.Grass] = "GrassBlock",
+	[Enum.Material.Ground] = "CoalBlock",
+	[Enum.Material.Ice] = "IceBlock",
+	[Enum.Material.LeafyGrass] = "GrassBlock",
+	[Enum.Material.Limestone] = "CoalBlock",
+	[Enum.Material.Marble] = "MarbleBlock",
+	[Enum.Material.Metal] = "MetalBlock",
+	[Enum.Material.Mud] = "CoalBlock",
+	[Enum.Material.Neon] = "NeonBlock",
+	[Enum.Material.Pavement] = "ConcreteBlock",
+	[Enum.Material.Pebble] = "StoneBlock",
+	[Enum.Material.Plastic] = "PlasticBlock",
+	[Enum.Material.Rock] = "CoalBlock",
+	[Enum.Material.Salt] = "SandBlock",
+	[Enum.Material.Sand] = "SandBlock",
+	[Enum.Material.Sandstone] = "CoalBlock",
+	[Enum.Material.Slate] = "CoalBlock",
+	[Enum.Material.SmoothPlastic] = "PlasticBlock",
+	[Enum.Material.Snow] = "SandBlock",
+	[Enum.Material.Wood] = "SmoothWoodBlock",
+	[Enum.Material.WoodPlanks] = "WoodBlock",
 
--- Properties
+}
 
-BABBuildHelper.Name = "BABBuildHelper"
-BABBuildHelper.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-BABBuildHelper.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-Main.Name = "Main"
-Main.Parent = BABBuildHelper
-Main.BackgroundColor3 = Color3.new(0, 0, 0)
-Main.BackgroundTransparency = 0.5
-Main.BorderSizePixel = 0
-Main.Position = UDim2.new(0.0108352648, 0, 0.573177993, 0)
-Main.Size = UDim2.new(0.148321629, 0, 0.358208954, 0)
-
-TextButton.Parent = Main
-TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton.BackgroundTransparency = 1
-TextButton.BorderSizePixel = 0
-TextButton.Position = UDim2.new(0.0842105299, 0, 0.0297618434, 0)
-TextButton.Size = UDim2.new(0.614200652, 0, 0.105137356, 0)
-TextButton.Font = Enum.Font.SourceSans
-TextButton.Text = "SIZE"
-TextButton.TextColor3 = Color3.new(1, 1, 1)
-TextButton.TextSize = 14
-TextButton.TextXAlignment = Enum.TextXAlignment.Left
-
-TextButton_2.Parent = Main
-TextButton_2.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton_2.BackgroundTransparency = 1
-TextButton_2.BorderSizePixel = 0
-TextButton_2.Position = UDim2.new(0.0736842081, 0, 0.326058149, 0)
-TextButton_2.Size = UDim2.new(0.624726892, 0, 0.105137356, 0)
-TextButton_2.Font = Enum.Font.SourceSans
-TextButton_2.Text = "POSITION"
-TextButton_2.TextColor3 = Color3.new(1, 1, 1)
-TextButton_2.TextSize = 14
-TextButton_2.TextXAlignment = Enum.TextXAlignment.Left
-
-TextButton_3.Parent = Main
-TextButton_3.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton_3.BackgroundTransparency = 1
-TextButton_3.BorderSizePixel = 0
-TextButton_3.Position = UDim2.new(0.0736842081, 0, 0.645502567, 0)
-TextButton_3.Size = UDim2.new(0.624726892, 0, 0.105137356, 0)
-TextButton_3.Font = Enum.Font.SourceSans
-TextButton_3.Text = "ROTATION"
-TextButton_3.TextColor3 = Color3.new(1, 1, 1)
-TextButton_3.TextSize = 14
-TextButton_3.TextXAlignment = Enum.TextXAlignment.Left
-
-Siz.Name = "Siz"
-Siz.Parent = Main
-Siz.BackgroundColor3 = Color3.new(1, 1, 1)
-Siz.BackgroundTransparency = 1
-Siz.Position = UDim2.new(0.0736842081, 0, 0.134899139, 0)
-Siz.Size = UDim2.new(0.621052623, 0, 0.189814821, 0)
-Siz.Font = Enum.Font.SourceSans
-Siz.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
-Siz.PlaceholderText = "PASTE LIST HERE"
-Siz.Text = ""
-Siz.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
-Siz.TextSize = 14
-Siz.TextXAlignment = Enum.TextXAlignment.Left
-Siz.TextYAlignment = Enum.TextYAlignment.Top
-
-Rot.Name = "Rot"
-Rot.Parent = Main
-Rot.BackgroundColor3 = Color3.new(1, 1, 1)
-Rot.BackgroundTransparency = 1
-Rot.Position = UDim2.new(0.0736842081, 0, 0.750639856, 0)
-Rot.Size = UDim2.new(0.621052623, 0, 0.199074075, 0)
-Rot.Font = Enum.Font.SourceSans
-Rot.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
-Rot.PlaceholderText = "PASTE LIST HERE"
-Rot.Text = ""
-Rot.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
-Rot.TextSize = 14
-Rot.TextXAlignment = Enum.TextXAlignment.Left
-Rot.TextYAlignment = Enum.TextYAlignment.Top
-
-Pos.Name = "Pos"
-Pos.Parent = Main
-Pos.BackgroundColor3 = Color3.new(1, 1, 1)
-Pos.BackgroundTransparency = 1
-Pos.Position = UDim2.new(0.0736842081, 0, 0.431195438, 0)
-Pos.Size = UDim2.new(0.621052623, 0, 0.21296297, 0)
-Pos.Font = Enum.Font.SourceSans
-Pos.PlaceholderColor3 = Color3.new(0.698039, 0.698039, 0.698039)
-Pos.PlaceholderText = "PASTE LIST HERE"
-Pos.Text = ""
-Pos.TextColor3 = Color3.new(0.784314, 0.784314, 0.784314)
-Pos.TextSize = 14
-Pos.TextXAlignment = Enum.TextXAlignment.Left
-Pos.TextYAlignment = Enum.TextYAlignment.Top
-
-Exec.Name = "Exec"
-Exec.Parent = Main
-Exec.BackgroundColor3 = Color3.new(0, 0, 0)
-Exec.BackgroundTransparency = 0.5
-Exec.BorderSizePixel = 0
-Exec.Position = UDim2.new(-0.00526317814, 0, 1.03902102, 0)
-Exec.Size = UDim2.new(1.00526321, 0, 0.10976699, 0)
-Exec.Font = Enum.Font.SourceSans
-Exec.Text = "PREVIEW"
-Exec.TextColor3 = Color3.new(1, 1, 1)
-Exec.TextSize = 14
-
--- Scripts
-
-local function TCYBBVV_fake_script() -- Main.LocalScript 
-	local script = Instance.new('LocalScript', Main)
-
-	-- Init
-	local folder
-	local function init()
-		local lookFor = workspace:FindFirstChild("TestFolder")
-		if lookFor then
-			lookFor:Destroy()
-		end
-		folder = Instance.new("Folder")
-		folder.Name = "TestFolder"
-		folder.Parent = workspace
+workspace.ChildAdded:Connect(function(child)
+	if child:WaitForChild("Tag").Value == game.Players.LocalPlayer.Name then
+		ScalePart = child
 	end
-	local UIS = game:GetService("UserInputService")
-	
-	-- Changables 
-	local mat = _G.mat
-	local col = _G.col
-	local team = 1 -- = White
-	local old = Vector3.new(-52.366, 63.225, -348.407) -- White team
-	-- Code
-	init()
-	local function regen()
-	    local TeamPosition = game.Workspace:WaitForChild(tostring(game.Players.LocalPlayer.TeamColor).."Team").Baseplate.Position
-    	    local size = Vector3.new(tonumber(script.Parent.Siz.Text:split(",")[1]),tonumber(script.Parent.Siz.Text:split(",")[2]),tonumber(script.Parent.Siz.Text:split(",")[3]))
-	    local position = Vector3.new(tonumber(script.Parent.Pos.Text:split(",")[1]),tonumber(script.Parent.Pos.Text:split(",")[2]),tonumber(script.Parent.Pos.Text:split(",")[3]))
-	    local rotation = Vector3.new(tonumber(script.Parent.Rot.Text:split(",")[1]),tonumber(script.Parent.Rot.Text:split(",")[2]),tonumber(script.Parent.Rot.Text:split(",")[3]))
-		local part = Instance.new("Part")
-		part.Anchored = true
-		part.Transparency = 0.5
-		part.Material = Enum.Material.ForceField
-		part.BrickColor = BrickColor.new("Neon green")
-		if _G.UseOldPos or _G.UseOldPos == nil then
-			part.CFrame = CFrame.new(old)
-		else
-			part.CFrame = CFrame.new(TeamPosition)
+end)
+
+if HighlightMode then
+	for i = 1, #_G.size do
+		local whiteBase = CFrame.new(Vector3.new(6,9,-61) + _G.position[i])
+		if _G.UseBlobsPos == true then
+			whiteBase = CFrame.new(BlobOld + _G.position[i])
 		end
-		part.Orientation = rotation
-		part.CFrame += position
-		part.Size = size
-		part.Parent = workspace.TestFolder
-		part.Name = "Part"
+		BlockToChoose = MaterialList[_G.material[i]]
+		whiteBase *= CFrame.Angles(math.rad(_G.rotation[i].X), math.rad(_G.rotation[i].Y), math.rad(_G.rotation[i].Z))
+		Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data[BlockToChoose].Value, workspace.WhiteZone, whiteBase, true);
+		Scale:InvokeServer(ScalePart, _G.size[i], ScalePart.PPart.CFrame)
+		Paint:InvokeServer({{ScalePart, _G.color[i]}})
 	end
-	
-	UIS.InputBegan:Connect(function(key)
-		if key.KeyCode == Enum.KeyCode.RightShift then
-			for i,v in pairs(folder:GetChildren()) do
-				v.Transparency = 1
+else
+	for i,v in pairs(Model:GetDescendants()) do
+		if v:IsA("Part") then
+			local whiteBase = CFrame.new(Vector3.new(6,9,-61) + v.Position)
+			if _G.UseBlobsPos == true then
+				whiteBase = CFrame.new(BlobOld + v.Position)
 			end
+			whiteBase *= CFrame.Angles(math.rad(v.Orientation.X), math.rad(v.Orientation.Y), math.rad(v.Orientation.Z))
+			BlockToChoose = MaterialList[_G.material[i]]
+			Build:InvokeServer(BlockToChoose, game.Players.LocalPlayer.Data[BlockToChoose].Value, workspace.WhiteZone, whiteBase, true);
+			Scale:InvokeServer(ScalePart, v.Size, ScalePart.PPart.CFrame)
+			Paint:InvokeServer({{ScalePart, v.Color}})
 		end
-	end)
-	
-	UIS.InputEnded:Connect(function(key)
-		if key.KeyCode == Enum.KeyCode.RightShift then
-			for i,v in pairs(folder:GetChildren()) do
-				v.Transparency = 0.5
-			end
-		end
-		if key.KeyCode == Enum.KeyCode.Delete then
-			script.Parent.Parent:Destroy()
-		end
-	end)
-	
-	script.Parent.Exec.MouseButton1Up:Connect(function()
-		init()
-		regen()
-	end)
+	end
 end
-coroutine.wrap(TCYBBVV_fake_script)()
+
+
+Model:Destroy()

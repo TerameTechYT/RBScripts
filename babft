@@ -5,8 +5,9 @@ local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF"
 local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
 local InsertService = game:GetService("InsertService")
 local modelId = _G.modelId
+local Model
 if modelId ~= nil then
-	local Model = game:GetObjects('rbxassetid://'..modelId)[1]
+	Model = game:GetObjects('rbxassetid://'..modelId)[1]
 	if Model:IsA("Model") then
 		Model:MoveTo(Vector3.new(0,0,0))
 	end

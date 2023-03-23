@@ -11,6 +11,8 @@ if modelId ~= nil then
 	if Model:IsA("Model") then
 		Model:MoveTo(Vector3.new(0,0,0))
 	end
+	Model.Parent = workspace
+	game.Players.LocalPlayers.Character:MoveTo(Model:GetBoundingBox())
 end
 if workspace:FindFirstChild("PreviewFolder") then
     workspace.PreviewFolder:Destroy();

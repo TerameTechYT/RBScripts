@@ -11,23 +11,11 @@ if modelId ~= nil then
 	if Model:IsA("Model") then
 		Model:MoveTo(Vector3.new(0,0,0))
 	end
-	Model.Parent = workspace
-	game.Players.LocalPlayers.Character:MoveTo(Model:GetBoundingBox())
 end
 if workspace:FindFirstChild("PreviewFolder") then
     workspace.PreviewFolder:Destroy();
 end
-Instance.new("Model", workspace).Name = "PreviewFolder"
-
-local Lite = Instance.new("Highlight", game.Players.LocalPlayer.PlayerGui)
-Lite.OutlineColor = Color3.fromRGB(255, 255, 255)
-Lite.FillTransparency = 1
-local LitePart 
-if _G.LitePart == nil then
-	_G.LitePart = Instance.new("Part")
-	LitePart = _G.LitePart
-end
-
+Instance.new("Folder", workspace).Name = "PreviewFolder"
 local Mode = _G.Mode
 local BlockToChoose = "WoodBlock"
 local ScalePart
@@ -132,7 +120,7 @@ elseif Mode == "preview_manual" then
         coroutine.wrap(function()
         	local whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(0,5,0) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
 		    if _G.UseBlobsPos == true then
-		    	whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position) 
+		    	whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3)) 
 		    end
 		    whiteBase *= CFrame.Angles(math.rad(_G.ManualTable["Rotation"][i].X), math.rad(_G.ManualTable["Rotation"][i].Y), math.rad(_G.ManualTable["Rotation"][i].Z))
             BlockToChoose = _G.MaterialList[_G.ManualTable["Material"][i]]
@@ -148,9 +136,6 @@ elseif Mode == "preview_manual" then
             Part.Color = _G.ManualTable["Color"][i]
         end)()
     end
-	LitePart.Parent = workspace
-	LitePart.Size = workspace.PreviewFolder:GetExtentsSize()
-	LitePart.Position = workspace.PreviewFolder:GetBoundingBox()
 elseif Mode == "preview_model" then
 	warn("Previewing Model")
 	if Model then
@@ -164,7 +149,7 @@ elseif Mode == "preview_model" then
 	            coroutine.wrap(function()
 	            	local whiteBase = CFrame.new(v.Position + Vector3.new(0,5,0) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
 				    if _G.UseBlobsPos == true then
-					    whiteBase = CFrame.new(v.Position + Vector3.new(1.2,81.2,-3) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
+					    whiteBase = CFrame.new(BlobOld + v.Position)
 				    end
 				    whiteBase *= CFrame.Angles(math.rad(v.Rotation.X), math.rad(v.Rotation.Y), math.rad(v.Rotation.Z))
 				    BlockToChoose = _G.MaterialList[v.Material]
@@ -181,9 +166,6 @@ elseif Mode == "preview_model" then
 	            end)()
 			end
 		end
-		LitePart.Parent = workspace
-		LitePart.Size = workspace.PreviewFolder:GetExtentsSize()
-		LitePart.Position = workspace.PreviewFolder:GetBoundingBox()
 	end
 else
 	warn("No mode selected!")

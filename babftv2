@@ -28,6 +28,9 @@ end)
 
 if Mode == "manual" then
 	warn("Initalizing Manual")
+	if workspace:FindFirstChild("PreviewFolder") then
+		workspace.PreviewFolder:Destroy();
+	end
 	for i = 1, #_G.ManualTable["Position"] do
 		if _G.stop then
 			_G.stop = false
@@ -53,6 +56,9 @@ if Mode == "manual" then
     end
 elseif Mode == "model" then
 	warn("Initalizing Model")
+	if workspace:FindFirstChild("PreviewFolder") then
+		workspace.PreviewFolder:Destroy();
+	end
 	if Model then
 		for i,v in pairs(Model:GetDescendants()) do
 			if _G.stop then
@@ -82,6 +88,9 @@ elseif Mode == "model" then
 	end
 elseif Mode == "copy" then
 	warn("Initalizing Copy")
+	if workspace:FindFirstChild("PreviewFolder") then
+		workspace.PreviewFolder:Destroy();
+	end
 	for i,possibleBlock in pairs(workspace:GetChildren()) do
 		wait(_G.interval)
 		if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == _G.player then
@@ -109,7 +118,7 @@ elseif Mode == "preview_manual" then
 		end
         wait(_G.interval)
         coroutine.wrap(function()
-        	local whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(0,5,0))
+        	local whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(0,5,0) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
 		    if _G.UseBlobsPos == true then
 		    	whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3)) 
 		    end
@@ -119,6 +128,8 @@ elseif Mode == "preview_manual" then
 		  		BlockToChoose = _G.MaterialList["Single"]
 			end
             local Part = Instance.new("Part", workspace.PreviewFolder)
+			Part.Anchored = true
+			Part.Transparency = 0.5
             Part.CFrame = whiteBase
             Part.Size = _G.ManualTable["Size"][i]
             Part.Material = _G.ManualTable["Material"][i]
@@ -136,7 +147,7 @@ elseif Mode == "preview_model" then
 			if v:IsA("Part") then
 	            wait(_G.interval)
 	            coroutine.wrap(function()
-	            	local whiteBase = CFrame.new(v.Position + Vector3.new(0,5,0))
+	            	local whiteBase = CFrame.new(v.Position + Vector3.new(0,5,0) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
 				    if _G.UseBlobsPos == true then
 					    whiteBase = CFrame.new(BlobOld + v.Position)
 				    end
@@ -146,6 +157,8 @@ elseif Mode == "preview_model" then
 				   		BlockToChoose = _G.MaterialList["Single"]
 				    end
                     local Part = Instance.new("Part", workspace.PreviewFolder)
+					Part.Anchored = true
+					Part.Transparency = 0.5
                     Part.CFrame = whiteBase
                     Part.Size = v.Size
                     Part.Material = v.Material

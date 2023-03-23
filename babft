@@ -47,8 +47,9 @@ if Mode == "manual" then
             end)()
             Paint:InvokeServer({{ScalePart, _G.ManualTable["Color"][i]}})
         end)()
-	end
-elseif Mode == "model" then
+    end
+end
+if Mode == "model" then
 	warn("Initalizing Model")
 	if Model then
 		for i,v in pairs(Model:GetDescendants()) do
@@ -77,7 +78,8 @@ elseif Mode == "model" then
 			end
 		end
 	end
-elseif Mode == "copy" then
+end
+if Mode == "copy" then
 	warn("Initalizing Copy")
 	for i,possibleBlock in pairs(workspace:GetChildren()) do
 		wait(_G.interval)

@@ -1,12 +1,10 @@
 local blocks = {}
-if _G.blocks == nil then
-    for i,v in pairs(game.ReplicatedStorage.BuildingParts:GetChildren()) do
-	    if v:IsA("Model") and not v.Name:find("X") and not v.Name:find("XY") and not v.Name:find("Y") and not v.Name:find("Z") and not v.Name:find("Tool") then
-	    	table.insert(blocks, v.Name)
-	    end
-    end
-    _G.blocks = blocks
+for i,v in pairs(game.ReplicatedStorage.BuildingParts:GetChildren()) do
+	if v:IsA("Model") and not v.Name:find("X") and not v.Name:find("XY") and not v.Name:find("Y") and not v.Name:find("Z") and not v.Name:find("Tool") then
+		table.insert(blocks, v.Name)
+	end
 end
+
 if _G.MaterialList == nil then
 	_G.MaterialList = {
 		["Single"] = "PlasticBlock",
@@ -50,7 +48,6 @@ local MaterialList = _G.MaterialList
 
 local useOneBlock = false
 local waitTime = 0
-local LitePart = _G.LitePart
 
 local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt"))()
 
@@ -58,7 +55,7 @@ local win = DiscordLib:Window("BuildABoat Autobuilder")
 
 local serv = win:Server("Main", "")
 
-local btns = serv:Channel("Autobuilder")
+local btns = serv:Channel("Autobuild")
 
 btns:Textbox("Model ID", "Model ID Here", false, function(text)
 	if tonumber(text) == nil then
@@ -69,27 +66,7 @@ btns:Textbox("Model ID", "Model ID Here", false, function(text)
 	_G.modelId = tonumber(text)
 	print(_G.modelId)
 end)
-
-btns:Button("Preview Model", function()
-	if _G.currentlyBuilding then
-		_G.currentlyBuilding = false
-		_G.stop = true
-	else
-		_G.currentlyBuilding = true
-		_G.Mode = "preview_model"
-		DiscordLib:Notification("Preview", "Started Prevewing model", "Okay")
-		wait(waitTime)
-		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"), true)()
-		end)
-		print("Success Model:", suc, "Error Message:", errmsg)
-	end
-end)
-
 btns:Button("Build Model", function()
-	if _G.LitePart then
-		_G.LitePart.Parent = nil
-	end
 	if _G.currentlyBuilding then
 		_G.currentlyBuilding = false
 		_G.stop = true
@@ -99,7 +76,7 @@ btns:Button("Build Model", function()
 		DiscordLib:Notification("Building", "Started Model Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"), true)()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babft"), true)()
 		end)
 		print("Success Model:", suc, "Error Message:", errmsg)
 	end
@@ -110,28 +87,7 @@ btns:Textbox("Manual ID", "Manual List Here", false, function(text)
 	_G.Mode = "manual"
 	print(_G.list)
 end)
-btns:Button("Preview Manual", function()
-	if _G.currentlyBuilding then
-		_G.currentlyBuilding = false
-		_G.stop = true
-	else
-		_G.currentlyBuilding = true
-		_G.Mode = "preview_manual"
-		print(_G.list)
-		DiscordLib:Notification("Preview", "Started Previewing manual", "Okay")
-		wait(waitTime)
-		local suc,errmsg = pcall(function()
-			loadstring("_G.ManualTable = ".._G.list, true)()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"), true)()
-		end)
-		print("Success Manual:", suc, "Error Message:", errmsg)
-	end
-end)
-
 btns:Button("Build Manual", function()
-	if _G.LitePart then
-		_G.LitePart.Parent = nil
-	end
 	if _G.currentlyBuilding then
 		_G.currentlyBuilding = false
 		_G.stop = true
@@ -143,7 +99,7 @@ btns:Button("Build Manual", function()
 		wait(waitTime)
 		local suc,errmsg = pcall(function()
 			loadstring("_G.ManualTable = ".._G.list, true)()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"), true)()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babft"), true)()
 		end)
 		print("Success Manual:", suc, "Error Message:", errmsg)
 	end
@@ -155,9 +111,6 @@ btns:Textbox("Copy Build", "Player Here", false, function(text)
 	print(_G.player)
 end)
 btns:Button("Copy Build", function()
-	if _G.LitePart then
-		_G.LitePart:Remove()
-	end
 	if _G.currentlyBuilding then
 		_G.currentlyBuilding = false
 		_G.stop = true
@@ -167,7 +120,7 @@ btns:Button("Copy Build", function()
 		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"), true)()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babft"), true)()
 		end)
 		print("Success Copy:", suc, "Error Message:", errmsg)
 	end
@@ -197,26 +150,12 @@ end)
 
 local drops = serv:Channel("Materials")
 
-local drop = drops:Dropdown("Single Material", _G.blocks, function(val)
+local drop = drops:Dropdown("Single Material", blocks, function(val)
 	MaterialList["Single"] = val
 end)
 
 for i,v in pairs(Enum.Material:GetEnumItems()) do
-	local drop = drops:Dropdown(v.Name.." Material", _G.blocks, function(val)
+	local drop = drops:Dropdown(v.Name.." Material", blocks, function(val)
 		MaterialList[v] = val
 	end)
 end
-
-game:GetService("UserInputService").InputBegan:Connect(function(key)
-    if key.KeyCode == Enum.KeyCode.RightControl then
-        game.CoreGui.Discord.Enabled = not game.CoreGui.Discord.Enabled 
-    end
-end)
-
-game.Players.LocalPlayer:GetMouse().Target.Changed:Connect(function()
-	if _G.blockHealth then
-
-	else
-
-	end
-end)

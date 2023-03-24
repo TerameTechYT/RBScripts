@@ -9,7 +9,7 @@ local Model
 if modelId ~= nil then
 	Model = game:GetObjects('rbxassetid://'..modelId)[1]
 	if Model:IsA("Model") then
-		Model:MoveTo(Vector3.new(0,0,0))
+		Model:SetPrimaryPartCFrame(CFrame.new(0, 0, 0))
 	end
 end
 if workspace:FindFirstChild("PreviewFolder") then

@@ -1,1 +1,222 @@
+print("PlayerPos:", game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
 
+local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
+local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
+local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
+local InsertService = game:GetService("InsertService")
+local modelId = _G.modelId
+local Model
+if modelId ~= nil then
+	Model = game:GetObjects('rbxassetid://'..modelId)[1]
+	if Model:IsA("Model") then
+		Model:PivotTo(CFrame.new(0, 0, 0))
+	end
+end
+if workspace:FindFirstChild("PreviewFolder") then
+    workspace.PreviewFolder:Destroy();
+end
+Instance.new("Folder", workspace).Name = "PreviewFolder"
+local Mode = _G.Mode
+local BlockToChoose = "WoodBlock"
+local ScalePart
+
+workspace.ChildAdded:Connect(function(possibleBlock)
+	if possibleBlock:WaitForChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+		ScalePart = possibleBlock
+	end
+end)
+
+if Mode == "manual" then
+	warn("Initalizing Manual")
+	if workspace:FindFirstChild("PreviewFolder") then
+		workspace.PreviewFolder:Destroy();
+	end
+	for i = 1, #_G.ManualTable["Position"] do
+		if _G.stop then
+			_G.stop = false
+			break
+		end
+        wait(_G.interval)
+        coroutine.wrap(function()
+        	local whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(0,5,0))
+		    if _G.UseBlobsPos == true then
+		    	whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3)) 
+		    end
+		    whiteBase *= CFrame.Angles(math.rad(_G.ManualTable["Rotation"][i].X), math.rad(_G.ManualTable["Rotation"][i].Y), math.rad(_G.ManualTable["Rotation"][i].Z))
+            BlockToChoose = _G.MaterialList[_G.ManualTable["Material"][i]]
+			if _G.useOneBlock then
+		  		BlockToChoose = _G.MaterialList["Single"]
+			end
+
+			local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+			if game.Players.LocalPlayer.Settings.ShareBlocks then
+				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+			end
+		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
+            coroutine.wrap(function()
+                Scale:InvokeServer(ScalePart, _G.ManualTable["Size"][i], ScalePart.PPart.CFrame)
+            end)()
+            Paint:InvokeServer({{ScalePart, _G.ManualTable["Color"][i]}})
+        end)()
+    end
+elseif Mode == "model" then
+	warn("Initalizing Model")
+	if workspace:FindFirstChild("PreviewFolder") then
+		workspace.PreviewFolder:Destroy();
+	end
+	if Model then
+		for i,v in pairs(Model:GetDescendants()) do
+			if _G.stop then
+				_G.stop = false
+				break
+			end
+			if v:IsA("Part") then
+	            wait(_G.interval)
+	            coroutine.wrap(function()
+	            	local whiteBase = CFrame.new(v.Position + Vector3.new(0,5,0))
+				    if _G.UseBlobsPos == true then
+					    whiteBase = CFrame.new(BlobOld + v.Position)
+				    end
+				    whiteBase *= CFrame.Angles(math.rad(v.Rotation.X), math.rad(v.Rotation.Y), math.rad(v.Rotation.Z))
+				    BlockToChoose = _G.MaterialList[v.Material]
+				    if _G.useOneBlock then
+				   		BlockToChoose = _G.MaterialList["Single"]
+				    end
+					local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+					if game.Players.LocalPlayer.Settings.ShareBlocks then
+						value = sgame.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+					end
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+	                    Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
+	                end)()
+	                Paint:InvokeServer({{ScalePart, v.Color}})
+	            end)()
+			elseif v:IsA("WedgePart") then
+				wait(_G.interval)
+	            coroutine.wrap(function()
+					local wedgePart = v
+					local wedgeCFrame = wedgePart.CFrame
+
+					-- Get the size of the wedge part
+					local wedgeSize = wedgePart.Size
+
+					-- Calculate the angle of the wedge in radians
+					local wedgeAngle = math.atan(wedgeSize.Y / wedgeSize.Z)
+
+					-- Calculate the length of the angled surface
+					local angledSurfaceLength = math.sqrt(wedgeSize.Y ^ 2 + wedgeSize.Z ^ 2)
+					-- Createa new part to replace the wedge
+	            	local whiteBase = CFrame.new(v.Position + Vector3.new(0,5,0))
+				    if _G.UseBlobsPos == true then
+					    whiteBase = CFrame.new(BlobOld + v.Position)
+				    end
+				    whiteBase *= CFrame.Angles(-wedgeAngle, 0, 0)
+				    BlockToChoose = _G.MaterialList[v.Material]
+				    if _G.useOneBlock then
+				   		BlockToChoose = _G.MaterialList["Single"]
+				    end
+					local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+					if game.Players.LocalPlayer.Settings.ShareBlocks then
+						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+					end
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+	                    Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
+	                end)()
+	                Paint:InvokeServer({{ScalePart, v.Color}})
+	            end)()
+			end
+		end
+	end
+elseif Mode == "copy" then
+	warn("Initalizing Copy")
+	if workspace:FindFirstChild("PreviewFolder") then
+		workspace.PreviewFolder:Destroy();
+	end
+	for i,possibleBlock in pairs(workspace:GetChildren()) do
+		wait(_G.interval)
+		if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == _G.player then
+			local pos2 = workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position
+	        local whiteBase = CFrame.new(possibleBlock.PPart.Position - pos2)
+			print(whiteBase)
+			whiteBase *= CFrame.Angles(math.rad(possibleBlock.PPart.Rotation.X), math.rad(possibleBlock.PPart.Rotation.Y), math.rad(possibleBlock.PPart.Rotation.Z))
+			BlockToChoose = _G.MaterialList[possibleBlock.PPart.Material]
+			if _G.useOneBlock then
+				BlockToChoose = _G.MaterialList["Single"]
+			end
+			local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+			if game.Players.LocalPlayer.Settings.ShareBlocks then
+				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+			end
+		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        coroutine.wrap(function()
+	            Scale:InvokeServer(ScalePart, possibleBlock.PPart.Size, possibleBlock.PPart)
+	        end)()
+	        Paint:InvokeServer({{ScalePart, possibleBlock.PPart.Color}})
+		end
+	end
+elseif Mode == "preview_manual" then
+	warn("Previewing Manual")
+	for i = 1, #_G.ManualTable["Position"] do
+		if _G.stop then
+			_G.stop = false
+			break
+		end
+        wait(_G.interval)
+        coroutine.wrap(function()
+        	local whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(0,5,0) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
+		    if _G.UseBlobsPos == true then
+		    	whiteBase = CFrame.new(_G.ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3)) 
+		    end
+		    whiteBase *= CFrame.Angles(math.rad(_G.ManualTable["Rotation"][i].X), math.rad(_G.ManualTable["Rotation"][i].Y), math.rad(_G.ManualTable["Rotation"][i].Z))
+            BlockToChoose = _G.MaterialList[_G.ManualTable["Material"][i]]
+			if _G.useOneBlock then
+		  		BlockToChoose = _G.MaterialList["Single"]
+			end
+            local Part = Instance.new("Part", workspace.PreviewFolder)
+			Part.Anchored = true
+			Part.Transparency = 0.5
+            Part.CFrame = whiteBase
+            Part.Size = _G.ManualTable["Size"][i]
+            Part.Material = _G.ManualTable["Material"][i]
+            Part.Color = _G.ManualTable["Color"][i]
+        end)()
+    end
+elseif Mode == "preview_model" then
+	warn("Previewing Model")
+	if Model then
+		for i,v in pairs(Model:GetDescendants()) do
+			if _G.stop then
+				_G.stop = false
+				break
+			end
+			if v:IsA("Part") then
+	            wait(_G.interval)
+	            coroutine.wrap(function()
+	            	local whiteBase = CFrame.new(v.Position + Vector3.new(0,5,0) + workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position)
+				    if _G.UseBlobsPos == true then
+					    whiteBase = CFrame.new(BlobOld + v.Position)
+				    end
+				    whiteBase *= CFrame.Angles(math.rad(v.Rotation.X), math.rad(v.Rotation.Y), math.rad(v.Rotation.Z))
+				    BlockToChoose = _G.MaterialList[v.Material]
+				    if _G.useOneBlock then
+				   		BlockToChoose = _G.MaterialList["Single"]
+				    end
+                    local Part = Instance.new("Part", workspace.PreviewFolder)
+					Part.Anchored = true
+					Part.Transparency = 0.5
+                    Part.CFrame = whiteBase
+                    Part.Size = v.Size
+                    Part.Material = v.Material
+                    Part.Color = v.Color
+	            end)()
+			end
+		end
+	end
+else
+	warn("No mode selected!")
+end
+
+_G.currentlyBuilding = false
+
+if Model then
+	Model:Destroy()
+end

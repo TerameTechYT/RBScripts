@@ -79,10 +79,7 @@ btns:Button("Build Model", function()
 		getgenv().Mode = "model"
 		DiscordLib:Notification("Building", "Started Model Building, press button again to stop building!", "Okay")
 		wait(waitTime)
-		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
-		end)
-		print("Success Model:", suc, "Error Message:", errmsg)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 	end
 end)
 
@@ -101,11 +98,8 @@ btns:Button("Build Manual", function()
 		print(getgenv().list)
 		DiscordLib:Notification("Building", "Started Manual Building, press button again to stop building!", "Okay")
 		wait(waitTime)
-		local suc,errmsg = pcall(function()
-			loadstring("getgenv().ManualTable = "..getgenv().list)()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
-		end)
-		print("Success Manual:", suc, "Error Message:", errmsg)
+		loadstring("getgenv().ManualTable = "..getgenv().list)()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 	end
 end)
 
@@ -123,10 +117,7 @@ btns:Button("Copy Build", function()
 		getgenv().Mode = "copy"
 		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
 		wait(waitTime)
-		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
-		end)
-		print("Success Copy:", suc, "Error Message:", errmsg)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 	end
 end)
 

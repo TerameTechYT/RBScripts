@@ -1,12 +1,16 @@
-local blocks = {}
-for i,v in pairs(game.ReplicatedStorage.BuildingParts:GetChildren()) do
-	if v:IsA("Model") and not v.Name:find("X") and not v.Name:find("XY") and not v.Name:find("Y") and not v.Name:find("Z") and not v.Name:find("Tool") then
-		table.insert(blocks, v.Name)
+local blocks = getgenv().blocks
+if blocks == nil then
+	blocks = {}
+	for i,v in pairs(game.ReplicatedStorage.BuildingParts:GetChildren()) do
+		if v:IsA("Model") and not v.Name:find("X") and not v.Name:find("XY") and not v.Name:find("Y") and not v.Name:find("Z") and not v.Name:find("Tool") then
+			table.insert(blocks, v.Name)
+		end
 	end
 end
 
-if _G.MaterialList == nil then
-	_G.MaterialList = {
+
+if getgenv().MaterialList == nil then
+	getgenv().MaterialList = {
 		["Single"] = "PlasticBlock",
 		[Enum.Material.Asphalt] = "ConcreteBlock",
 		[Enum.Material.Basalt] = "CoalBlock",
@@ -44,7 +48,7 @@ if _G.MaterialList == nil then
 		[Enum.Material.WoodPlanks] = "WoodBlock",
 	}
 end
-local MaterialList = _G.MaterialList
+local MaterialList = getgenv().MaterialList
 
 local useOneBlock = false
 local waitTime = 0
@@ -62,65 +66,65 @@ btns:Textbox("Model ID", "Model ID Here", false, function(text)
 		print("why>:C")
 		return
 	end
-	_G.Mode = "model"
-	_G.modelId = tonumber(text)
-	print(_G.modelId)
+	getgenv().Mode = "model"
+	getgenv().modelId = tonumber(text)
+	print(getgenv().modelId)
 end)
 btns:Button("Build Model", function()
-	if _G.currentlyBuilding then
-		_G.currentlyBuilding = false
-		_G.stop = true
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
 	else
-		_G.currentlyBuilding = true
-		_G.Mode = "model"
+		getgenv().currentlyBuilding = true
+		getgenv().Mode = "model"
 		DiscordLib:Notification("Building", "Started Model Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babft"), true)()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 		end)
 		print("Success Model:", suc, "Error Message:", errmsg)
 	end
 end)
 
 btns:Textbox("Manual ID", "Manual List Here", false, function(text)
-	_G.list = text
-	_G.Mode = "manual"
-	print(_G.list)
+	getgenv().list = text
+	getgenv().Mode = "manual"
+	print(getgenv().list)
 end)
 btns:Button("Build Manual", function()
-	if _G.currentlyBuilding then
-		_G.currentlyBuilding = false
-		_G.stop = true
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
 	else
-		_G.currentlyBuilding = true
-		_G.Mode = "manual"
-		print(_G.list)
+		getgenv().currentlyBuilding = true
+		getgenv().Mode = "manual"
+		print(getgenv().list)
 		DiscordLib:Notification("Building", "Started Manual Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		local suc,errmsg = pcall(function()
-			loadstring("_G.ManualTable = ".._G.list, true)()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babft"), true)()
+			loadstring("getgenv().ManualTable = "..getgenv().list)()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 		end)
 		print("Success Manual:", suc, "Error Message:", errmsg)
 	end
 end)
 
 btns:Textbox("Copy Build", "Player Here", false, function(text)
-	_G.player = text
-	_G.Mode = "copy"
-	print(_G.player)
+	getgenv().player = text
+	getgenv().Mode = "copy"
+	print(getgenv().player)
 end)
 btns:Button("Copy Build", function()
-	if _G.currentlyBuilding then
-		_G.currentlyBuilding = false
-		_G.stop = true
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
 	else
-		_G.currentlyBuilding = true
-		_G.Mode = "copy"
+		getgenv().currentlyBuilding = true
+		getgenv().Mode = "copy"
 		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		local suc,errmsg = pcall(function()
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babft"), true)()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 		end)
 		print("Success Copy:", suc, "Error Message:", errmsg)
 	end
@@ -131,21 +135,21 @@ local tgls = serv:Channel("Settings")
 
 tgls:Toggle("Use Single Block",false, function(bool)
 	useOneBlock = bool
-	_G.useOneBlock = useOneBlock
+	getgenv().useOneBlock = useOneBlock
 end)	
 
 tgls:Toggle("Display Block Health (On Mouse Hover)",false, function(bool)
-	_G.blockHealth = useOneBlock
+	getgenv().blockHealth = useOneBlock
 end)	
 
 tgls:Toggle("Use Blobs Ship Pos",false, function(bool)
-	_G.UseBlobsPos = bool
+	getgenv().UseBlobsPos = bool
 end)	
 
 local slider = tgls:Slider("Block Placement Inverval (in Miliseconds)", 0, 10000, 0, function(t)
 	print(t)
 	waitTime = t / 1000
-	_G.interval = waitTime
+	getgenv().interval = waitTime
 end)
 
 local drops = serv:Channel("Materials")

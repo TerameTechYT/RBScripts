@@ -36,6 +36,7 @@ if Mode == "manual" then
 		end
         wait(getgenv().interval)
         coroutine.wrap(function()
+		if getgenv().ManualTable["Class"] == "Part" then
         	local whiteBase = CFrame.new(getgenv().ManualTable["Position"][i] + Vector3.new(0,5,0))
 		    if getgenv().UseBlobsPos == true then
 		    	whiteBase = CFrame.new(getgenv().ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3)) 
@@ -55,6 +56,38 @@ if Mode == "manual" then
                 Scale:InvokeServer(ScalePart, getgenv().ManualTable["Size"][i], ScalePart.PPart.CFrame)
             end)()
             Paint:InvokeServer({{ScalePart, getgenv().ManualTable["Color"][i]}})
+		elseif getgenv().ManualTable["Class"] == "WedgePart" then
+			wait(getgenv().interval)
+			coroutine.wrap(function()
+				-- Get the size of the wedge part
+				local wedgeSize = getgenv().ManualTable["Size"][i]
+
+				-- Calculate the angle of the wedge in radians
+				local wedgeAngle = math.atan(wedgeSize.Y / wedgeSize.Z)
+
+				-- Calculate the length of the angled surface
+				local angledSurfaceLength = math.sqrt(wedgeSize.Y ^ 2 + wedgeSize.Z ^ 2)
+				-- Createa new part to replace the wedge
+				whiteBase = CFrame.new(getgenv().ManualTable["Position"][i] + Vector3.new(0, 5, 0)) 
+				if getgenv().UseBlobsPos == true then
+					whiteBase = CFrame.new(getgenv().ManualTable["Position"][i] + Vector3.new(1.2,81.2,-3)) 
+				end
+				whiteBase *= CFrame.Angles(-wedgeAngle, 0, 0)
+				BlockToChoose = getgenv().MaterialList[getgenv().ManualTable["Material"][i]]
+				if getgenv().useOneBlock then
+					   BlockToChoose = getgenv().MaterialList["Single"]
+				end
+				local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+				if game.Players.LocalPlayer.Settings.ShareBlocks then
+					value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+				end
+				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	  
+                coroutine.wrap(function()
+					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
+				end)()
+				Paint:InvokeServer({{ScalePart, v.Color}})
+			end)()
+		end
         end)()
     end
 elseif Mode == "model" then

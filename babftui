@@ -99,6 +99,7 @@ btns:Button("Build Manual", function()
 		DiscordLib:Notification("Building", "Started Manual Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		loadstring("getgenv().ManualTable = "..getgenv().list)()
+		wait(waitTime)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
 	end
 end)

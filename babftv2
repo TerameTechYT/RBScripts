@@ -115,7 +115,7 @@ elseif Mode == "model" then
 				    end
 					local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
 					if game.Players.LocalPlayer.Settings.ShareBlocks then
-						value = sgame.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
 					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
 	                    Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)

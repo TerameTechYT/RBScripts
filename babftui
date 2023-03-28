@@ -71,12 +71,12 @@ btns:Textbox("Model ID", "Model ID Here", false, function(text)
 	print(getgenv().modelId)
 end)
 btns:Button("Build Model", function()
+	getgenv().Mode = "model"
 	if getgenv().currentlyBuilding then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true
 	else
 		getgenv().currentlyBuilding = true
-		getgenv().Mode = "model"
 		DiscordLib:Notification("Building", "Started Model Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
@@ -89,12 +89,12 @@ btns:Textbox("Manual ID", "Manual List Here", false, function(text)
 	print(getgenv().list)
 end)
 btns:Button("Build Manual", function()
+	getgenv().Mode = "manual"
 	if getgenv().currentlyBuilding then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true
 	else
 		getgenv().currentlyBuilding = true
-		getgenv().Mode = "manual"
 		print(getgenv().list)
 		DiscordLib:Notification("Building", "Started Manual Building, press button again to stop building!", "Okay")
 		wait(waitTime)
@@ -109,12 +109,12 @@ btns:Textbox("Copy Build", "Player Here", false, function(text)
 	print(getgenv().player)
 end)
 btns:Button("Copy Build", function()
+	getgenv().Mode = "copy"
 	if getgenv().currentlyBuilding then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true
 	else
 		getgenv().currentlyBuilding = true
-		getgenv().Mode = "copy"
 		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()

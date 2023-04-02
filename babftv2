@@ -16,20 +16,28 @@ end
 Instance.new("Folder", workspace).Name = "PreviewFolder"
 local Mode = getgenv().Mode
 local BlockToChoose = "WoodBlock"
-local ScalePart
+local ScalePart = workspace[#workspace:GetChildren]
 
 for i, connection in pairs(getconnections(workspace.ChildAdded)) do
     connection:Disconnect()
 end
 
-workspace.ChildAdded:Connect(function(possibleBlock)
-	coroutine.wrap(function()
-		if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
-			print("Found your part")
-			ScalePart = possibleBlock
-		end
-	end)()
-end)
+if ScalePart:IsA("Model") and not ScalePart:FindFirstChild("Humanoid") and ScalePart:FindFirstChild("Tag") and ScalePart.ScalePart.Value == game.Players.LocalPlayer.Name then
+
+else
+	repeat
+		ScalePart = workspace[#workspace:GetChildren]
+	until ScalePart:IsA("Model") and not ScalePart:FindFirstChild("Humanoid") and ScalePart:FindFirstChild("Tag") and ScalePart.ScalePart.Value == game.Players.LocalPlayer.Name
+end
+
+-- workspace.ChildAdded:Connect(function(possibleBlock)
+-- 	coroutine.wrap(function()
+-- 		if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+-- 			print("Found your part")
+-- 			ScalePart = possibleBlock
+-- 		end
+-- 	end)()
+-- end)
 
 if Mode == "manual" then
 	warn("Initalizing Manual")

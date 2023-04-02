@@ -60,6 +60,7 @@ if Mode == "manual" then
 			end
 		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
             coroutine.wrap(function()
+				wait(getgenv().interval/2)
                 Scale:InvokeServer(ScalePart, getgenv().ManualTable["Size"][i], ScalePart.PPart.CFrame)
             end)()
             Paint:InvokeServer({{ScalePart, getgenv().ManualTable["Color"][i]}})
@@ -90,6 +91,7 @@ if Mode == "manual" then
 				end
 				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	  
                 coroutine.wrap(function()
+					wait(getgenv().interval/2)
 					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 				end)()
 				Paint:InvokeServer({{ScalePart, v.Color}})
@@ -125,7 +127,8 @@ elseif Mode == "model" then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
 					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
-	                    Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
+						wait(getgenv().interval/2)
+						Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
 	                Paint:InvokeServer({{ScalePart, v.Color}})
 	            end)()
@@ -159,7 +162,8 @@ elseif Mode == "model" then
 					end
 					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
 					coroutine.wrap(function()
-	                    Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
+	                    wait(getgenv().interval/2)
+						Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
 	                Paint:InvokeServer({{ScalePart, v.Color}})
 	            end)()

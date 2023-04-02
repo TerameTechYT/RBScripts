@@ -24,7 +24,7 @@ end
 
 workspace.ChildAdded:Connect(function(possibleBlock)
 	coroutine.wrap(function()
-		if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+		if possibleBlock:WaitForChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
 			print("Found your part")
 			ScalePart = possibleBlock
 		end

@@ -16,18 +16,10 @@ end
 Instance.new("Folder", workspace).Name = "PreviewFolder"
 local Mode = getgenv().Mode
 local BlockToChoose = "WoodBlock"
-local ScalePart = workspace[#workspace:GetChildren]
+local ScalePart = workspace[#workspace:GetChildren()]
 
 for i, connection in pairs(getconnections(workspace.ChildAdded)) do
     connection:Disconnect()
-end
-
-if ScalePart:IsA("Model") and not ScalePart:FindFirstChild("Humanoid") and ScalePart:FindFirstChild("Tag") and ScalePart.ScalePart.Value == game.Players.LocalPlayer.Name then
-
-else
-	repeat
-		ScalePart = workspace[#workspace:GetChildren]
-	until ScalePart:IsA("Model") and not ScalePart:FindFirstChild("Humanoid") and ScalePart:FindFirstChild("Tag") and ScalePart.ScalePart.Value == game.Players.LocalPlayer.Name
 end
 
 -- workspace.ChildAdded:Connect(function(possibleBlock)
@@ -67,6 +59,7 @@ if Mode == "manual" then
 				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 			end
 		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
+			ScalePart = workspace[#workspace:GetChildren()]
             coroutine.wrap(function()
 				wait(getgenv().interval/2)
                 Scale:InvokeServer(ScalePart, getgenv().ManualTable["Size"][i], ScalePart.PPart.CFrame)
@@ -97,7 +90,8 @@ if Mode == "manual" then
 				if game.Players.LocalPlayer.Settings.ShareBlocks then
 					value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 				end
-				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	  
+				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	 
+				ScalePart = workspace[#workspace:GetChildren] 
                 coroutine.wrap(function()
 					wait(getgenv().interval/2)
 					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
@@ -134,7 +128,9 @@ elseif Mode == "model" then
 					if game.Players.LocalPlayer.Settings.ShareBlocks then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
-					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
+					ScalePart = workspace[#workspace:GetChildren]        
+					coroutine.wrap(function()
 						wait(getgenv().interval/2)
 						Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
@@ -169,6 +165,7 @@ elseif Mode == "model" then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
 					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
+					ScalePart = workspace[#workspace:GetChildren]
 					coroutine.wrap(function()
 	                    wait(getgenv().interval/2)
 						Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
@@ -198,6 +195,7 @@ elseif Mode == "copy" then
 			if game.Players.LocalPlayer.Settings.ShareBlocks then
 				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 			end
+			ScalePart = workspace[#workspace:GetChildren]
 		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        
 			coroutine.wrap(function()
 	            Scale:InvokeServer(ScalePart, possibleBlock.PPart.Size, possibleBlock.PPart)

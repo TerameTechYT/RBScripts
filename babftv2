@@ -53,6 +53,7 @@ if Mode == "manual" then
 			end
 		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
             coroutine.wrap(function()
+				wait()
                 Scale:InvokeServer(ScalePart, getgenv().ManualTable["Size"][i], ScalePart.PPart.CFrame)
             end)()
             Paint:InvokeServer({{ScalePart, getgenv().ManualTable["Color"][i]}})
@@ -83,6 +84,7 @@ if Mode == "manual" then
 				end
 				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	  
                 coroutine.wrap(function()
+					wait()
 					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 				end)()
 				Paint:InvokeServer({{ScalePart, v.Color}})
@@ -150,7 +152,9 @@ elseif Mode == "model" then
 					if game.Players.LocalPlayer.Settings.ShareBlocks then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
-					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	 
+					coroutine.wrap(function()
+						wait()
 	                    Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
 	                Paint:InvokeServer({{ScalePart, v.Color}})

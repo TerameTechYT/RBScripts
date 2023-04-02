@@ -18,8 +18,13 @@ local Mode = getgenv().Mode
 local BlockToChoose = "WoodBlock"
 local ScalePart
 
+for i, connection in pairs(getconnections(workspace.ChildAdded)) do
+    connection:Disconnect()
+end
+
 workspace.ChildAdded:Connect(function(possibleBlock)
 	if possibleBlock:FindFirstChild("Tag") and possibleBlock:FindFirstChild("Tag").Value == game.Players.LocalPlayer.Name then
+		print("Found your part")
 		ScalePart = possibleBlock
 	end
 end)
@@ -75,7 +80,7 @@ if Mode == "manual" then
 				whiteBase *= CFrame.Angles(-wedgeAngle, 0, 0)
 				BlockToChoose = getgenv().MaterialList[getgenv().ManualTable["Material"][i]]
 				if getgenv().useOneBlock then
-					   BlockToChoose = getgenv().MaterialList["Single"]
+					BlockToChoose = getgenv().MaterialList["Single"]
 				end
 				local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
 				if game.Players.LocalPlayer.Settings.ShareBlocks then
@@ -150,7 +155,8 @@ elseif Mode == "model" then
 					if game.Players.LocalPlayer.Settings.ShareBlocks then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
-					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
+					coroutine.wrap(function()
 	                    Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
 	                Paint:InvokeServer({{ScalePart, v.Color}})
@@ -178,7 +184,8 @@ elseif Mode == "copy" then
 			if game.Players.LocalPlayer.Settings.ShareBlocks then
 				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 			end
-		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        coroutine.wrap(function()
+		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        
+			coroutine.wrap(function()
 	            Scale:InvokeServer(ScalePart, possibleBlock.PPart.Size, possibleBlock.PPart)
 	        end)()
 	        Paint:InvokeServer({{ScalePart, possibleBlock.PPart.Color}})

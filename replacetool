@@ -1,9 +1,10 @@
-local Material = getgenv().MaterialList["ReplaceTool"]
+local Material = "WoodBlock"
 local Tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
 Tool.Name = "To "..Material
 Tool.RequiresHandle = false
 local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
 local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
+local Delete = game.Players.LocalPlayer.Backpack.DeleteTool:FindFirstChild("RF");
 local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
 local Connection = nil
 local ScalePart = nil
@@ -39,6 +40,7 @@ Tool.Equipped:Connect(function(Mouse)
         wait(.25)
         Scale:InvokeServer(ScalePart, v.PPart.Size, v.PPart.CFrame)
         Paint:InvokeServer({{ScalePart, v.PPart.Color}})
+        Delete:InvokeServer(v)
     end)
 end)
 Tool.Unequipped:Connect(function()

@@ -1,0 +1,47 @@
+local Material = getgenv().MaterialList["ReplaceTool"]
+local Tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
+Tool.Name = "To "..Material
+Tool.RequiresHandle = false
+local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
+local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
+local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
+local Connection = nil
+local ScalePart = nil
+
+for i, connection in pairs(getconnections(workspace.ChildAdded)) do
+    connection:Disconnect()
+end
+
+workspace.ChildAdded:Connect(function(possibleBlock)
+    wait()
+    print("Child Added")
+    if possibleBlock:FindFirstChild("Tag") then
+        print("Found part")
+        if possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+            ScalePart = possibleBlock
+            print("found your part")
+        end
+    end
+end)
+
+for i, connection in pairs(getconnections(game.Players.LocalPlayer:GetMouse().Button1Up)) do
+    connection:Disconnect()
+end
+Tool.Equipped:Connect(function(Mouse)
+    Connection = Mouse.Button1Up:Connect(function()
+        local v = game.Players.LocalPlayer:GetMouse().Target.Parent
+        local Value = game.Players.LocalPlayer.Data:FindFirstChild(Material).Value
+        print(Value)
+        local tempPos = workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone").Position - v.PPart.Position
+        local cfra = (CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(v.PPart.Rotation.X), math.rad(v.PPart.Rotation.Y), math.rad(v.PPart.Rotation.Z))) - tempPos
+        print(cfra)
+        Build:InvokeServer(Material, Value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), cfra, true)
+        wait(.25)
+        Scale:InvokeServer(ScalePart, v.PPart.Size, v.PPart.CFrame)
+        Paint:InvokeServer({{ScalePart, v.PPart.Color}})
+    end)
+end)
+Tool.Unequipped:Connect(function()
+    Connection:Disconnect()
+    Connection = nil
+end)

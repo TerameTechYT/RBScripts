@@ -12,6 +12,7 @@ end
 if getgenv().MaterialList == nil then
 	getgenv().MaterialList = {
 		["Single"] = "PlasticBlock",
+		["ReplaceTool"] = "PlasticBlock",
 		[Enum.Material.Asphalt] = "ConcreteBlock",
 		[Enum.Material.Basalt] = "CoalBlock",
 		[Enum.Material.Brick] = "BrickBlock",
@@ -122,6 +123,9 @@ btns:Button("Copy Build", function()
 	end
 end)
 
+btns:Button("Give replace tool (material in \"Materials\")", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/replacetool"))()
+end)
 
 local tgls = serv:Channel("Settings")
 
@@ -148,6 +152,10 @@ local drops = serv:Channel("Materials")
 
 local drop = drops:Dropdown("Single Material", blocks, function(val)
 	MaterialList["Single"] = val
+end)
+
+local drop = drops:Dropdown("Replace Tool Material", blocks, function(val)
+	MaterialList["ReplaceTool"] = val
 end)
 
 for i,v in pairs(Enum.Material:GetEnumItems()) do

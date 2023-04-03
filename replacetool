@@ -1,4 +1,4 @@
-local Material = "WoodBlock"
+local Material = getgenv().MaterialList["ReplaceTool"]
 local Tool = Instance.new("Tool", game.Players.LocalPlayer.Backpack)
 Tool.Name = "To "..Material
 Tool.RequiresHandle = false

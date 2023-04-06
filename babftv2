@@ -87,8 +87,9 @@ if Mode == "manual" then
                 coroutine.wrap(function()
 					wait()
 					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
+					Paint:InvokeServer({{ScalePart, v.Color}})
 				end)()
-				Paint:InvokeServer({{ScalePart, v.Color}})
+				
 			end)()
 		end
         end)()
@@ -123,8 +124,9 @@ elseif Mode == "model" then
 					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
 	                    wait()
 						Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
+						Paint:InvokeServer({{ScalePart, v.Color}})
 	                end)()
-	                Paint:InvokeServer({{ScalePart, v.Color}})
+	               
 	            end)()
 			elseif v:IsA("WedgePart") then
 				wait(getgenv().interval)
@@ -157,8 +159,9 @@ elseif Mode == "model" then
 					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
 	                    wait()
 						Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
+						Paint:InvokeServer({{ScalePart, v.Color}})
 	                end)()
-	                Paint:InvokeServer({{ScalePart, v.Color}})
+	               
 	            end)()
 			end
 		end
@@ -186,8 +189,9 @@ elseif Mode == "copy" then
 		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        coroutine.wrap(function()
 	            wait()
 				Scale:InvokeServer(ScalePart, possibleBlock.PPart.Size, possibleBlock.PPart)
+				Paint:InvokeServer({{ScalePart, possibleBlock.PPart.Color}})
 	        end)()
-	        Paint:InvokeServer({{ScalePart, possibleBlock.PPart.Color}})
+	       
 		end
 	end
 elseif Mode == "preview_manual" then

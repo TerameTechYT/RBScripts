@@ -16,20 +16,13 @@ end
 Instance.new("Folder", workspace).Name = "PreviewFolder"
 local Mode = getgenv().Mode
 local BlockToChoose = "WoodBlock"
-local ScalePart = workspace[#workspace:GetChildren()]
+local ScalePart
 
-for i, connection in pairs(getconnections(workspace.ChildAdded)) do
-    connection:Disconnect()
-end
-
--- workspace.ChildAdded:Connect(function(possibleBlock)
--- 	coroutine.wrap(function()
--- 		if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
--- 			print("Found your part")
--- 			ScalePart = possibleBlock
--- 		end
--- 	end)()
--- end)
+workspace.ChildAdded:Connect(function(possibleBlock)
+	if possibleBlock:IsA("Model") and not possibleBlock:FindFirstChildOfClass("Humanoid") and possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+		ScalePart = possibleBlock
+	end
+end)
 
 if Mode == "manual" then
 	warn("Initalizing Manual")
@@ -54,14 +47,12 @@ if Mode == "manual" then
 		  		BlockToChoose = getgenv().MaterialList["Single"]
 			end
 
-			local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value	
+			local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
 			if game.Players.LocalPlayer.Settings.ShareBlocks then
 				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 			end
 		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
-			ScalePart = workspace[#workspace:GetChildren()]
             coroutine.wrap(function()
-				wait(getgenv().interval/2)
                 Scale:InvokeServer(ScalePart, getgenv().ManualTable["Size"][i], ScalePart.PPart.CFrame)
             end)()
             Paint:InvokeServer({{ScalePart, getgenv().ManualTable["Color"][i]}})
@@ -84,16 +75,14 @@ if Mode == "manual" then
 				whiteBase *= CFrame.Angles(-wedgeAngle, 0, 0)
 				BlockToChoose = getgenv().MaterialList[getgenv().ManualTable["Material"][i]]
 				if getgenv().useOneBlock then
-					BlockToChoose = getgenv().MaterialList["Single"]
+					   BlockToChoose = getgenv().MaterialList["Single"]
 				end
 				local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
 				if game.Players.LocalPlayer.Settings.ShareBlocks then
 					value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 				end
-				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	 
-				ScalePart = workspace[#workspace:GetChildren] 
+				Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	  
                 coroutine.wrap(function()
-					wait(getgenv().interval/2)
 					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 				end)()
 				Paint:InvokeServer({{ScalePart, v.Color}})
@@ -128,11 +117,8 @@ elseif Mode == "model" then
 					if game.Players.LocalPlayer.Settings.ShareBlocks then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
-					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
-					ScalePart = workspace[#workspace:GetChildren]        
-					coroutine.wrap(function()
-						wait(getgenv().interval/2)
-						Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+	                    Scale:InvokeServer(ScalePart, v.Size, ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
 	                Paint:InvokeServer({{ScalePart, v.Color}})
 	            end)()
@@ -164,11 +150,8 @@ elseif Mode == "model" then
 					if game.Players.LocalPlayer.Settings.ShareBlocks then
 						value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 					end
-					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);
-					ScalePart = workspace[#workspace:GetChildren]
-					coroutine.wrap(function()
-	                    wait(getgenv().interval/2)
-						Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
+					Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	                coroutine.wrap(function()
+	                    Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
 	                end)()
 	                Paint:InvokeServer({{ScalePart, v.Color}})
 	            end)()
@@ -195,9 +178,7 @@ elseif Mode == "copy" then
 			if game.Players.LocalPlayer.Settings.ShareBlocks then
 				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 			end
-			ScalePart = workspace[#workspace:GetChildren]
-		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        
-			coroutine.wrap(function()
+		    Build:InvokeServer(BlockToChoose, value, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), whiteBase, true);	        coroutine.wrap(function()
 	            Scale:InvokeServer(ScalePart, possibleBlock.PPart.Size, possibleBlock.PPart)
 	        end)()
 	        Paint:InvokeServer({{ScalePart, possibleBlock.PPart.Color}})

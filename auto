@@ -4,8 +4,6 @@ getgenv().TreasureAutoFarm = {
     Teleport = 6, -- // How fast between each teleport between the stages and stuff
     TimeBetweenRuns = 6 -- // How long to wait until it goes to the next run
 }
-getgenv().AutoFarmEnabled = true
-getgenv().GoldGoal = math.huge
  
 -- // Services
 local Players = game:GetService("Players")

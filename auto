@@ -4,6 +4,8 @@ getgenv().TreasureAutoFarm = {
     Teleport = 6, -- // How fast between each teleport between the stages and stuff
     TimeBetweenRuns = 6 -- // How long to wait until it goes to the next run
 }
+getgenv().AutoFarmEnabled = true
+getgenv().GoldGoal = math.huge
  
 -- // Services
 local Players = game:GetService("Players")
@@ -32,7 +34,7 @@ local autoFarm = function(currentRun)
             -- // Create a temp part under you
             local Part = Instance.new("Part", LocalPlayer.Character)
             Part.Anchored = true
-            if LocalPlayer.Character.HumanoidRootPart then
+            if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 Part.Position = LocalPlayer.Character.HumanoidRootPart.Position - Vector3.new(0, 6, 0)
             else
                 break
@@ -45,7 +47,7 @@ local autoFarm = function(currentRun)
         end
     end
  
-    if not LocalPlayer.Character.HumanoidRootPart then
+    if not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         return
     end
 
@@ -71,7 +73,7 @@ end
 -- // Whilst the autofarm is enable, constantly do it
 local autoFarmRun = 1
 while wait() do
-    if (getgenv().TreasureAutoFarm.Enabled and game.Players.LocalPlayer.Data.Gold.Value >= getgenv().GoldGoal) then
+    if (getgenv().TreasureAutoFarm.Enabled and game.Players.LocalPlayer.Data.Gold.Value <= getgenv().GoldGoal) then
         print("Initialising Auto Farm: Run " .. autoFarmRun)
         autoFarm(autoFarmRun)
         autoFarmRun = autoFarmRun + 1

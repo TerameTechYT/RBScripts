@@ -19,6 +19,7 @@ local BlockToChoose = "WoodBlock"
 local ScalePart
 
 workspace.ChildAdded:Connect(function(possibleBlock)
+	wait()
 	if possibleBlock:IsA("Model") and not possibleBlock:FindFirstChildOfClass("Humanoid") and possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
 		ScalePart = possibleBlock
 	end

@@ -54,7 +54,7 @@ if Mode == "manual" then
 		  		BlockToChoose = getgenv().MaterialList["Single"]
 			end
 
-			local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+			local value = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value	
 			if game.Players.LocalPlayer.Settings.ShareBlocks then
 				value = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
 			end

@@ -8,6 +8,8 @@ if blocks == nil then
 	end
 end
 
+getgenv().AutoFarmEnabled = false
+getgenv().GoldGoal = math.huge
 
 if getgenv().MaterialList == nil then
 	getgenv().MaterialList = {
@@ -60,7 +62,7 @@ local win = DiscordLib:Window("BuildABoat Autobuilder")
 
 local serv = win:Server("Main", "")
 
-local btns = serv:Channel("Autobuild")
+local btns = serv:Channel("Functions")
 
 btns:Textbox("Model ID", "Model ID Here", false, function(text)
 	if tonumber(text) == nil then
@@ -87,8 +89,8 @@ end)
 btns:Textbox("Manual ID", "Manual List Here", false, function(text)
 	getgenv().list = text
 	getgenv().Mode = "manual"
-	print(getgenv().list)
 end)
+
 btns:Button("Build Manual", function()
 	getgenv().Mode = "manual"
 	if getgenv().currentlyBuilding then
@@ -96,7 +98,6 @@ btns:Button("Build Manual", function()
 		getgenv().stop = true
 	else
 		getgenv().currentlyBuilding = true
-		print(getgenv().list)
 		DiscordLib:Notification("Building", "Started Manual Building, press button again to stop building!", "Okay")
 		wait(waitTime)
 		loadstring("getgenv().ManualTable = "..getgenv().list)()
@@ -110,21 +111,37 @@ btns:Textbox("Copy Build", "Player Here", false, function(text)
 	getgenv().Mode = "copy"
 	print(getgenv().player)
 end)
+
 btns:Button("Copy Build", function()
 	getgenv().Mode = "copy"
-	if getgenv().currentlyBuilding then
+	if  then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true
 	else
 		getgenv().currentlyBuilding = true
 		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
 		wait(waitTime)
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/auto"))()
 	end
 end)
 
 btns:Button("Give replace tool (material in \"Materials\")", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/replacetool"))()
+end)
+
+btns:Textbox("Gold Goal (how much gold to get before stopping)", "Goal Here", false, function(text)
+	getgenv().GoldGoal = tonumber(text) or math.huge
+end)
+
+btns:Button("Autofarm", function()
+	if getgenv().AutoFarmEnabled then
+		getgenv().AutoFarmEnabled = false
+		DiscordLib:Notification("Autofarming", "Stopped autofarming!", "Okay")
+	else
+		DiscordLib:Notification("Autofarming", "Started autofarming!", "Okay")
+		getgenv().AutoFarmEnabled = true
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv2"))()
+	end
 end)
 
 local tgls = serv:Channel("Settings")

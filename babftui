@@ -114,7 +114,7 @@ end)
 
 btns:Button("Copy Build", function()
 	getgenv().Mode = "copy"
-	if  then
+	if getgenv().currentlyBuilding then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true
 	else

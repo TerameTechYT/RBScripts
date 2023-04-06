@@ -88,7 +88,7 @@ if Mode == "manual" then
                 coroutine.wrap(function()
 					wait()
 					Scale:InvokeServer(ScalePart, Vector3.new(wedgeSize.X, 0, angledSurfaceLength), ScalePart:FindFirstChild("PPart").CFrame)
-					Paint:InvokeServer({{ScalePart, v.Color}})
+					Paint:InvokeServer({{ScalePart, getgenv().ManualTable["Color"][i]}})
 				end)()
 				
 			end)()

@@ -73,7 +73,7 @@ end
 -- // Whilst the autofarm is enable, constantly do it
 local autoFarmRun = 1
 while wait() do
-    if (getgenv().TreasureAutoFarm.Enabled and game.Players.LocalPlayer.Data.Gold.Value <= getgenv().GoldGoal) then
+    if (getgenv().AutoFarmEnabled and game.Players.LocalPlayer.Data.Gold.Value <= getgenv().GoldGoal) then
         print("Initialising Auto Farm: Run " .. autoFarmRun)
         autoFarm(autoFarmRun)
         autoFarmRun = autoFarmRun + 1

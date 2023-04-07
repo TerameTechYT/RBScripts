@@ -26,7 +26,7 @@ end
 
 workspace.ChildAdded:Connect(function(possibleBlock)
 	wait()
-	if possibleBlock:IsA("Model") and not possibleBlock:FindFirstChildOfClass("Humanoid") and possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+	if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name and possibleBlock:FindFirstChild("PPart") then
 		table.insert(Parts, {possibleBlock})
         print("Added your part")
         found = true
@@ -67,7 +67,7 @@ if Mode == "manual" then
             PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
         end
         coroutine.wrap(function()
-            Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true);
+            Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
         end)()
         found = false
         repeat wait() until found
@@ -79,12 +79,13 @@ if Mode == "manual" then
            table.insert(Parts[#Parts], {PartSize, PartColor})
         end
     end
-    wait(2)
-    for i,PartStuff in pairs(Parts) do
-        local Part = PartStuff[1]
-        local Size = PartStuff[2][1]
-        local Color = PartStuff[2][2]
-        wait(.2)
+    print("Scaling and painting next!")
+    wait()
+    print("Scaling and painting!")
+    for i = 1, #Parts do
+        local Part = Parts[i][1]
+        local Size = Parts[i][2][1]
+        local Color = Parts[i][2][2]
         coroutine.wrap(function()
             coroutine.wrap(function()
                 Scale:InvokeServer(Part, Size, Part.PPart.CFrame)
@@ -93,8 +94,8 @@ if Mode == "manual" then
         end)()
     end
 elseif Mode == "model" then
-    wait(Interval)
     for i,possibleBlock in pairs(Model:GetDescendants()) do
+        wait(Interval)
         if possibleBlock.ClassName == "Part" or possibleBlock.ClassName == "WedgePart" then
             local PartPosition = possibleBlock.Position
             local PartSize = possibleBlock.Size
@@ -127,25 +128,25 @@ elseif Mode == "model" then
                 PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
             end
             coroutine.wrap(function()
-                Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true);
+                Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
             end)()
             found = false
-            repeat wait() until found
+            wait()
+            repeat wait()until found
             if PartClass == "Part" then
-               table.insert(Parts[#Parts], {PartSize, PartColor})       
+                table.insert(Parts[#Parts], {PartSize, PartColor})       
             elseif PartClass == "WedgePart" then
                 table.insert(Parts[#Parts], {wedgeSize, PartColor})
             else
-               table.insert(Parts[#Parts], {PartSize, PartColor})
+                table.insert(Parts[#Parts], {PartSize, PartColor})
             end
         end
     end
-    wait(2)
-    for i,PartStuff in pairs(Parts) do
-        local Part = PartStuff[1]
-        local Size = PartStuff[2][1]
-        local Color = PartStuff[2][2]
-        wait(.2)
+    wait(1)
+    for i = 1, #Parts do
+        local Part = PartStuff[i][1]
+        local Size = PartStuff[i][2][1]
+        local Color = PartStuff[i][2][2]
         coroutine.wrap(function()
             coroutine.wrap(function()
                 Scale:InvokeServer(Part, Size, Part.PPart.CFrame)

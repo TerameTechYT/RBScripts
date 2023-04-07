@@ -1,7 +1,7 @@
 -- // Custom Settings
 getgenv().TreasureAutoFarm = {
     Enabled = getgenv().AutoFarmEnabled, -- // Toggle the auto farm on and off
-    Teleport = 6, -- // How fast between each teleport between the stages and stuff
+    Teleport = 3.6, -- // How fast between each teleport between the stages and stuff
     TimeBetweenRuns = 6 -- // How long to wait until it goes to the next run
 }
  
@@ -27,7 +27,7 @@ local autoFarm = function(currentRun)
         if (DarknessPart) then
             -- // Teleport to next stage
             print("Teleporting to next stage: Stage " .. i)
-            Character.HumanoidRootPart.CFrame = DarknessPart.CFrame
+            Character.HumanoidRootPart.CFrame = DarknessPart.CFrame + Vector3.new(0,16,0)
  
             -- // Create a temp part under you
             local Part = Instance.new("Part", LocalPlayer.Character)

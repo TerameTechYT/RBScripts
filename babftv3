@@ -1,0 +1,89 @@
+local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
+local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
+local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
+local InsertService = game:GetService("InsertService")
+local modelId = getgenv().modelId
+local MaterialList = getgenv().MaterialList
+local Interval = getgenv().interval
+local UseSingle = getgenv().useOneBlock
+local Model
+
+if modelId ~= nil then
+	Model = game:GetObjects('rbxassetid://'..modelId)[1]
+	if Model:IsA("Model") then
+		Model:PivotTo(CFrame.new(0, 0, 0))
+	end
+end
+
+local Mode = getgenv().Mode
+local BlockToChoose = "WoodBlock"
+local Parts = {}
+local List = getgenv().ManualTable
+
+workspace.ChildAdded:Connect(function(possibleBlock)
+	wait()
+	if possibleBlock:IsA("Model") and not possibleBlock:FindFirstChildOfClass("Humanoid") and possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+		table.insert(Parts, {possibleBlock})
+        print("Added your part")
+	end
+end)
+
+if Mode == "manual" then
+    for index = 1, table.getn(List["Position"]) do
+        local PartPosition = List["Position"][index]
+        local PartSize = List["Size"][index]
+        local PartColor = List["Color"][index]
+        local PartClass = List["Class"][index]
+        local PartRotation = List["Rotation"][index]
+        local PartMaterial = List["Material"][index]
+        local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
+        local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
+        local PositionToPlace = CFrame.new(PartPosition)
+        if getgenv().UseBlobsPos == true then
+            PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
+        end
+        local wedgeSize = Vector3.new(PartSize.X, 0, angledSurfaceLength)
+        if PartClass == "Part" then
+            PositionToPlace *= CFrame.Angles(PartRotation.X, PartRotation.Y, PartRotation.Z)
+        elseif PartClass == "WedgePart" then
+            PositionToPlace *= CFrame.Angles(-wedgeAngle + PartRotation.X, PartRotation.Y, PartRotation.Z)
+        else
+            PositionToPlace *= CFrame.Angles(PartRotation.X, PartRotation.Y, PartRotation.Z)
+            
+        end
+        
+        local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+        if game.Players.LocalPlayer.Settings.ShareBlocks then
+            PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+        end
+
+        BlockToChoose = MaterialList[PartMaterial]
+        if UseSingle then
+              BlockToChoose = MaterialList["Single"]
+        end
+        wait(Interval)
+        Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true);
+        wait()
+        if PartClass == "Part" then
+            table.insert(Parts[#Parts], {PartSize, PartColor})       
+        elseif PartClass == "WedgePart" then
+            table.insert(Parts[#Parts], {wedgeSize, PartColor})
+        else
+            table.insert(Parts[#Parts], {PartSize, PartColor})
+        end
+    end
+    for i,subList in pairs(Parts) do
+        for i,PartStuff in pairs(subList) do
+            local Part = PartStuff[1]
+            local Size = PartStuff[2][1]
+            local Color = PartStuff[2][1]
+            print(Part.Name, tostring(Size), tostring(Color))
+        end
+    end
+elseif Mode == "model" then
+
+elseif Mode == "copy" then
+
+else
+    warn("No mode selected!")
+end

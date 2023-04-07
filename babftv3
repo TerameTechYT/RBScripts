@@ -29,7 +29,7 @@ workspace.ChildAdded:Connect(function(possibleBlock)
 end)
 
 if Mode == "manual" then
-    for index = 1, table.getn(List["Position"]) do
+    for index = 1, #List["Position"] do
         local PartPosition = List["Position"][index]
         local PartSize = List["Size"][index]
         local PartColor = List["Color"][index]

@@ -1,7 +1,6 @@
 local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
 local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
 local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
-local Delete = game.Players.LocalPlayer.Backpack.DeleteTool:FindFirstChild("RF");
 local InsertService = game:GetService("InsertService")
 local modelId = getgenv().modelId
 local MaterialList = getgenv().MaterialList
@@ -11,13 +10,8 @@ local Model
 
 if modelId ~= nil then
 	Model = game:GetObjects('rbxassetid://'..modelId)[1]
-    for i, Part in (Model:GetDescendants()) do 
-        if Part.ClassName == "Part" or Part.ClassName == "WedePart" then
-            Part.Anchored = true
-        end
-    end
 	if Model:IsA("Model") then
-		Model:PivotTo(CFrame.new(0, 5, 0))
+		Model:PivotTo(CFrame.new(0, 0, 0))
 	end
 end
 
@@ -25,38 +19,23 @@ local Mode = getgenv().Mode
 local BlockToChoose = "WoodBlock"
 local Parts = {}
 local List = getgenv().ManualTable
-local temp = nil
-local temp2 = nil
-local temp3
-for i,con in pairs(getconnections(workspace.ChildAdded)) do
-    con:Disconnect()
+local found = false
+for i,c in pairs(getconnections(workspace.ChildAdded)) do
+    c:Disconnect()
 end
 
 workspace.ChildAdded:Connect(function(possibleBlock)
-    wait()
-	if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+	wait()
+	if possibleBlock:IsA("Model") and not possibleBlock:FindFirstChildOfClass("Humanoid") and possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
 		table.insert(Parts, {possibleBlock})
         print("Added your part")
-        if temp3 == "Part" then
-            table.insert(Parts[#Parts], {temp, temp2})
-        elseif temp3 == "WedgePart" then
-            table.insert(Parts[#Parts], {temp, temp2})
-        else
-            table.insert(Parts[#Parts], {temp, temp2})
-        end
+        found = true
 	end
 end)
 
-table.clear(Parts)
-
-wait()
-
 if Mode == "manual" then
+    wait(Interval)
     for index = 1, #List["Position"] do
-        if getgenv().stop then
-            break
-        end
-        wait(Interval)
         local PartPosition = List["Position"][index]
         local PartSize = List["Size"][index]
         local PartColor = List["Color"][index]
@@ -65,114 +44,113 @@ if Mode == "manual" then
         local PartMaterial = List["Material"][index]
         local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
         local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
-        local PositionToPlace = CFrame.new(PartPosition + Vector3.new(0,5,0))
+        local PositionToPlace = CFrame.new(PartPosition)
         if getgenv().UseBlobsPos == true then
             PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
         end
-        local wedgeSize = Vector3.new(PartSize.X, 0, angledSurfaceLength)
+        local wedgeSize = Vector3.new(PartSize.X, 1, angledSurfaceLength)
         if PartClass == "Part" then
-            PositionToPlace *= CFrame.fromEulerAnglesXYZ(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
         elseif PartClass == "WedgePart" then
-            PositionToPlace *= CFrame.fromEulerAnglesXYZ(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            PositionToPlace *= CFrame.Angles(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
         else
-            PositionToPlace *= CFrame.fromEulerAnglesXYZ(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
         end
-        print(PositionToPlace)
+        
         BlockToChoose = MaterialList[PartMaterial]
         if UseSingle then
               BlockToChoose = MaterialList["Single"]
         end
+
         local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
         if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
             PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
         end
-        print(PartCount)
-        print("Building: "..BlockToChoose)
-        Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true);
-        wait()
+        coroutine.wrap(function()
+            Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true);
+        end)()
+        found = false
+        repeat wait() until found
         if PartClass == "Part" then
-            table.insert(Parts[#Parts], {PartSize, PartColor})
+           table.insert(Parts[#Parts], {PartSize, PartColor})       
         elseif PartClass == "WedgePart" then
             table.insert(Parts[#Parts], {wedgeSize, PartColor})
         else
-            table.insert(Parts[#Parts], {PartSize, PartColor})
+           table.insert(Parts[#Parts], {PartSize, PartColor})
         end
     end
-    for i,PartList in pairs(Parts) do
-        if getgenv().stop then
-            break
-        end
-        local PartModel = PartList[1]
-        local Size = PartList[2][1]
-        local Color = PartList[2][2]
+    wait(2)
+    for i,PartStuff in pairs(Parts) do
+        local Part = PartStuff[1]
+        local Size = PartStuff[2][1]
+        local Color = PartStuff[2][2]
+        wait(.2)
         coroutine.wrap(function()
             coroutine.wrap(function()
-                Scale:InvokeServer(PartModel, Size, PartModel.PPart.CFrame)
+                Scale:InvokeServer(Part, Size, Part.PPart.CFrame)
             end)()
-		    Paint:InvokeServer({{PartModel, Color}})
+            Paint:InvokeServer({{Part, Color}})
         end)()
     end
 elseif Mode == "model" then
-    for i, Part in (Model:GetDescendants()) do
-        if Interval > 0 then
-            wait(Interval)
-        end
-        if Part.ClassName == "Part" or Part.ClassName == "WedePart" then
-            if getgenv().stop then
-                break
-            end
-            local PartPosition = Part.Position
-            local PartSize = Part.Size
-            local PartColor = Part.Color
-            local PartClass = Part.ClassName
-            local PartRotation = Part.Rotation
-            local PartMaterial = Part.Material
+    wait(Interval)
+    for i,possibleBlock in pairs(Model:GetDescendants()) do
+        if possibleBlock.ClassName == "Part" or possibleBlock.ClassName == "WedgePart" then
+            local PartPosition = possibleBlock.Position
+            local PartSize = possibleBlock.Size
+            local PartColor = possibleBlock.Color
+            local PartClass = possibleBlock.ClassName
+            local PartRotation = possibleBlock.Rotation
+            local PartMaterial = possibleBlock.Material
             local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
             local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
-            local PositionToPlace = CFrame.new(PartPosition + Vector3.new(0,5,0))
-            temp = PartSize
-            temp2 = PartColor
-            temp3 = PartClass
+            local PositionToPlace = CFrame.new(PartPosition)
             if getgenv().UseBlobsPos == true then
                 PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
             end
-            local wedgeSize = Vector3.new(PartSize.X, 0, angledSurfaceLength)
+            local wedgeSize = Vector3.new(PartSize.X, 1, angledSurfaceLength)
             if PartClass == "Part" then
-                PositionToPlace *= CFrame.fromEulerAnglesXYZ(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
             elseif PartClass == "WedgePart" then
-                PositionToPlace *= CFrame.fromEulerAnglesXYZ(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                PositionToPlace *= CFrame.Angles(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
             else
-                PositionToPlace *= CFrame.fromEulerAnglesXYZ(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
             end
-            print(PositionToPlace)
+            
             BlockToChoose = MaterialList[PartMaterial]
             if UseSingle then
                   BlockToChoose = MaterialList["Single"]
             end
+    
             local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
             if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
                 PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
             end
-            print(PartCount)
-            print("Building: "..BlockToChoose)
             coroutine.wrap(function()
                 Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true);
-            end)()  
+            end)()
+            found = false
+            repeat wait() until found
+            if PartClass == "Part" then
+               table.insert(Parts[#Parts], {PartSize, PartColor})       
+            elseif PartClass == "WedgePart" then
+                table.insert(Parts[#Parts], {wedgeSize, PartColor})
+            else
+               table.insert(Parts[#Parts], {PartSize, PartColor})
+            end
         end
     end
-    wait(1)
-    for i,PartList in pairs(Parts) do
-        if getgenv().stop then
-            break
-        end
-        local PartModel = PartList[1]
-        local Size = PartList[2][1]
-        local Color = PartList[2][2]
+    wait(2)
+    for i,PartStuff in pairs(Parts) do
+        local Part = PartStuff[1]
+        local Size = PartStuff[2][1]
+        local Color = PartStuff[2][2]
+        wait(.2)
         coroutine.wrap(function()
             coroutine.wrap(function()
-                Scale:InvokeServer(PartModel, Size, PartModel.PPart.CFrame)
+                Scale:InvokeServer(Part, Size, Part.PPart.CFrame)
             end)()
-		    Paint:InvokeServer({{PartModel, Color}})
+            Paint:InvokeServer({{Part, Color}})
         end)()
     end
 elseif Mode == "copy" then
@@ -182,10 +160,7 @@ else
 end
 
 getgenv().currentlyBuilding = false
-if getgenv().stop then
-    getgenv().stop = false
-end
 
 if Model then
 	Model:Destroy()
-end
+end 

@@ -87,3 +87,9 @@ elseif Mode == "copy" then
 else
     warn("No mode selected!")
 end
+
+getgenv().currentlyBuilding = false
+
+if Model then
+	Model:Destroy()
+end

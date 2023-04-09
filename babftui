@@ -165,6 +165,11 @@ local slider = tgls:Slider("Block Placement Inverval (in Miliseconds)", 0, 10000
 	getgenv().interval = waitTime
 end)
 
+local slider2 = tgls:Slider("Cylinder quality", 16, 64, 16, function(e)
+	print(t)
+	getgenv().cylinderQuality = e
+end)
+
 local drops = serv:Channel("Materials")
 
 local drop = drops:Dropdown("Single Material", blocks, function(val)

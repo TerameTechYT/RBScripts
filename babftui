@@ -121,7 +121,7 @@ btns:Button("Copy Build", function()
 		getgenv().currentlyBuilding = true
 		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
 		wait(waitTime)
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/auto"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
 	end
 end)
 
@@ -140,7 +140,7 @@ btns:Button("Autofarm", function()
 	else
 		DiscordLib:Notification("Autofarming", "Started autofarming!", "Okay")
 		getgenv().AutoFarmEnabled = true
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/auto"))()
 	end
 end)
 

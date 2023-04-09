@@ -185,6 +185,7 @@ elseif Mode == "model" then
                     table.insert(Parts[#Parts], {CylSize, PartColor})
                 end
             end
+        end
     end
     wait(1)
     for i = 1, #Parts do

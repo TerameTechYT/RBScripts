@@ -176,7 +176,7 @@ elseif Mode == "model" then
     
                 for i = 1, cylinderSides do
                     local CylSize = Vector3.new(partThickness, cylinderHeight, cylinderRadius * 2)
-                    local CylPos = CFrame.new(Vector3.new(PositionToPlace.X, PositionToPlace.Y, cylinderRadius + PositionToPlace.Z)) * CFrame.Angles(math.rad(PartRotation.X + 90), math.rad((i-1) * angleStep + PartRotation.Y), math.rad(PartRotation.Z))
+                    local CylPos = CFrame.new(Vector3.new(PositionToPlace.X, PositionToPlace.Y, cylinderRadius + PositionToPlace.Z)) * CFrame.Angles(math.rad(PartRotation.X), math.rad((i-1) * angleStep + PartRotation.Y), math.rad(PartRotation.Z))
                     coroutine.wrap(function()
                         Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CylPos, true, 1);
                     end)()

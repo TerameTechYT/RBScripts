@@ -209,7 +209,7 @@ elseif Mode == "copy_buildplot" then
             local PartClass = possibleBlock.PrimaryPart.ClassName
             local PartRotation = possibleBlock.PrimaryPart.Rotation
             local PartMaterial = possibleBlock.PrimaryPart.Material
-            local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position -  possibleBlock.PrimaryPart.Position
+            local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position - possibleBlock.PrimaryPart.Position
             local PositionToPlace = CFrame.new(0, 0, 0) - temp
             PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
             print(PositionToPlace)
@@ -247,10 +247,9 @@ elseif Mode == "copy_savefile" then
             local PartColor = possibleBlock.PrimaryPart.Color
             local PartRotation = possibleBlock.PrimaryPart.Rotation
             local PartMaterial = possibleBlock.PrimaryPart.Material
-            local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position -  possibleBlock.PrimaryPart.Position
-            local PartPosition = CFrame.new(0, 0, 0) - temp
-            PartPosition *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-            filecontent = filecontent..tostring(PartPosition)..delim..tostring(PartSize)..delim..tostring(PartColor)..delim..tostring(possibleBlock.Name).."|"
+            local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position - possibleBlock.PrimaryPart.Position
+            local PartPosition = Vector3.new(0, 0, 0) - temp
+            filecontent = filecontent..tostring(PartPosition)..delim..tostring(PartRotation)..delim..tostring(PartSize)..delim..tostring(PartColor)..delim..tostring(possibleBlock.Name).."|"
         end
     end
     makefolder("ZechUI")
@@ -261,11 +260,12 @@ elseif Mode == "copy_buildfile" then
     local list = filecontent:split("|")
     for i, block in pairs(list) do
         wait(Interval)
-        local CFr = CFrame.new(unpack(block:split(delim)[1]:split(", ")))
-        local Size = Vector3.new(unpack(block:split(delim)[2]:split(", ")))
-        local Color = Color3.new(unpack(block:split(delim)[3]:split(", ")))
-        local BlockName = tostring(block:split(delim)[4])
-        print(CFr, Size, Color, BlockName)
+        local Pos = Vector3.new(unpack(block:split(delim)[1]:split(", ")))
+        local Rotation = Vector3.new(unpack(block:split(delim)[2]:split(", ")))
+        local Size = Vector3.new(unpack(block:split(delim)[3]:split(", ")))
+        local Color = Color3.new(unpack(block:split(delim)[4]:split(", ")))
+        local BlockName = tostring(block:split(delim)[5])
+        local CFr = CFrame.new(Pos) * CFrame.Angles(math.rad(Rotation.X), math.rad(Rotation.Y), math.rad(Rotation.Z))
         local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockName).Value
         if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
             PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockName).Value

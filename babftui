@@ -108,12 +108,43 @@ end)
 
 btns:Textbox("Copy Build", "Player Here", false, function(text)
 	getgenv().player = text
-	getgenv().Mode = "copy"
 	print(getgenv().player)
 end)
 
-btns:Button("Copy Build", function()
-	getgenv().Mode = "copy"
+btns:Textbox("Copy Build", "File Name Here", false, function(text)
+	getgenv().filename = text
+	print(getgenv().filename)
+end)
+
+btns:Button("Copy Build (Plot)", function()
+	getgenv().Mode = "copy_buildplot"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+	end
+end)
+
+
+btns:Button("Copy Build (Save)", function()
+	getgenv().Mode = "copy_savefile"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+	end
+end)
+
+btns:Button("Copy Build (Load)", function()
+	getgenv().Mode = "copy_loadfile"
 	if getgenv().currentlyBuilding then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true

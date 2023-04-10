@@ -187,11 +187,13 @@ elseif Mode == "model" then
             end
         end
     end
-    wait(1)
+    print("Scaling and painting next!")
+    wait()
+    print("Scaling and painting!")
     for i = 1, #Parts do
-        local Part = PartStuff[i][1]
-        local Size = PartStuff[i][2][1]
-        local Color = PartStuff[i][2][2]
+        local Part = Parts[i][1]
+        local Size = Parts[i][2][1]
+        local Color = Parts[i][2][2]
         coroutine.wrap(function()
             coroutine.wrap(function()
                 Scale:InvokeServer(Part, Size, Part.PPart.CFrame)
@@ -200,7 +202,43 @@ elseif Mode == "model" then
         end)()
     end
 elseif Mode == "copy" then
-
+    for i,possibleBlock in pairs(workspace:GetChildren()) do
+        if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == getgenv().player and possibleBlock:FindFirstChild("PPart") then
+            local PartSize = possibleBlock.PPart.Size
+            local PartColor = possibleBlock.PPart.Color
+            local PartClass = possibleBlock.PPart.ClassName
+            local PartRotation = possibleBlock.PPart.Rotation
+            local PartMaterial = possibleBlock.PPart.Material
+            local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position -  possibleBlock.PPart.Position
+            local PositionToPlace = CFrame.new(0, 0, 0) - temp
+            PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            print(PositionToPlace)
+            local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(possibleBlock.Name).Value
+            if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
+                PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(possibleBlock.Name).Value
+            end
+            coroutine.wrap(function()
+                Build:InvokeServer(possibleBlock.Name, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
+            end)()
+            found = false
+            repeat wait() until found
+            table.insert(Parts[#Parts], {PartSize, PartColor})
+        end
+    end
+    print("Scaling and painting next!")
+    wait()
+    print("Scaling and painting!")
+    for i = 1, #Parts do
+        local Part = Parts[i][1]
+        local Size = Parts[i][2][1]
+        local Color = Parts[i][2][2]
+        coroutine.wrap(function()
+            coroutine.wrap(function()
+                Scale:InvokeServer(Part, Size, Part.PPart.CFrame)
+            end)()
+            Paint:InvokeServer({{Part, Color}})
+        end)()
+    end
 else
     warn("No mode selected!")
 end

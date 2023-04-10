@@ -143,8 +143,8 @@ btns:Button("Copy Build (Save)", function()
 	end
 end)
 
-btns:Button("Copy Build (Load)", function()
-	getgenv().Mode = "copy_loadfile"
+btns:Button("Copy Build (Build)", function()
+	getgenv().Mode = "copy_buildfile"
 	if getgenv().currentlyBuilding then
 		getgenv().currentlyBuilding = false
 		getgenv().stop = true

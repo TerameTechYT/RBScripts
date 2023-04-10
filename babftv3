@@ -202,6 +202,7 @@ elseif Mode == "model" then
     end
 elseif Mode == "copy_buildplot" then
     for i,possibleBlock in pairs(workspace:GetChildren()) do
+        wait(Interval)
         if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == getgenv().player then
             local PartSize = possibleBlock.PrimaryPart.Size
             local PartColor = possibleBlock.PrimaryPart.Color
@@ -259,6 +260,7 @@ elseif Mode == "copy_buildfile" then
     local filecontent = readfile("ZechUI/ZechBAB/"..getgenv().filename..".ZBaB")
     local list = filecontent:split("|")
     for i, block in pairs(list) do
+        wait(Interval)
         local CFr = CFrame.new(unpack(block:split(delim)[1]:split(", ")))
         local Size = Vector3.new(unpack(block:split(delim)[2]:split(", ")))
         local Color = Color3.new(unpack(block:split(delim)[3]:split(", ")))

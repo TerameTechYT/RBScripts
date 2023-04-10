@@ -248,6 +248,7 @@ elseif Mode == "copy_savefile" then
             local PartMaterial = possibleBlock.PrimaryPart.Material
             local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position -  possibleBlock.PrimaryPart.Position
             local PartPosition = CFrame.new(0, 0, 0) - temp
+            PartPosition *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
             filecontent = filecontent..tostring(PartPosition)..delim..tostring(PartSize)..delim..tostring(PartColor)..delim..tostring(possibleBlock.Name).."|"
         end
     end

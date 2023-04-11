@@ -1,16 +1,13 @@
-loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/netby'))()
-wait(1)
 local handTransparency = 0 --transparency of your hands
 local handsOffset = CFrame.fromEulerAnglesXYZ(8, 0, 0) * CFrame.new(0, 0.7, 0.15)
 local headScale = 1.5
 local flyspeed = headScale / 4
 local flyFPS = 120
 local disableVrLaserPointer = false --disables robloxes vr laser pointer
+local enableGunMod = false
 local flybutton = Enum.KeyCode.ButtonR1
 local equipbutton = Enum.KeyCode.ButtonA
 local shootbutton = Enum.KeyCode.ButtonR2
-
---reanimate by MyWorld#4430 discord.gg/pYVHtSJmEY
 local Vector3_101 = Vector3.new(1, 0, 1)
 local netless_Y = Vector3.new(0, 25.1, 0)
 local function getNetlessVelocity(realPartVelocity) --edit this if you have a better netless method
@@ -174,6 +171,23 @@ hatcollide = hatcollide and (method == 0)
 
 addtools = addtools and gp(lp, "Backpack", "Backpack")
 
+local fenv = getfenv()
+local shp = fenv.sethiddenproperty or fenv.set_hidden_property or fenv.set_hidden_prop or fenv.sethiddenprop
+local ssr = fenv.setsimulationradius or fenv.set_simulation_radius or fenv.set_sim_radius or fenv.setsimradius or fenv.set_simulation_rad or fenv.setsimulationrad
+
+if shp and (simradius == "shp") then
+	spawn(function()
+		while c and heartbeat:Wait() do
+			shp(lp, "SimulationRadius", inf)
+		end
+	end)
+elseif ssr and (simradius == "ssr") then
+	spawn(function()
+		while c and heartbeat:Wait() do
+			ssr(inf)
+		end
+	end)
+end
 
 antiragdoll = antiragdoll and function(v)
 	if v:IsA("HingeConstraint") or v:IsA("BallSocketConstraint") then
@@ -289,6 +303,13 @@ if hatcollide and c:FindFirstChildOfClass("Accessory") then
     end
     torso:Destroy()
     root:Destroy()
+    if shp then
+        for i,v in pairs(c:GetChildren()) do
+            if v:IsA("Accessory") then
+                shp(v, "BackendAccoutrementState", 0)
+            end 
+        end
+    end
     anything:Destroy()
 end
 
@@ -850,6 +871,11 @@ local cf = CFrame.new
 local v3 = Vector3.new
 local partsOffset = headScale - 1
 
+local fenv = getfenv()
+if fenv.setfpscap then
+    fenv.setfpscap(120)
+end
+
 local function gp(parent, name, className)
     if typeof(parent) == "Instance" then
         for i, v in pairs(parent:GetChildren()) do
@@ -881,6 +907,95 @@ if disableVrLaserPointer then
 end
 
 local cons = {}
+
+--gun mod:
+local att = enableGunMod and gp(gp(gp(c, "Meshes/HeavySniper (1)Accessory", "Accessory"), "Handle", "BasePart"), "att1_Handle", "Attachment")
+local racf = ra.CFrame
+if att then
+    local handle0 = gp(gp(model, "Meshes/HeavySniper (1)Accessory", "Accessory"), "Handle", "BasePart")
+    if not handle0 then
+        return
+    end
+    spawn(function()
+        wait()
+        if handle0 and handle0.Parent then
+            handle0.Transparency = 0
+        end
+    end)
+    local gunpart = ra:Clone()
+    gunpart.Name = "gunpart"
+    gunpart.Transparency = 1
+    gunpart.Anchored = true
+    gunpart.Velocity = v3(0, 0, 0)
+    gunpart.Parent = c
+    att.Orientation = v3(0, 90, -90)
+    att.Position = v3(0, -2.5, -0.6)
+    att.Parent = gunpart
+    local pointer = Instance.new("Part")
+    pointer.Name = "pointer"
+    pointer.Size = v3(0.1, 0.1, 0.1)
+    pointer.Transparency = 1
+    pointer.Shape = "Ball"
+    pointer.Color = Color3.new(0, 0, 1)
+    pointer.Material = "Neon"
+    pointer.Anchored = true
+    pointer.CanCollide = false
+    pointer.CFrame = racf
+    pointer.Parent = c
+    local raycastpar = RaycastParams.new()
+    raycastpar.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastpar.FilterDescendantsInstances = {c}
+    raycastpar.IgnoreWater = false
+    local equipped = false
+    local shooting = false
+    cons.gunibegan = uis.InputBegan:Connect(function(key)
+        key = key.KeyCode
+        if equipped and (key == shootbutton) then
+            shooting = true
+            while shooting do
+                fling(pointer.Position, 0.1)
+            end
+        elseif key == equipbutton then
+            equipped = not equipped
+            if equipped then
+                att.Parent = ra
+                pointer.Transparency = 0
+            else
+                shooting = false
+                gunpart.CFrame = racf
+                att.Parent = gunpart
+                pointer.Transparency = 1
+            end
+        end
+    end)
+    cons.guniended = uis.InputEnded:Connect(function(key)
+        if shooting and (key.KeyCode == shootbutton) then
+            shooting = false
+        end
+    end)
+    cons.gunpointer = renderstepped:Connect(function()
+        if equipped then
+            local raycastres = ws:Raycast(racf.Position + racf.LookVector * 0.75, racf.UpVector * -1000, raycastpar)
+            if raycastres then
+                pointer.Position = raycastres.Position
+            end
+        end
+    end)
+    cons.gunchanged = gunpart:GetPropertyChangedSignal("Parent"):Connect(function()
+        for i, v in pairs(cons) do
+            v:Disconnect()
+        end
+        cam.CameraType = Enum.CameraType.Custom
+    end)
+    cons.gunpointerchanged = pointer:GetPropertyChangedSignal("Parent"):Connect(function()
+        for i, v in pairs(cons) do
+            v:Disconnect()
+        end
+        equipped = false
+        shooting = false
+        cam.CameraType = Enum.CameraType.Custom
+    end)
+end
 
 local event = Instance.new("BindableEvent", c)
 flyFPS = 1 / flyFPS

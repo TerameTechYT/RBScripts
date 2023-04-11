@@ -19,91 +19,96 @@ local Mode = getgenv().Mode
 local BlockToChoose = "WoodBlock"
 local Parts = {}
 local List = getgenv().ManualTable
-local found = false
+local found = {}
 for i,c in pairs(getconnections(workspace.ChildAdded)) do
     c:Disconnect()
 end
-
+local blockC = 1
 workspace.ChildAdded:Connect(function(possibleBlock)
 	wait()
-	if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
-		table.insert(Parts, {possibleBlock})
-        print("Added your part")
-        found = true
-	end
+    coroutine.wrap(function() 
+        if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
+		    table.insert(Parts, {possibleBlock})
+            print("Added your part LN:", debug.traceback())
+            found[blockC] = true
+            blockC+=1
+	    end
+    end)()
 end)
 
 if Mode == "manual" then
-    wait(Interval)
     for index = 1, #List["Position"] do
-        local PartPosition = List["Position"][index]
-        local PartSize = List["Size"][index]
-        local PartColor = List["Color"][index]
-        local PartClass = List["Class"][index]
-        local PartRotation = List["Rotation"][index]
-        local PartMaterial = List["Material"][index]
-        local PartShape = List["Shape"][index]
-        local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
-        local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
-        local PositionToPlace = CFrame.new(PartPosition)
-
-        if getgenv().UseBlobsPos == true then
-            PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
-        end
-        local wedgeSize = Vector3.new(PartSize.X, 1, angledSurfaceLength)
-        if PartClass == "Part" then
-            PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-        elseif PartClass == "WedgePart" then
-            PositionToPlace *= CFrame.Angles(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-        else
-            PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-        end
-        
-        BlockToChoose = MaterialList[PartMaterial]
-        if UseSingle then
-            BlockToChoose = MaterialList["Single"]
-        end
-
-        local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
-        if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
-            PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
-        end
-
-        if PartShape == Enum.PartType.Block then
-            coroutine.wrap(function()
-                Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
-            end)()
-            found = false
-            repeat wait() until found
-            if PartClass == "Part" then
-               table.insert(Parts[#Parts], {PartSize, PartColor})       
-            elseif PartClass == "WedgePart" then
-                table.insert(Parts[#Parts], {wedgeSize, PartColor})
-            else
-               table.insert(Parts[#Parts], {PartSize, PartColor})
-            end
-        elseif PartShape == Enum.PartType.Cylinder then
-            local cylinderRadius = math.max(PartSize.X, PartSize.Y, PartSize.Z) / 2
-            local cylinderHeight = PartSize.X
-            local cylinderSides = getgenv().cylinderQuality or 24
-            local partThickness = 1 * cylinderRadius / 2.5
-            local angleStep = 360 / cylinderSides
-
-            for i = 1, cylinderSides do
-                local CylSize = Vector3.new(partThickness, cylinderHeight, cylinderRadius * 2)
-                local CylPos = CFrame.new(Vector3.new(PositionToPlace.X, PositionToPlace.Y, cylinderRadius + PositionToPlace.Z)) * CFrame.Angles(math.rad(PartRotation.X + 90), math.rad(((i-1) * angleStep) + PartRotation.Y), math.rad(PartRotation.Z))
-                coroutine.wrap(function()
-                    Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CylPos, true, 1);
-                end)()
-                found = false
-                repeat wait() until found
-                table.insert(Parts[#Parts], {CylSize, PartColor})
-            end
-        end
+        table.insert(found, false)
     end
-    print("Scaling and painting next!")
-    wait()
-    print("Scaling and painting!")
+    for index = 1, #List["Position"] do
+        coroutine.wrap(function()
+            local PartPosition = List["Position"][index]
+            local PartSize = List["Size"][index]
+            local PartColor = List["Color"][index]
+            local PartClass = List["Class"][index]
+            local PartRotation = List["Rotation"][index]
+            local PartMaterial = List["Material"][index]
+            local PartShape = List["Shape"][index]
+            local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
+            local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
+            local PositionToPlace = CFrame.new(PartPosition)
+
+            if getgenv().UseBlobsPos == true then
+                PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
+            end
+            local wedgeSize = Vector3.new(PartSize.X, 1, angledSurfaceLength)
+            if PartClass == "Part" then
+                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            elseif PartClass == "WedgePart" then
+                PositionToPlace *= CFrame.Angles(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            else
+                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+            end
+
+            BlockToChoose = MaterialList[PartMaterial]
+            if UseSingle then
+                BlockToChoose = MaterialList["Single"]
+            end
+
+            local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+            if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
+                PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+            end
+
+            if PartShape == Enum.PartType.Block then
+                coroutine.wrap(function()
+                    Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
+                end)()
+                repeat wait() until found[i]
+                if PartClass == "Part" then
+                   table.insert(Parts[i], {PartSize, PartColor})       
+                elseif PartClass == "WedgePart" then
+                    table.insert(Parts[i], {wedgeSize, PartColor})
+                else
+                   table.insert(Parts[i], {PartSize, PartColor})
+                end
+            elseif PartShape == Enum.PartType.Cylinder then
+                local cylinderRadius = math.max(PartSize.X, PartSize.Y, PartSize.Z) / 2
+                local cylinderHeight = PartSize.X
+                local cylinderSides = getgenv().cylinderQuality or 24
+                local partThickness = 1 * cylinderRadius / 2.5
+                local angleStep = 360 / cylinderSides
+
+                for i = 1, cylinderSides do
+                    local CylSize = Vector3.new(partThickness, cylinderHeight, cylinderRadius * 2)
+                    local CylPos = CFrame.new(Vector3.new(PositionToPlace.X, PositionToPlace.Y, cylinderRadius + PositionToPlace.Z)) * CFrame.Angles(math.rad(PartRotation.X + 90), math.rad(((i-1) * angleStep) + PartRotation.Y), math.rad(PartRotation.Z))
+                    coroutine.wrap(function()
+                        Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CylPos, true, 1);
+                    end)()
+                    repeat wait() until found[i]
+                    table.insert(Parts[i], {CylSize, PartColor})
+                end
+            end
+        end)()
+    end
+    print("Scaling and painting next! LN:", debug.traceback())
+    wait(2)
+    print("Scaling and painting! LN:", debug.traceback())
     for i = 1, #Parts do
         local Part = Parts[i][1]
         local Size = Parts[i][2][1]
@@ -117,78 +122,82 @@ if Mode == "manual" then
     end
 elseif Mode == "model" then
     for i,possibleBlock in pairs(Model:GetDescendants()) do
-        wait(Interval)
         if possibleBlock.ClassName == "Part" or possibleBlock.ClassName == "WedgePart" then
-            local PartPosition = possibleBlock.Position
-            local PartSize = possibleBlock.Size
-            local PartColor = possibleBlock.Color
-            local PartClass = possibleBlock.ClassName
-            local PartRotation = possibleBlock.Rotation
-            local PartMaterial = possibleBlock.Material
-            local PartShape = possibleBlock.Shape
-            local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
-            local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
-            local PositionToPlace = CFrame.new(PartPosition)
-
-
-            if getgenv().UseBlobsPos == true then
-                PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
-            end
-            local wedgeSize = Vector3.new(PartSize.X, 1, angledSurfaceLength)
-            if PartClass == "Part" then
-                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-            elseif PartClass == "WedgePart" then
-                PositionToPlace *= CFrame.Angles(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-            else
-                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-            end
-            
-            BlockToChoose = MaterialList[PartMaterial]
-            if UseSingle then
-                BlockToChoose = MaterialList["Single"]
-            end
-    
-            local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
-            if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
-                PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
-            end
-    
-            if PartShape == Enum.PartType.Block then
-                coroutine.wrap(function()
-                    Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
-                end)()
-                found = false
-                repeat wait() until found
-                if PartClass == "Part" then
-                   table.insert(Parts[#Parts], {PartSize, PartColor})       
-                elseif PartClass == "WedgePart" then
-                    table.insert(Parts[#Parts], {wedgeSize, PartColor})
-                else
-                   table.insert(Parts[#Parts], {PartSize, PartColor})
-                end
-            elseif PartShape == Enum.PartType.Cylinder then
-                local cylinderRadius = math.max(PartSize.X, PartSize.Y, PartSize.Z) / 2
-                local cylinderHeight = PartSize.X
-                local cylinderSides = getgenv().cylinderQuality or 24
-                local partThickness = 1 * cylinderRadius / 2.5
-                local angleStep = 360 / cylinderSides
-    
-                for i = 1, cylinderSides do
-                    local CylSize = Vector3.new(partThickness, cylinderHeight, cylinderRadius * 2)
-                    local CylPos = CFrame.new(Vector3.new(PositionToPlace.X, PositionToPlace.Y, cylinderRadius + PositionToPlace.Z)) * CFrame.Angles(math.rad(PartRotation.X + 90), math.rad((i-1) * angleStep + PartRotation.Y), math.rad(PartRotation.Z))
-                    coroutine.wrap(function()
-                        Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CylPos, true, 1);
-                    end)()
-                    found = false
-                    repeat wait() until found
-                    table.insert(Parts[#Parts], {CylSize, PartColor})
-                end
-            end
+            table.insert(found, false)
         end
     end
-    print("Scaling and painting next!")
-    wait()
-    print("Scaling and painting!")
+    for i,possibleBlock in pairs(Model:GetDescendants()) do
+        if possibleBlock.ClassName == "Part" or possibleBlock.ClassName == "WedgePart" then
+            coroutine.wrap(function()
+                local PartPosition = possibleBlock.Position
+                local PartSize = possibleBlock.Size
+                local PartColor = possibleBlock.Color
+                local PartClass = possibleBlock.ClassName
+                local PartRotation = possibleBlock.Rotation
+                local PartMaterial = possibleBlock.Material
+                local PartShape = possibleBlock.Shape
+                local wedgeAngle = math.atan(PartSize.Y / PartSize.Z)
+                local angledSurfaceLength = math.sqrt(PartSize.Y ^ 2 + PartSize.Z ^ 2)
+                local PositionToPlace = CFrame.new(PartPosition)
+
+
+                if getgenv().UseBlobsPos == true then
+                    PositionToPlace = CFrame.new(PartPosition + Vector3.new(1.2,81.2,-3)) 
+                end
+                local wedgeSize = Vector3.new(PartSize.X, 1, angledSurfaceLength)
+                if PartClass == "Part" then
+                    PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                elseif PartClass == "WedgePart" then
+                    PositionToPlace *= CFrame.Angles(-wedgeAngle + math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                else
+                    PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                end
+
+                BlockToChoose = MaterialList[PartMaterial]
+                if UseSingle then
+                    BlockToChoose = MaterialList["Single"]
+                end
+
+                local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockToChoose).Value
+                if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
+                    PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockToChoose).Value
+                end
+
+                if PartShape == Enum.PartType.Block then
+                    coroutine.wrap(function()
+                        Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
+                    end)()
+                    repeat wait() until found[i]
+                    if PartClass == "Part" then
+                       table.insert(Parts[i], {PartSize, PartColor})       
+                    elseif PartClass == "WedgePart" then
+                        table.insert(Parts[i], {wedgeSize, PartColor})
+                    else
+                       table.insert(Parts[i], {PartSize, PartColor})
+                    end
+                elseif PartShape == Enum.PartType.Cylinder then
+                    local cylinderRadius = math.max(PartSize.X, PartSize.Y, PartSize.Z) / 2
+                    local cylinderHeight = PartSize.X
+                    local cylinderSides = getgenv().cylinderQuality or 24
+                    local partThickness = 1 * cylinderRadius / 2.5
+                    local angleStep = 360 / cylinderSides
+
+                    for i = 1, cylinderSides do
+                        local CylSize = Vector3.new(partThickness, cylinderHeight, cylinderRadius * 2)
+                        local CylPos = CFrame.new(Vector3.new(PositionToPlace.X, PositionToPlace.Y, cylinderRadius + PositionToPlace.Z)) * CFrame.Angles(math.rad(PartRotation.X + 90), math.rad((i-1) * angleStep + PartRotation.Y), math.rad(PartRotation.Z))
+                        coroutine.wrap(function()
+                            Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CylPos, true, 1);
+                        end)()
+                        repeat wait() until found[i]
+                        table.insert(Parts[i], {CylSize, PartColor})
+                    end
+                end
+            end)()
+        end
+    end
+    print("Scaling and painting next! LN:", debug.traceback())
+    wait(2)
+    print("Scaling and painting! LN:", debug.traceback())
     for i = 1, #Parts do
         local Part = Parts[i][1]
         local Size = Parts[i][2][1]
@@ -202,32 +211,39 @@ elseif Mode == "model" then
     end
 elseif Mode == "copy_buildplot" then
     for i,possibleBlock in pairs(workspace:GetChildren()) do
-        wait(Interval)
         if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == getgenv().player then
-            local PartSize = possibleBlock.PrimaryPart.Size
-            local PartColor = possibleBlock.PrimaryPart.Color
-            local PartClass = possibleBlock.PrimaryPart.ClassName
-            local PartRotation = possibleBlock.PrimaryPart.Rotation
-            local PartMaterial = possibleBlock.PrimaryPart.Material
-            local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position - possibleBlock.PrimaryPart.Position
-            local PositionToPlace = CFrame.new(0, 0, 0) - temp
-            PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
-            print(PositionToPlace)
-            local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(possibleBlock.Name).Value
-            if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
-                PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(possibleBlock.Name).Value
-            end
-            coroutine.wrap(function()
-                Build:InvokeServer(possibleBlock.Name, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
-            end)()
-            found = false
-            repeat wait() until found   
-            table.insert(Parts[#Parts], {PartSize, PartColor})
+            table.insert(found, false)
         end
     end
-    print("Scaling and painting next!")
-    wait()
-    print("Scaling and painting!")
+
+    for i,possibleBlock in pairs(workspace:GetChildren()) do
+        wait(Interval)
+        if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == getgenv().player then
+            coroutine.wrap(function()
+                local PartSize = possibleBlock.PrimaryPart.Size
+                local PartColor = possibleBlock.PrimaryPart.Color
+                local PartClass = possibleBlock.PrimaryPart.ClassName
+                local PartRotation = possibleBlock.PrimaryPart.Rotation
+                local PartMaterial = possibleBlock.PrimaryPart.Material
+                local temp = workspace:FindFirstChild(tostring(game.Players:FindFirstChild(getgenv().player).TeamColor).."Zone").Position - possibleBlock.PrimaryPart.Position
+                local PositionToPlace = CFrame.new(0, 0, 0) - temp
+                PositionToPlace *= CFrame.Angles(math.rad(PartRotation.X), math.rad(PartRotation.Y), math.rad(PartRotation.Z))
+                print(PositionToPlace)
+                local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(possibleBlock.Name).Value
+                if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
+                    PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(possibleBlock.Name).Value
+                end
+                coroutine.wrap(function()
+                    Build:InvokeServer(possibleBlock.Name, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
+                end)()
+                repeat wait() until found[i]
+                table.insert(Parts[i], {Size, Color})
+            end)()
+        end
+    end
+    print("Scaling and painting next! LN:", debug.traceback())
+    wait(2)
+    print("Scaling and painting! LN:", debug.traceback())
     for i = 1, #Parts do
         local Part = Parts[i][1]
         local Size = Parts[i][2][1]
@@ -258,28 +274,31 @@ elseif Mode == "copy_savefile" then
 elseif Mode == "copy_buildfile" then
     local filecontent = readfile("ZechUI/ZechBAB/"..getgenv().filename..".ZBaB")
     local list = filecontent:split("|")
-    for i, block in pairs(list) do
-        wait(Interval)
-        local Pos = Vector3.new(unpack(block:split(delim)[1]:split(", ")))
-        local Rotation = Vector3.new(unpack(block:split(delim)[2]:split(", ")))
-        local Size = Vector3.new(unpack(block:split(delim)[3]:split(", ")))
-        local Color = Color3.new(unpack(block:split(delim)[4]:split(", ")))
-        local BlockName = tostring(block:split(delim)[5])
-        local CFr = CFrame.new(Pos) * CFrame.Angles(math.rad(Rotation.X), math.rad(Rotation.Y), math.rad(Rotation.Z))
-        local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockName).Value
-        if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
-            PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockName).Value
-        end
-        coroutine.wrap(function()
-            Build:InvokeServer(BlockName, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CFr, true, 1);
-        end)()
-        found = false
-        repeat wait() until found 
-        table.insert(Parts[#Parts], {Size, Color})
+    for i,_ in pairs(list) do
+        table.insert(found, false)
     end
-    print("Scaling and painting next!")
-    wait()
-    print("Scaling and painting!")
+    for i, block in pairs(list) do
+        coroutine.wrap(function()
+            local Pos = Vector3.new(unpack(block:split(delim)[1]:split(", ")))
+            local Rotation = Vector3.new(unpack(block:split(delim)[2]:split(", ")))
+            local Size = Vector3.new(unpack(block:split(delim)[3]:split(", ")))
+            local Color = Color3.new(unpack(block:split(delim)[4]:split(", ")))
+            local BlockName = tostring(block:split(delim)[5])
+            local CFr = CFrame.new(Pos) * CFrame.Angles(math.rad(Rotation.X), math.rad(Rotation.Y), math.rad(Rotation.Z))
+            local PartCount = game.Players.LocalPlayer.Data:FindFirstChild(BlockName).Value
+            if game.Players.LocalPlayer.Settings.ShareBlocks.Value then
+                PartCount = game.Players:FindFirstChild(game.Players.LocalPlayer.Team.TeamLeader.Value).Data:FindFirstChild(BlockName).Value
+            end
+            coroutine.wrap(function()
+                Build:InvokeServer(BlockName, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CFr, true, 1);
+            end)()
+            repeat wait() until found[i]
+            table.insert(Parts[i], {Size, Color})
+        end)()
+    end
+    print("Scaling and painting next! LN:", debug.traceback())
+    wait(2)
+    print("Scaling and painting! LN:", debug.traceback())
     for i = 1, #Parts do
         local Part = Parts[i][1]
         local Size = Parts[i][2][1]
@@ -292,7 +311,7 @@ elseif Mode == "copy_buildfile" then
         end)()
     end
 else
-    warn("No mode selected!")
+    warn("No mode selected! LN:", debug.traceback())
 end
 
 getgenv().currentlyBuilding = false

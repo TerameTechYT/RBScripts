@@ -72,6 +72,11 @@ end
 local autoFarmRun = 1
 while wait() do
     if (getgenv().AutoFarmEnabled and game.Players.LocalPlayer.Data.Gold.Value <= getgenv().GoldGoal) then
+        getgenv().TreasureAutoFarm = {
+            Enabled = getgenv().AutoFarmEnabled, -- // Toggle the auto farm on and off
+            Teleport = 3.6, -- // How fast between each teleport between the stages and stuff
+            TimeBetweenRuns = 6 -- // How long to wait until it goes to the next run
+        }
         print("Initialising Auto Farm: Run " .. autoFarmRun)
         autoFarm(autoFarmRun)
         autoFarmRun = autoFarmRun + 1

@@ -1,5 +1,4 @@
 wait()
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
@@ -143,26 +142,30 @@ VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder", workspace)
 
+
 player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
 
-loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
-
-
 player.Character.Humanoid.Health = 0
+
+loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
 
 Char = nil
 
 Camera.CameraType = Enum.CameraType.Scriptable
-
+Camera.CFrame *= CFrame.Angles(0,0,0)
 Camera.HeadScale = 2
-
 game:GetService("RunService").Stepped:Connect(function()
 	if vbreak == true then return end
-	lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
-	righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
-	Headpos = workspace.CurrentCamera:GetRenderCFrame()
+    if VRService.VREnabled then
+	    lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
+	    righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
+    else
+    	lefthandpos = CFrame.new()
+	    righthandpos = CFrame.new()
+    end
+    Headpos = workspace.CurrentCamera:GetRenderCFrame()
 end)
 
 for i,v in pairs (clone:GetDescendants()) do
@@ -173,17 +176,17 @@ end
 
 player.CharacterAppearanceLoaded:Connect(function(Char)
     wait()
-    print("hello!")
+    
 	if player.Character ~= nil then
 		if vbreak == true then return end
-		
+		if ebreak == true then return end
+		print("hello!")
 		Char = Char
 		
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 		Char.Humanoid:Destroy()
 		
-		Char.Torso:Destroy()
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
 		
@@ -203,6 +206,8 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
 			Char.Head.CFrame = Headpos
 			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+            Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+            Char.Torso.CFrame = Headpos - Headpos.UpVector * 1.5
 			for i,v in pairs(Char:GetDescendants()) do
 				if v:IsA("Accessory") then
 					v.Handle.CFrame = clone[v.Name].Handle.CFrame
@@ -210,6 +215,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			end
 		end
 	end
+    ebreak = true
 end)
 
 cooldown = false
@@ -217,10 +223,9 @@ cooldown = false
 UserInputService = game:GetService("UserInputService")
 
 UserInputService.InputChanged:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
-		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/3)
-		Camera.CFrame += righthandpos.RightVector * (input.Position.X/3)
-		
+    if input.KeyCode == Enum.KeyCode.Thumbstick2 then
+		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2.5)
+		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2.5)
 	end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30
@@ -230,7 +235,7 @@ UserInputService.InputChanged:Connect(function(input)
 
 		Camera.CFrame *= CFrame.Angles(0,math.rad(angle),0)
 		cooldown = true
-		wait(0.4)
+		wait(0.3)
 		cooldown = false
 	end
 end)

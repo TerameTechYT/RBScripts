@@ -8,7 +8,7 @@ if not getgenv().Network then
 		Connections = {};
 		Output = {
 			Enabled = true;
-			Prefix = "[NETWORK] ";
+			Prefix = "[NETWORK BYPASS] ";
 			Send = function(Type,Output,BypassOutput)
 				if typeof(Type) == "function" and (Type == print or Type == warn or Type == error) and typeof(Output) == "string" and (typeof(BypassOutput) == "nil" or typeof(BypassOutput) == "boolean") then
 					if Network["Output"].Enabled == true or BypassOutput == true then
@@ -294,8 +294,10 @@ UserInputService.InputChanged:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
-
 	end
+    if input.KeyCode == Enum.KeyCode.ButtonA then
+        Camera.CFrame += CFrame.new(0,0.05,0)
+    end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30
 		if -input.Position.X < 0 then

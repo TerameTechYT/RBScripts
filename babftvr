@@ -133,6 +133,7 @@ end
 
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
+wait(1)
 
 player = game:GetService("Players").LocalPlayer
 Camera = workspace.CurrentCamera

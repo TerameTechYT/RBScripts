@@ -175,8 +175,6 @@ for i,v in pairs (clone:GetDescendants()) do
 end
 
 player.CharacterAppearanceLoaded:Connect(function(Char)
-    wait()
-    
 	if player.Character ~= nil then
 		if vbreak == true then return end	
 		Char = Char

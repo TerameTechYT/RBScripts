@@ -149,7 +149,7 @@ clone.Parent = folder
 
 player.Character.Humanoid.Health = 0
 
-loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
+-- loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
 
 Char = nil
 
@@ -185,7 +185,9 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		Char:WaitForChild("Head").CanCollide = false
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
-		
+        Char.Humanoid:Destroy()
+		Char.Torso:Destroy()
+
 		for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)
@@ -196,7 +198,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 				v.Handle.Transparency = 1
 			end
 		end
-
+		
 		while task.wait() do
 			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65

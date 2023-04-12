@@ -206,7 +206,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)
 				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-				v.CanCollide = false
+				v.CanCollide = true
 			end
 			if v:IsA("Accessory") then
 				v.Handle.Transparency = 1

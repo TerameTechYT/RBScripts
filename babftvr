@@ -14,6 +14,9 @@ Updates/Bugfixes may come.
 Network libary made by 4eyes.
 
 ]]
+local mt = getrawmetatable(game);
+setreadonly(mt, false);
+local old = mt.__index
 
 wait(2)
 Noclip = true
@@ -165,7 +168,16 @@ player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
 
-workspace.FallenPartsDestroyHeight=0/0
+mt.__index = function(a,b)
+    if tostring(a) == "workspace" then
+        if tostring(b) == "FallenPartsDestroyHeight" then
+            return 0/0;
+        end
+    end
+    return old(a, b)
+end)
+loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/antikill'))()
+
 
 player.Character.Humanoid.Health = 0
 

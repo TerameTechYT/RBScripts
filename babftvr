@@ -201,42 +201,44 @@ for i,v in pairs (clone:GetDescendants()) do
 	end
 end
 
-if player.Character ~= nil then
-	if vbreak == true then return end
-	
-	Char = Char
-	
-	mouse.TargetFilter = Char
-	Char:WaitForChild("Head").CanCollide = false
-	Char.Humanoid:Destroy()
-	
-	Char.Torso:Destroy()
-	Char["Left Leg"]:Destroy()
-	Char["Right Leg"]:Destroy()
-	
-	for i,v in pairs(Char:GetDescendants()) do
-		if v:IsA("BasePart") then
-            Network.RetainPart(v)
-			v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-			v.CanCollide = false
-		end
-		if v:IsA("Accessory") then
-			v.Handle.Transparency = 1
-		end
-	end
-
-	while task.wait() do
-		Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-		Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-		Char.Head.CFrame = Headpos
-		clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+player.CharacterAppearanceLoaded:Connect(function(Char)
+	if player.Character ~= nil then
+		if vbreak == true then return end
+		
+		Char = Char
+		
+		mouse.TargetFilter = Char
+		Char:WaitForChild("Head").CanCollide = false
+		Char.Humanoid:Destroy()
+		
+		Char.Torso:Destroy()
+		Char["Left Leg"]:Destroy()
+		Char["Right Leg"]:Destroy()
+		
 		for i,v in pairs(Char:GetDescendants()) do
+			if v:IsA("BasePart") then
+                Network.RetainPart(v)
+				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+				v.CanCollide = false
+			end
 			if v:IsA("Accessory") then
-				v.Handle.CFrame = clone[v.Name].Handle.CFrame
+				v.Handle.Transparency = 1
+			end
+		end
+
+		while task.wait() do
+			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+			Char.Head.CFrame = Headpos
+			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+			for i,v in pairs(Char:GetDescendants()) do
+				if v:IsA("Accessory") then
+					v.Handle.CFrame = clone[v.Name].Handle.CFrame
+				end
 			end
 		end
 	end
-end
+end)
 
 cooldown = false
 

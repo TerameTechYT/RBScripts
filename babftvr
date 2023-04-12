@@ -167,8 +167,6 @@ clone.Parent = folder
 
 player.Character.Humanoid.Health = 0
 
-player.Character = nil
-
 Char = nil
 
 Camera.CameraType = Enum.CameraType.Scriptable
@@ -212,10 +210,6 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 				v.Handle.Transparency = 1
 			end
 		end
-
-		player.Character = nil
-		
-
 
 		while task.wait() do
 			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65

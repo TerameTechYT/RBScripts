@@ -245,7 +245,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			end
 		end
 
-		con; con = game:GetService("RunService").Stepped:Connect(function()
+		while task.wait() do
             if RigType.Name == "R6" then
 			    Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
                 Char["Left Arm"].Transparency = 1
@@ -282,7 +282,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 					v.Handle.CFrame = clone[v.Name].Handle.CFrame
 				end
 			end
-		end)
+		end
 	end
 end)
 

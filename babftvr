@@ -233,7 +233,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
             end
         end
         RigType = Char.Humanoid.RigType
-		-- Char.Humanoid:Destroy()
+		Char.Humanoid:Destroy()
 		for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)

@@ -1,25 +1,4 @@
---[[
-Made by Rouxhaver
-
-VR HeadSet required
-Use R6 avatar
-do not edit avatar while script is running.
-
-Controls:
-Right joystick to move in direction of hand.
-Left joystick to rotate.
-
-Notes:
-Updates/Bugfixes may come.
-Network libary made by 4eyes.
-
-]]
-local mt = getrawmetatable(game);
-setreadonly(mt, false);
-local old = mt.__index
-
-wait(2)
-Noclip = true
+wait()
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -162,22 +141,13 @@ mouse = player:GetMouse()
 
 VRService = game:GetService("VRService")
 
-folder = Instance.new("Folder",workspace)
+folder = Instance.new("Folder", workspace)
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
 
-mt.__index = function(a,b)
-    if tostring(a) == "workspace" then
-        if tostring(b) == "FallenPartsDestroyHeight" then
-			print("e")
-            return 0/0;
-        end
-    end
-    return old(a, b)
-end
-loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/antikill'))()
+loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
 
 
 player.Character.Humanoid.Health = 0
@@ -202,6 +172,8 @@ for i,v in pairs (clone:GetDescendants()) do
 end
 
 player.CharacterAppearanceLoaded:Connect(function(Char)
+    wait()
+    print("hello!")
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		

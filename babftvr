@@ -143,6 +143,10 @@ mouse = player:GetMouse()
 VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder",workspace)
+if player.Character.Humanoid.RigType.Name == "R15" then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/r6'))()
+	wait(2)
+end
 local hand1 = player.Character["Left Arm"]:Clone()
 local hand2 = player.Character["Right Arm"]:Clone()
 local spawn = Instance.new("SpawnLocation", folder)
@@ -196,11 +200,6 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
-
-        if Char.Humanoid.RigType.Name == "R15" then
-            require(6861971724).convert(Char.Name)
-			wait(2)
-        end
 
 		Char.Humanoid:Destroy()
 

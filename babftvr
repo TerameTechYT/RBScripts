@@ -171,6 +171,7 @@ clone.Parent = folder
 mt.__index = function(a,b)
     if tostring(a) == "workspace" then
         if tostring(b) == "FallenPartsDestroyHeight" then
+			print("e")
             return 0/0;
         end
     end

@@ -282,7 +282,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 					v.Handle.CFrame = clone[v.Name].Handle.CFrame
 				end
 			end
-		end
+		end	
 	end
 end)
 

@@ -1,254 +1,218 @@
-wait()
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-local IsR15 = LocalPlayer.Character.Humanoid.RigType.Name == "R15"
+local blocks = getgenv().blocks
+if blocks == nil then
+	blocks = {}
+	for i,v in pairs(game.ReplicatedStorage.BuildingParts:GetChildren()) do
+		if v:IsA("Model") and not v.Name:find("X") and not v.Name:find("XY") and not v.Name:find("Y") and not v.Name:find("Z") and not v.Name:find("Tool") then
+			table.insert(blocks, v.Name)
+		end
+	end
+end
 
-if not getgenv().Network then
-	getgenv().Network = {
-		BaseParts = {};
-		FakeConnections = {};
-		Connections = {};
-		Output = {
-			Enabled = true;
-			Prefix = "[NETWORK] ";
-			Send = function(Type,Output,BypassOutput)
-				if typeof(Type) == "function" and (Type == print or Type == warn or Type == error) and typeof(Output) == "string" and (typeof(BypassOutput) == "nil" or typeof(BypassOutput) == "boolean") then
-					if Network["Output"].Enabled == true or BypassOutput == true then
-						Type(Network["Output"].Prefix..Output);
-					end;
-				elseif Network["Output"].Enabled == true then
-					error(Network["Output"].Prefix.."Output Send Error : Invalid syntax.");
-				end;
-			end;
-		};
-		CharacterRelative = false;
+getgenv().AutoFarmEnabled = false
+getgenv().GoldGoal = math.huge
+
+if getgenv().MaterialList == nil then
+	getgenv().MaterialList = {
+		["Single"] = "PlasticBlock",
+		["ReplaceTool"] = "PlasticBlock",
+		[Enum.Material.Asphalt] = "ConcreteBlock",
+		[Enum.Material.Basalt] = "CoalBlock",
+		[Enum.Material.Brick] = "BrickBlock",
+		[Enum.Material.Cobblestone] = "StoneBlock",
+		[Enum.Material.Concrete] = "ConcreteBlock",
+		[Enum.Material.CorrodedMetal] = "RustedBlock",
+		[Enum.Material.CrackedLava] = "ObsidianBlock",
+		[Enum.Material.DiamondPlate] = "TitaniumBlock",
+		[Enum.Material.Fabric] = "FabricBlock",
+		[Enum.Material.Foil] = "BouncyBlock",
+		[Enum.Material.ForceField] = "Glass",
+		[Enum.Material.Glass] = "GoldBlock",
+		[Enum.Material.Granite] = "ObsidianBlock",
+		[Enum.Material.Grass] = "GrassBlock",
+		[Enum.Material.Ground] = "CoalBlock",
+		[Enum.Material.Ice] = "IceBlock",
+		[Enum.Material.LeafyGrass] = "GrassBlock",
+		[Enum.Material.Limestone] = "CoalBlock",
+		[Enum.Material.Marble] = "MarbleBlock",
+		[Enum.Material.Metal] = "MetalBlock",
+		[Enum.Material.Mud] = "CoalBlock",
+		[Enum.Material.Neon] = "NeonBlock",
+		[Enum.Material.Pavement] = "ConcreteBlock",
+		[Enum.Material.Pebble] = "StoneBlock",
+		[Enum.Material.Plastic] = "PlasticBlock",
+		[Enum.Material.Rock] = "CoalBlock",
+		[Enum.Material.Salt] = "SandBlock",
+		[Enum.Material.Sand] = "SandBlock",
+		[Enum.Material.Sandstone] = "CoalBlock",
+		[Enum.Material.Slate] = "CoalBlock",
+		[Enum.Material.SmoothPlastic] = "PlasticBlock",
+		[Enum.Material.Snow] = "SandBlock",
+		[Enum.Material.Wood] = "SmoothWoodBlock",
+		[Enum.Material.WoodPlanks] = "WoodBlock",
 	}
-
-	Network["Output"].Send(print,": Loading.")
-	Network["Velocity"] = Vector3.new(14.46262424,14.46262424,14.46262424); --exactly 25.1 magnitude
-	Network["RetainPart"] = function(Part,ReturnFakePart) --function for retaining ownership of unanchored parts
-		assert(typeof(Part) == "Instance" and Part:IsA("BasePart") and Part:IsDescendantOf(workspace),Network["Output"].Prefix.."RetainPart Error : Invalid syntax: Arg1 (Part) must be a BasePart which is a descendant of workspace.")
-		assert(typeof(ReturnFakePart) == "boolean" or typeof(ReturnFakePart) == "nil",Network["Output"].Prefix.."RetainPart Error : Invalid syntax: Arg2 (ReturnFakePart) must be a boolean or nil.")
-		if not table.find(Network["BaseParts"],Part) then
-			if Network.CharacterRelative == true then
-				local Character = LocalPlayer.Character
-				if Character and Character.PrimaryPart then
-					local Distance = (Character.PrimaryPart.Position-Part.Position).Magnitude
-					if Distance > 1000 then
-						Network["Output"].Send(warn,"RetainPart Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as it is more than "..gethiddenproperty(LocalPlayer,"MaximumSimulationRadius").." studs away.")
-						return false
-					end
-				else
-					Network["Output"].Send(warn,"RetainPart Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as the LocalPlayer Character's PrimaryPart does not exist.")
-					return false
-				end
-			end
-			table.insert(Network["BaseParts"],Part)
-			Part.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-			Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
-			if ReturnFakePart == true then
-				return FakePart
-			end
-		else
-			Network["Output"].Send(warn,"RetainPart Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as it already active.")
-			return false
-		end
-	end
-
-	Network["RemovePart"] = function(Part) --function for removing ownership of unanchored part
-		assert(typeof(Part) == "Instance" and Part:IsA("BasePart"),Network["Output"].Prefix.."RemovePart Error : Invalid syntax: Arg1 (Part) must be a BasePart.")
-		local Index = table.find(Network["BaseParts"],Part)
-		if Index then
-			table.remove(Network["BaseParts"],Index)
-			--Network["Output"].Send(print,"RemovePart Output: PartOwnership removed from BasePart "..Part:GetFullName()..".")
-		else
-			Network["Output"].Send(warn,"RemovePart Warning : BasePart "..Part:GetFullName().." not found in BaseParts table.")
-		end
-	end
-
-	Network["SuperStepper"] = Instance.new("BindableEvent") --make super fast event to connect to
-	for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
-		Event:Connect(function()
-			return Network["SuperStepper"]:Fire(Network["SuperStepper"],tick())
-		end)
-	end
-
-	Network["PartOwnership"] = {};
-	Network["PartOwnership"]["PreMethodSettings"] = {};
-	Network["PartOwnership"]["Enabled"] = false;
-	Network["PartOwnership"]["Enable"] = coroutine.create(function() --creating a thread for network stuff
-		if Network["PartOwnership"]["Enabled"] == false then
-			Network["PartOwnership"]["Enabled"] = true --do cool network stuff before doing more cool network stuff
-			Network["PartOwnership"]["PreMethodSettings"].ReplicationFocus = LocalPlayer.ReplicationFocus
-			LocalPlayer.ReplicationFocus = workspace
-			Network["PartOwnership"]["PreMethodSettings"].SimulationRadius = gethiddenproperty(LocalPlayer,"SimulationRadius")
-			Network["PartOwnership"]["Connection"] = Network["SuperStepper"].Event:Connect(function() --super fast asynchronous loop
-				sethiddenproperty(LocalPlayer,"SimulationRadius",1/0)
-				for _,Part in pairs(Network["BaseParts"]) do --loop through parts and do network stuff
-					coroutine.wrap(function()
-						if Part:IsDescendantOf(workspace) then
-							if Network.CharacterRelative == true then
-								local Character = LocalPlayer.Character;
-								if Character and Character.PrimaryPart then
-									local Distance = (Character.PrimaryPart.Position - Part.Position).Magnitude
-									if Distance > 1000 then
-										Network["Output"].Send(warn,"PartOwnership Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as it is more than "..gethiddenproperty(LocalPlayer,"MaximumSimulationRadius").." studs away.")
-										Lost = true;
-										Network["RemovePart"](Part)
-									end
-								else
-									Network["Output"].Send(warn,"PartOwnership Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as the LocalPlayer Character's PrimaryPart does not exist.")
-								end
-							end
-							Part.Velocity = Network["Velocity"]+Vector3.new(0,math.cos(tick()*10)/100,0) --keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
-						else
-							Network["RemovePart"](Part)
-						end
-					end)()
-				end
-			end)
-			Network["Output"].Send(print,"PartOwnership Output : PartOwnership enabled.")
-		else
-			Network["Output"].Send(warn,"PartOwnership Output : PartOwnership already enabled.")
-		end
-	end)
-	Network["PartOwnership"]["Disable"] = coroutine.create(function()
-		if Network["PartOwnership"]["Connection"] then
-			Network["PartOwnership"]["Connection"]:Disconnect()
-			LocalPlayer.ReplicationFocus = Network["PartOwnership"]["PreMethodSettings"].ReplicationFocus
-			sethiddenproperty(LocalPlayer,"SimulationRadius",Network["PartOwnership"]["PreMethodSettings"].SimulationRadius)
-			Network["PartOwnership"]["PreMethodSettings"] = {}
-			for _,Part in pairs(Network["BaseParts"]) do
-				Network["RemovePart"](Part)
-			end
-			Network["PartOwnership"]["Enabled"] = false
-			Network["Output"].Send(print,"PartOwnership Output : PartOwnership disabled.")
-		else
-			Network["Output"].Send(warn,"PartOwnership Output : PartOwnership already disabled.")
-		end
-	end)
-	Network["Output"].Send(print,": Loaded.")
 end
+local MaterialList = getgenv().MaterialList
 
-coroutine.resume(Network["PartOwnership"]["Enable"])
+local useOneBlock = false
+local waitTime = 0
 
-wait()
+local DiscordLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt"))()
 
-player = game:GetService("Players").LocalPlayer
-Camera = workspace.CurrentCamera
-mouse = player:GetMouse()
+local win = DiscordLib:Window("BuildABoat Autobuilder")
 
-VRService = game:GetService("VRService")
+local serv = win:Server("Main", "")
 
-folder = Instance.new("Folder", workspace)
+local btns = serv:Channel("Functions")
 
-
-player.Character.Archivable = true
-clone = player.Character:Clone()
-clone.Parent = folder
-
-player.Character.Humanoid.Health = 0
-
-loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
-
-Char = nil
-
-Camera.CameraType = Enum.CameraType.Scriptable
-Camera.CFrame *= CFrame.Angles(0,0,0)
-Camera.HeadScale = 2
-game:GetService("RunService").Stepped:Connect(function()
-	if vbreak == true then return end
-    if VRService.VREnabled then
-	    lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
-	    righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
-    else
-    	lefthandpos = CFrame.new()
-	    righthandpos = CFrame.new()
-    end
-    Headpos = workspace.CurrentCamera:GetRenderCFrame()
+btns:Textbox("Model ID", "Model ID Here", false, function(text)
+	if tonumber(text) == nil then
+		print("why>:C")
+		return
+	end
+	getgenv().Mode = "model"
+	getgenv().modelId = tonumber(text)
+	print(getgenv().modelId)
+end)
+btns:Button("Build Model", function()
+	getgenv().Mode = "model"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Model Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+	end
 end)
 
-for i,v in pairs (clone:GetDescendants()) do
-	if v:IsA("BasePart") then
-		v.Transparency = 1
+btns:Textbox("Manual ID", "Manual List Here", false, function(text)
+	getgenv().list = text
+	getgenv().Mode = "manual"
+end)
+
+btns:Button("Build Manual", function()
+	getgenv().Mode = "manual"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Manual Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring("getgenv().ManualTable = "..getgenv().list)()
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
 	end
+end)
+
+btns:Textbox("Copy Build", "Player Here", false, function(text)
+	getgenv().player = text
+	print(getgenv().player)
+end)
+
+btns:Textbox("Copy Build", "File Name Here", false, function(text)
+	getgenv().filename = text
+	print(getgenv().filename)
+end)
+
+btns:Button("Copy Build (Plot)", function()
+	getgenv().Mode = "copy_buildplot"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+	end
+end)
+
+
+btns:Button("Copy Build (Save)", function()
+	getgenv().Mode = "copy_savefile"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+	end
+end)
+
+btns:Button("Copy Build (Build)", function()
+	getgenv().Mode = "copy_buildfile"
+	if getgenv().currentlyBuilding then
+		getgenv().currentlyBuilding = false
+		getgenv().stop = true
+	else
+		getgenv().currentlyBuilding = true
+		DiscordLib:Notification("Building", "Started Copy Building, press button again to stop building!", "Okay")
+		wait(waitTime)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/babftv3"))()
+	end
+end)
+
+btns:Button("Give replace tool (material in \"Materials\")", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/replacetool"))()
+end)
+
+btns:Textbox("Gold Goal (how much gold to get before stopping)", "Goal Here", false, function(text)
+	getgenv().GoldGoal = tonumber(text) or math.huge
+end)
+
+btns:Button("Autofarm", function()
+	if getgenv().AutoFarmEnabled then
+		getgenv().AutoFarmEnabled = false
+		DiscordLib:Notification("Autofarming", "Stopped autofarming!", "Okay")
+	else
+		DiscordLib:Notification("Autofarming", "Started autofarming!", "Okay")
+		getgenv().AutoFarmEnabled = true
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/auto"))()
+	end
+end)
+
+local tgls = serv:Channel("Settings")
+
+tgls:Toggle("Use Single Block",false, function(bool)
+	useOneBlock = bool
+	getgenv().useOneBlock = useOneBlock
+end)	
+
+tgls:Toggle("Display Block Health (On Mouse Hover)",false, function(bool)
+	getgenv().blockHealth = useOneBlock
+end)	
+
+tgls:Toggle("Use Blobs Ship Pos",false, function(bool)
+	getgenv().UseBlobsPos = bool
+end)	
+
+local slider = tgls:Slider("Block Placement Inverval (in Miliseconds)", 0, 10000, 0, function(t)
+	print(t)
+	waitTime = t / 1000
+	getgenv().interval = waitTime
+end)
+
+local slider2 = tgls:Slider("Cylinder quality", 16, 64, 16, function(e)
+	print(t)
+	getgenv().cylinderQuality = e
+end)
+
+local drops = serv:Channel("Materials")
+
+local drop = drops:Dropdown("Single Material", blocks, function(val)
+	MaterialList["Single"] = val
+end)
+
+local drop = drops:Dropdown("Replace Tool Material", blocks, function(val)
+	MaterialList["ReplaceTool"] = val
+end)
+
+for i,v in pairs(Enum.Material:GetEnumItems()) do
+	local drop = drops:Dropdown(v.Name.." Material", blocks, function(val)
+		MaterialList[v] = val
+	end)
 end
-
-player.CharacterAppearanceLoaded:Connect(function(Char)
-    wait()
-    
-	if player.Character ~= nil then
-		if vbreak == true then return end
-		Char = Char
-		
-		mouse.TargetFilter = Char
-		Char:WaitForChild("Head").CanCollide = false
-        -- if Char.Humanoid.RigType == Enum.HumanoidRigType.R15 then
-        --     local Main = game.Players:GetHumanoidDescriptionFromUserId(Char.CharacterAppearanceId)
-        --     local morph = game.Players:CreateHumanoidModelFromDescription(Main, Enum.HumanoidRigType.R6)
-        --     morph:SetPrimaryPartCFrame(Char.PrimaryPart.CFrame)
-        --     morph.Name = Char.Name
-        --     Char:Destroy()
-        --     Char = morph
-        --     morph.Parent = workspace
-        -- end	
-		Char.Humanoid:Destroy()
-		for i,v in pairs(Char:GetDescendants()) do
-            if v.Name:find("Leg") then
-                v:Destroy()
-            end
-        end
-		for i,v in pairs(Char:GetDescendants()) do
-			if v:IsA("BasePart") then
-                Network.RetainPart(v)
-				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-				v.CanCollide = false
-			end
-			if v:IsA("Accessory") then
-				v.Handle.Transparency = 1
-			end
-		end
-        wait()
-        while task.wait() do
-            Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-            Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            Char.Head.CFrame = Headpos
-            clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
-            Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
-            Char.Torso.CFrame = Headpos - Headpos.UpVector * 1.5
-            for i,v in pairs(Char:GetDescendants()) do
-            	if v:IsA("Accessory") then
-            		v.Handle.CFrame = clone[v.Name].Handle.CFrame
-            	end
-            end
-        end
-	end
-end)
-
-cooldown = false
-
-UserInputService = game:GetService("UserInputService")
-
-UserInputService.InputChanged:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Thumbstick2 then
-		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2.5)
-		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2.5)
-	end
-	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
-		local angle = 30
-		if -input.Position.X < 0 then
-			angle = -30
-		end
-
-		Camera.CFrame *= CFrame.Angles(0,math.rad(angle),0)
-		cooldown = true
-		wait(0.4)
-		cooldown = false
-	end
-end)
-
-Camera:GetPropertyChangedSignal("CameraType"):Connect(function()
-	if vbreak == true then return end
-	Camera.CameraType = Enum.CameraType.Scriptable
-end)

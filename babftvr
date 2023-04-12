@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
-
 if not getgenv().Network then
 	getgenv().Network = {
 		BaseParts = {};
@@ -129,6 +128,11 @@ if not getgenv().Network then
 	Network["Output"].Send(print,": Loaded.")
 end
 
+-- if LocalPlayer.Character.Humanoid.RigType.Name == "R15" then
+--     loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/r6'))()
+-- 	wait(2)
+-- end
+
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
 wait()
@@ -143,15 +147,31 @@ mouse = player:GetMouse()
 VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder",workspace)
-if player.Character.Humanoid.RigType.Name == "R15" then
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/r6'))()
-	wait(2)
+if LocalPlayer.Character.Humanoid.RigType.Name == "R6" then
+    hand1 = player.Character["Left Arm"]:Clone()
+    hand2 = player.Character["Right Arm"]:Clone()
+else
+    hand1 = player.Character["LeftUpperArm"]:Clone()
+    hand2 = player.Character["RightUpperArm"]:Clone()
+    hand3 = player.Character["LeftLowerArm"]:Clone()
+    hand4 = player.Character["RightLowerArm"]:Clone()
+    hand5 = player.Character["LeftHand"]:Clone()
+    hand6 = player.Character["RightHand"]:Clone()
+
+    hand3.Anchored = true
+    hand4.Anchored = true
+    hand5.Anchored = true
+    hand6.Anchored = true
+
+    hand3.CanCollide = true
+    hand4.CanCollide = true
+    hand5.CanCollide = true
+    hand6.CanCollide = true
 end
-local hand1 = player.Character["Left Arm"]:Clone()
-local hand2 = player.Character["Right Arm"]:Clone()
-local spawn = Instance.new("SpawnLocation", folder)
+spawn = Instance.new("SpawnLocation", folder)
 hand1.Anchored = true
 hand2.Anchored = true
+
 spawn.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
@@ -201,12 +221,19 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 
+        if Char.Humanoid.RigType.Name == "R6" then
+		    Char.Torso:Destroy()
+            Char["Left Leg"]:Destroy()
+		    Char["Right Leg"]:Destroy()
+        else
+            for i,v in pairs(Char:GetDescendants()) do
+                if v.Name:find("Leg") or v.Name:Find("Torso") or v.Name:find("Foot") then
+                    v:Destroy()
+                end
+            end
+        end
+        RigType = Char.Humanoid.RigType
 		Char.Humanoid:Destroy()
-
-		Char.Torso:Destroy()
-		Char["Left Leg"]:Destroy()
-		Char["Right Leg"]:Destroy()
-		
 		for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)
@@ -219,12 +246,33 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		end
 
 		while task.wait() do
-			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-            Char["Left Arm"].Transparency = 1
-			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            Char["Right Arm"].Transparency = 1
-            hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
-			hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+            if RigType.Name == "R6" then
+			    Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                Char["Left Arm"].Transparency = 1
+			    Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                Char["Right Arm"].Transparency = 1
+                hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
+			    hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+            else
+                Char["LeftUpperArm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                Char["LeftUpperArm"].Transparency = 1
+			    Char["RightUpperArm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                Char["RightUpperArm"].Transparency = 1
+                Char["LeftLowerArm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.5
+                Char["LeftLowerArm"].Transparency = 1
+                Char["RightLowerArm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.5   
+                Char["RightLowerArm"].Transparency = 1
+                Char["LeftHand"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.3
+                Char["LeftHand"].Transparency = 1
+                Char["RightHand"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.3
+                Char["RightHand"].Transparency = 1
+                hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
+			    hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                hand3.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.5	
+			    hand4.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.5
+                hand5.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.3	
+			    hand6.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.3
+            end
 			Char.Head.CFrame = Headpos
 			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 			spawn.CFrame = Headpos - Headpos.UpVector * 2
@@ -244,9 +292,9 @@ UserInputService = game:GetService("UserInputService")
 
 UserInputService.InputChanged:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
-		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/3)
-		Camera.CFrame += righthandpos.RightVector * (input.Position.X/3)
-		
+		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
+		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
+
 	end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30

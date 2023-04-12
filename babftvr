@@ -209,6 +209,8 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
             Char["Right Arm"].Transparency = 1
             hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 			hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+			hand1.Size = Char["Left Arm"].Size
+			hand2.Size = Char["Right Arm"].Size
 			Char.Head.CFrame = Headpos
 			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 			Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5

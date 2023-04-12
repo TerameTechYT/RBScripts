@@ -187,6 +187,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 
         if Char.Humanoid.RigType == Enum.RigType.R15 then
             require(6861971724).convert(Char.Name)
+			wait(2)
         end
 
 		Char.Humanoid:Destroy()

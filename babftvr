@@ -175,7 +175,7 @@ mt.__index = function(a,b)
         end
     end
     return old(a, b)
-end)
+end
 loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/antikill'))()
 
 

@@ -145,6 +145,15 @@ VRService = game:GetService("VRService")
 folder = Instance.new("Folder",workspace)
 local hand1 = Instance.new("Part", folder)
 local hand2 = Instance.new("Part", folder)
+local spawn = Instance.new("SpawnLocation", folder)
+hand1.Anchored = true
+hand2.Anchored = true
+spawn.Anchored = true
+hand1.CanCollide = true
+hand2.CanCollide = true
+spawn.CanCollide = true
+spawn.Transparency = 1
+player.RespawnLocation = spawn
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
@@ -212,10 +221,11 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
             Char["Left Arm"].Transparency = 1
 			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
             Char["Right Arm"].Transparency = 1
-            hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-			hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+            hand1.CFrame = Char["Left Arm"].CFrame
+			hand2.CFrame = Char["Right Arm"].CFrame
 			Char.Head.CFrame = Headpos
 			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+			spawn.CFrame = Headpos - Headpos.UpVector * 2
 			Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 			for i,v in pairs(Char:GetDescendants()) do   
 				if v:IsA("Accessory") then

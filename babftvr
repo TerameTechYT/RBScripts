@@ -81,7 +81,7 @@ if not getgenv().Network then
 			LocalPlayer.ReplicationFocus = workspace
 			Network["PartOwnership"]["PreMethodSettings"].SimulationRadius = gethiddenproperty(LocalPlayer,"SimulationRadius")
 			Network["PartOwnership"]["Connection"] = Network["SuperStepper"].Event:Connect(function() --super fast asynchronous loop
-				sethiddenproperty(LocalPlayer,"SimulationRadius", 1/0)
+				sethiddenproperty(LocalPlayer,"SimulationRadius", 0/0)
 				for _,Part in pairs(Network["BaseParts"]) do --loop through parts and do network stuff
 					coroutine.wrap(function()
 						if Part:IsDescendantOf(workspace) then
@@ -98,7 +98,7 @@ if not getgenv().Network then
 									Network["Output"].Send(warn,"PartOwnership Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as the LocalPlayer Character's PrimaryPart does not exist.")
 								end
 							end
-							Part.Velocity = Network["Velocity"] + Vector3.new(0,math.cos(tick())/50,0) --keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
+							Part.Velocity = Network["Velocity"] --+ Vector3.new(0,math.cos(tick())/50,0) keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
 						else
 							Network["RemovePart"](Part)
 						end
@@ -233,7 +233,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
             end
         end
         RigType = Char.Humanoid.RigType
-		Char.Humanoid:Destroy()
+		-- Char.Humanoid:Destroy()
 		for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)
@@ -296,7 +296,7 @@ UserInputService.InputChanged:Connect(function(input)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
     if input.KeyCode == Enum.KeyCode.ButtonA then
-        Camera.CFrame += CFrame.new(0,0.05,0)
+        Camera.CFrame += CFrame.new(0,0.1,0)
     end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30

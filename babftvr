@@ -245,7 +245,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			end
 		end
 
-		while task.wait() do
+		con; con = game:GetService("RunService").Stepped:Connect(function()
             if RigType.Name == "R6" then
 			    Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
                 Char["Left Arm"].Transparency = 1
@@ -273,16 +273,16 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
                 hand5.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.3	
 			    hand6.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.3
             end
-			Char.Head.CFrame = Headpos
-			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
-			spawn.CFrame = Headpos - Headpos.UpVector * 2
-			Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+            Char.Head.CFrame = Headpos
+	        clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+	        spawn.CFrame = Headpos - Headpos.UpVector * 2
+	        Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 			for i,v in pairs(Char:GetDescendants()) do   
 				if v:IsA("Accessory") then
 					v.Handle.CFrame = clone[v.Name].Handle.CFrame
 				end
 			end
-		end
+		end)
 	end
 end)
 

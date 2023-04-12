@@ -1,10 +1,10 @@
 --|| Settings:
 
 local StudsOffset = 0 -- Character height (negative if you're too high)
-local Smoothness = 0.5 -- Character interpolation (0.1 - 1 = smooth - rigid)
+local Smoothness = .5 -- Character interpolation (0.1 - 1 = smooth - rigid)
 
 local AnchorCharacter = true -- Prevent physics from causing inconsistencies
-local HideCharacter = true -- Hide character on a platform
+local HideCharacter = false -- Hide character on a platform
 local NoCollision = true -- Disable player collision
 
 local ChatEnabled = false -- See chat on your left hand in-game
@@ -60,15 +60,6 @@ Script = function()
 
     local VRService = game:GetService("VRService")
     local VRReady = VRService.VREnabled
-	
-	    local UserInputService = game:GetService("UserInputService")
-		    local RunService = game:GetService("RunService")
-			    local HttpService = game:GetService("HttpService")
-				    local StarterGui = game:GetService("StarterGui")
-					
-					    local HeadAccessories = {}
-						    local UsedAccessories = {}
-							 = VRService.VREnabled
 
     local UserInputService = game:GetService("UserInputService")
     local RunService = game:GetService("RunService")
@@ -438,16 +429,7 @@ Script = function()
         end
     end
 
-    if not VRReady = VRService.VREnabled
-	
-	    local UserInputService = game:GetService("UserInputService")
-		    local RunService = game:GetService("RunService")
-			    local HttpService = game:GetService("HttpService")
-				    local StarterGui = game:GetService("StarterGui")
-					
-					    local HeadAccessories = {}
-						    local UsedAccessories = {}
-							 then
+    if not VRReady then
         VirtualRig.RightUpperArm.ShoulderConstraint.RigidityEnabled = true
         VirtualRig.LeftUpperArm.ShoulderConstraint.RigidityEnabled = true
     end

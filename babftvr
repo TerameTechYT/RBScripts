@@ -152,6 +152,8 @@ spawn.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
 spawn.CanCollide = true
+hand1.Size = Vector3.new(1, 2, 1)
+hand2.Size = Vector3.new(1, 2, 1)
 spawn.Transparency = 1
 player.RespawnLocation = spawn
 

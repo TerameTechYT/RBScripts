@@ -152,8 +152,8 @@ spawn.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
 spawn.CanCollide = true
-hand1.Size = Vector3.new(2, 1, 1)
-hand2.Size = Vector3.new(2, 1, 1)
+hand1.Size = Vector3.new(1, 1, 2)
+hand2.Size = Vector3.new(1, 1, 2)
 spawn.Transparency = 1
 player.RespawnLocation = spawn
 
@@ -219,9 +219,9 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		end
 
 		while task.wait() do
-			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(0),0,0) - lefthandpos.LookVector * 0.65
+			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,math.rad(90)) - lefthandpos.LookVector * 0.65
             Char["Left Arm"].Transparency = 1
-			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(0),0,0) - righthandpos.LookVector * 0.65
+			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,math.rad(90)) - righthandpos.LookVector * 0.65
             Char["Right Arm"].Transparency = 1
             hand1.CFrame = Char["Left Arm"].CFrame
 			hand2.CFrame = Char["Right Arm"].CFrame

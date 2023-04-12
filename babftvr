@@ -194,7 +194,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 
-        if Char.Humanoid.RigType == Enum.RigType.R15 then
+        if Char.Humanoid.RigType.Name == "R15" then
             require(6861971724).convert(Char.Name)
 			wait(2)
         end

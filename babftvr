@@ -1,3 +1,21 @@
+--[[
+Made by Rouxhaver
+
+VR HeadSet required
+Use R6 avatar
+do not edit avatar while script is running.
+
+Controls:
+Right joystick to move in direction of hand.
+Left joystick to rotate.
+
+Notes:
+Updates/Bugfixes may come.
+Network libary made by 4eyes.
+
+]]
+
+wait(2)
 Noclip = true
 
 local Players = game:GetService("Players")
@@ -26,7 +44,7 @@ if not getgenv().Network then
 	}
 
 	Network["Output"].Send(print,": Loading.")
-	Network["Velocity"] = Vector3.new(28.9252485,28.9252485,28.9252485); --exactly 25.1 magnitude
+	Network["Velocity"] = Vector3.new(14.46262424,14.46262424,14.46262424); --exactly 25.1 magnitude
 	Network["RetainPart"] = function(Part,ReturnFakePart) --function for retaining ownership of unanchored parts
 		assert(typeof(Part) == "Instance" and Part:IsA("BasePart") and Part:IsDescendantOf(workspace),Network["Output"].Prefix.."RetainPart Error : Invalid syntax: Arg1 (Part) must be a BasePart which is a descendant of workspace.")
 		assert(typeof(ReturnFakePart) == "boolean" or typeof(ReturnFakePart) == "nil",Network["Output"].Prefix.."RetainPart Error : Invalid syntax: Arg2 (ReturnFakePart) must be a boolean or nil.")
@@ -46,7 +64,7 @@ if not getgenv().Network then
 			end
 			table.insert(Network["BaseParts"],Part)
 			Part.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-			Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
+			--Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
 			if ReturnFakePart == true then
 				return FakePart
 			end
@@ -133,6 +151,7 @@ end
 
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
+wait()
 
 player = game:GetService("Players").LocalPlayer
 Camera = workspace.CurrentCamera
@@ -145,6 +164,7 @@ folder = Instance.new("Folder",workspace)
 player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
+
 
 player.Character.Humanoid.Health = 0
 
@@ -168,7 +188,6 @@ for i,v in pairs (clone:GetDescendants()) do
 end
 
 player.CharacterAppearanceLoaded:Connect(function(Char)
-	wait()
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		
@@ -193,19 +212,22 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			end
 		end
 
-		while wait() do
+		while task.wait() do
 			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
 			Char.Head.CFrame = Headpos
 			clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 			for i,v in pairs(Char:GetDescendants()) do
-
 				if v:IsA("Accessory") then
 					v.Handle.CFrame = clone[v.Name].Handle.CFrame
 				end
 			end
 		end
 	end
+end)
+
+player.CharacterAppearanceLoaded:Connect(function(Char)
+	
 end)
 
 cooldown = false
@@ -216,6 +238,7 @@ UserInputService.InputChanged:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/3)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/3)
+		
 	end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30

@@ -138,7 +138,7 @@ StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 
 player = game:GetService("Players").LocalPlayer
 Camera = workspace.CurrentCamera
-mouse = player:GetMouse()\
+mouse = player:GetMouse()
 VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder",workspace)

@@ -152,6 +152,9 @@ hand2.CanCollide = true
 hand1.Parent = folder
 hand2.Parent = folder
 
+hand1.Transparency = 1
+hand2.Transparency = 1
+
 player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
@@ -199,11 +202,11 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 			Char:WaitForChild("Torso").Transparency = 1
 			Char["Left Leg"]:Destroy()
 			Char["Right Leg"]:Destroy()
-			Char["Left Arm"].Transparency = 1
-			Char["Right Arm"].Transparency = 1
+			-- Char["Left Arm"].Transparency = 1
+			-- Char["Right Arm"].Transparency = 1
 			Char.Humanoid.RequiresNeck = false
-			Char.Humanoid:Destroy()
-			Char.Torso:Destroy()
+			-- Char.Humanoid:Destroy()
+			-- Char.Torso:Destroy()
 			player.Character = nil
 			for i,v in pairs(Char:GetDescendants()) do
 				if v:IsA("BasePart") then
@@ -222,8 +225,8 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
 				coroutine.wrap(function()
-					Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-					Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+					Char.Torso["Left Shoulder"].C0 = (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+					Char.Torso["Right Shoulder"].C0 = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
 					hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 					hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
 					Char.Head.CFrame = Headpos

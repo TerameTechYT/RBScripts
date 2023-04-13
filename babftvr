@@ -253,12 +253,16 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
             Char["Right Arm"].Transparency = 1
             hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
 			hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+            Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
             Char.Head.CFrame = Headpos
 	        clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 	        spawn.CFrame = Headpos - Headpos.UpVector * 2
-			for i,v in pairs(Char:GetDescendants()) do  
-				if v:IsA("Accessory") then
-					v.Handle.CFrame = clone[v.Name].Handle.CFrame
+			for i,v in pairs(Char:GetDescendants()) do 
+				if v:IsA("Motor6D") and v.Name:find("Shoulder") then
+					v:Destroy()
+				end
+				if v:IsA("BasePart") then
+					v.CFrame = clone[v.Name].CFrame
 				end
 			end
 		end)	

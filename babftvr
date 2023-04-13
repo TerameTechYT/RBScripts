@@ -128,11 +128,6 @@ if not getgenv().Network then
 	Network["Output"].Send(print,": Loaded.")
 end
 
--- if LocalPlayer.Character.Humanoid.RigType.Name == "R15" then
---     loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/r6'))()
--- 	wait(2)
--- end
-
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
 wait()
@@ -148,45 +143,18 @@ VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder",workspace)
 folder.Name = "PlayerClone"
-if LocalPlayer.Character.Humanoid.RigType.Name == "R6" then
-    hand1 = player.Character["Left Arm"]:Clone()
-    hand2 = player.Character["Right Arm"]:Clone()
-else
-    hand1 = player.Character["LeftUpperArm"]:Clone()
-    hand2 = player.Character["RightUpperArm"]:Clone()
-    hand3 = player.Character["LeftLowerArm"]:Clone()
-    hand4 = player.Character["RightLowerArm"]:Clone()
-    hand5 = player.Character["LeftHand"]:Clone()
-    hand6 = player.Character["RightHand"]:Clone()
-
-    hand3.Anchored = true
-    hand4.Anchored = true
-    hand5.Anchored = true
-    hand6.Anchored = true
-
-    hand3.CanCollide = true
-    hand4.CanCollide = true
-    hand5.CanCollide = true
-    hand6.CanCollide = true
-end
-spawn = Instance.new("SpawnLocation", folder)
+hand1 = player.Character["Left Arm"]:Clone()
+hand2 = player.Character["Right Arm"]:Clone()
 hand1.Anchored = true
 hand2.Anchored = true
-spawn.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
-spawn.CanCollide = true
-spawn.Transparency = 1
-player.RespawnLocation = spawn
-
 hand1.Parent = folder
 hand2.Parent = folder
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
-
--- loadstring(game:HttpGet('https://pastebin.com/raw/XF0j0Ups'))()
 
 player.Character.Humanoid.Health = 0
 
@@ -198,71 +166,73 @@ Camera.CameraType = Enum.CameraType.Scriptable
 
 Camera.HeadScale = 2
 
-game:GetService("RunService").Stepped:Connect(function()
-	if vbreak == true then return end
-	lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
-	righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
-	Headpos = workspace.CurrentCamera:GetRenderCFrame()
-end)
+for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
+	Event:Connect(function()
+		if vbreak == true then return end
+		lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
+		righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
+		Headpos = workspace.CurrentCamera:GetRenderCFrame()
+	end)
+end
 
 for i,v in pairs (clone:GetDescendants()) do
 	if v:IsA("BasePart") then
-        -- v.Anchored = true
 		v.Transparency = 1
+		v.CanCollide = false
 	end
 end
-local con;
 player.CharacterAppearanceLoaded:Connect(function(Char)
 	print("Loaded Character Appearance")
 	if player.Character ~= nil then
 		if vbreak == true then return end
-		
-		Char = Char
-		
-		mouse.TargetFilter = Char
-		Char:WaitForChild("Head").CanCollide = false
-		Char:WaitForChild("Head").Transparency = 1
-
-		Char.Torso:Remove()
-    	Char["Left Leg"]:Destroy()
-		Char["Right Leg"]:Destroy()
-            -- for i,v in pairs(Char:GetDescendants()) do
-            --     if v.Name:find("Leg") or v.Name:Find("Torso") or v.Name:find("Foot") then
-            --         v:Destroy()
-            --     end
-            -- end
-        RigType = Char.Humanoid.RigType
-		Char.Humanoid:Remove()
-		for i,v in pairs(Char:GetDescendants()) do
-			if v:IsA("BasePart") then
-                Network.RetainPart(v)
-				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-				v.CanCollide = false
-			end
-			if v:IsA("Accessory") then
-				v.Handle.Transparency = 1
-			end
-		end
-		if con ~= nil then
-			con:Disconnect()
-		end
-		con = game:GetService("RunService").Stepped:Connect(function()
-			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-            Char["Left Arm"].Transparency = 1
-			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            Char["Right Arm"].Transparency = 1
-            hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
-			hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
-            Char.Head.CFrame = Headpos
-	        clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
-	        spawn.CFrame = Headpos - Headpos.UpVector * 2
-			for i,v in pairs(Char:GetDescendants()) do 
-				if v:IsA("Accessory") then
-					v.Handle.CFrame = clone[v.Name].Handle.CFrame
+		coroutine.wrap(function()
+			Char["Animate"]:Destroy()
+			Char = Char
+			mouse.TargetFilter = Char
+			Char:WaitForChild("Head").CanCollide = false
+			Char:WaitForChild("Head").Transparency = 1
+			Char:WaitForChild("Torso").CanCollide = false
+			Char:WaitForChild("Torso").Transparency = 1
+    		Char["Left Leg"]:Destroy()
+			Char["Right Leg"]:Destroy()
+			-- Char.Humanoid:Destroy()
+			-- Char.Torso:Destroy()
+			for i,v in pairs(Char:GetDescendants()) do
+				if v:IsA("BasePart") then
+        	        Network.RetainPart(v)
+					v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+					v.CanCollide = false
 				end
+				if v:IsA("Accessory") then
+					v.Handle.Transparency = 1
+				end
+			end		
+			if con ~= nil then
+				con:Disconnect()
 			end
-		end)	
+		end)()
+		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
+			Event:Connect(function()
+				coroutine.wrap(function()
+            		Char["Left Arm"].Transparency = 1
+					Char["Right Arm"].Transparency = 1
+					Char.Torso["Left Shoulder"].C0 = (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+					Char.Torso["Right Shoulder"].C0 = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+					print((lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5))
+					print((righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5))
+            		hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+					hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+            		Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+            		Char.Head.CFrame = Headpos
+	        		clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+					for i,v in pairs(Char:GetDescendants()) do
+						if v:IsA("Accessory") then
+							v.Handle.CFrame = clone[v.Name].Handle.CFrame
+						end
+					end
+				end)()
+			end)
+		end
 	end
 end)
 
@@ -275,9 +245,6 @@ UserInputService.InputChanged:Connect(function(input)
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
-    if input.KeyCode == Enum.KeyCode.ButtonA then
-        Camera.CFrame += CFrame.new(0,0.1,0)
-    end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30
 		if -input.Position.X < 0 then

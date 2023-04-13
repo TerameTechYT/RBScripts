@@ -256,9 +256,6 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
             Char.Head.CFrame = Headpos
 	        clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 	        spawn.CFrame = Headpos - Headpos.UpVector * 2
-			if Char:FindFirstChild("HumanoidRootPart") then
-				Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
-			end
 			for i,v in pairs(Char:GetDescendants()) do  
 				if v:IsA("Accessory") then
 					v.Handle.CFrame = clone[v.Name].Handle.CFrame

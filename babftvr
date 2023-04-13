@@ -258,12 +258,6 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 	        clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 	        spawn.CFrame = Headpos - Headpos.UpVector * 2
 			for i,v in pairs(Char:GetDescendants()) do 
-				if v:IsA("Motor6D") and v.Name == "Left Shoulder" then
-					v.C1 = Char["Left Arm"].CFrame
-				end
-				if v:IsA("Motor6D") and v.Name == "Right Shoulder" then
-					v.C1 = Char["Left Arm"].CFrame
-				end
 				if v:IsA("BasePart") then
 					v.CFrame = clone[v.Name].CFrame
 				end

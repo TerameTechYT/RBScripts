@@ -221,6 +221,7 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
+		Char:WaitForChild("Head").Transparency = 1
 
 		Char.Torso.Transparency = 1
     	Char["Left Leg"]:Destroy()

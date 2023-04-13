@@ -181,50 +181,53 @@ for i,v in pairs (clone:GetDescendants()) do
 		v.CanCollide = false
 	end
 end
+
+
+
 player.CharacterAppearanceLoaded:Connect(function(Char)
 	print("Loaded Character Appearance")
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		coroutine.wrap(function()
 			Char["Animate"]:Destroy()
+			Char["Health"]:Destroy()
 			Char = Char
 			mouse.TargetFilter = Char
 			Char:WaitForChild("Head").CanCollide = false
 			Char:WaitForChild("Head").Transparency = 1
 			Char:WaitForChild("Torso").CanCollide = false
 			Char:WaitForChild("Torso").Transparency = 1
-    		Char["Left Leg"]:Destroy()
+			Char["Left Leg"]:Destroy()
 			Char["Right Leg"]:Destroy()
-			-- Char.Humanoid:Destroy()
-			-- Char.Torso:Destroy()
+			Char["Left Arm"].Transparency = 1
+			Char["Right Arm"].Transparency = 1
+			Char.Humanoid.RequiresNeck = false
+			Char.Humanoid:Destroy()
+			Char.Torso:Destroy()
+			player.Character = nil
 			for i,v in pairs(Char:GetDescendants()) do
 				if v:IsA("BasePart") then
-        	        Network.RetainPart(v)
+					Network.RetainPart(v)
 					v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
 					v.CanCollide = false
 				end
 				if v:IsA("Accessory") then
 					v.Handle.Transparency = 1
 				end
-			end		
-			if con ~= nil then
-				con:Disconnect()
 			end
+			Char.Destroying:Connect(function()
+				LocalPlayer.LoadCharacter()
+			end)
 		end)()
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
 				coroutine.wrap(function()
-            		Char["Left Arm"].Transparency = 1
-					Char["Right Arm"].Transparency = 1
-					Char.Torso["Left Shoulder"].C0 = (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-					Char.Torso["Right Shoulder"].C0 = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-					print((lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5))
-					print((righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5))
-            		hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+					Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+					Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+					hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 					hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            		Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-            		Char.Head.CFrame = Headpos
-	        		clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+					Char.Head.CFrame = Headpos
+					clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 					for i,v in pairs(Char:GetDescendants()) do
 						if v:IsA("Accessory") then
 							v.Handle.CFrame = clone[v.Name].Handle.CFrame
@@ -261,4 +264,22 @@ end)
 Camera:GetPropertyChangedSignal("CameraType"):Connect(function()
 	if vbreak == true then return end
 	Camera.CameraType = Enum.CameraType.Scriptable
+end)
+
+stop = false
+
+UserInputService.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.ButtonA and stop == false then
+		repeat
+			Camera.CFrame += Vector3.new(0, 0.5, 0)
+			wait()
+		until stop
+		stop = false
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.ButtonA then
+		stop = true
+	end
 end)

@@ -19,7 +19,7 @@ if not getgenv().Network then
 				end;
 			end;
 		};
-		CharacterRelative = false;
+		CharacterRelative = true;
 	}
 
 	Network["Output"].Send(print,": Loading.")
@@ -43,7 +43,7 @@ if not getgenv().Network then
 			end
 			table.insert(Network["BaseParts"],Part)
 			Part.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-			-- Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
+			Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
 			if ReturnFakePart == true then
 				return FakePart
 			end
@@ -98,7 +98,7 @@ if not getgenv().Network then
 									Network["Output"].Send(warn,"PartOwnership Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as the LocalPlayer Character's PrimaryPart does not exist.")
 								end
 							end
-							Part.Velocity = Network["Velocity"] + Vector3.new(0,math.cos(tick()*10)/100,0) --keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
+							Part.Velocity = Network["Velocity"] --+ Vector3.new(0,math.cos(tick())/50,0) keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
 						else
 							Network["RemovePart"](Part)
 						end
@@ -147,7 +147,6 @@ mouse = player:GetMouse()
 VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder",workspace)
-folder.Name = "PlayerClone"
 if LocalPlayer.Character.Humanoid.RigType.Name == "R6" then
     hand1 = player.Character["Left Arm"]:Clone()
     hand2 = player.Character["Right Arm"]:Clone()
@@ -172,6 +171,7 @@ end
 spawn = Instance.new("SpawnLocation", folder)
 hand1.Anchored = true
 hand2.Anchored = true
+
 spawn.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
@@ -211,9 +211,8 @@ for i,v in pairs (clone:GetDescendants()) do
 		v.Transparency = 1
 	end
 end
-local con;
+
 player.CharacterAppearanceLoaded:Connect(function(Char)
-	print("Loaded Character Appearance")
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		
@@ -221,18 +220,20 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 		
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
-		Char:WaitForChild("Head").Transparency = 1
 
-		Char.Torso.Transparency = 1
-    	Char["Left Leg"]:Destroy()
-		Char["Right Leg"]:Destroy()
-            -- for i,v in pairs(Char:GetDescendants()) do
-            --     if v.Name:find("Leg") or v.Name:Find("Torso") or v.Name:find("Foot") then
-            --         v:Destroy()
-            --     end
-            -- end
+        if Char.Humanoid.RigType.Name == "R6" then
+		    Char.Torso:Destroy()
+            Char["Left Leg"]:Destroy()
+		    Char["Right Leg"]:Destroy()
+        else
+            for i,v in pairs(Char:GetDescendants()) do
+                if v.Name:find("Leg") or v.Name:Find("Torso") or v.Name:find("Foot") then
+                    v:Destroy()
+                end
+            end
+        end
         RigType = Char.Humanoid.RigType
-		-- Char.Humanoid:Destroy()
+		Char.Humanoid:Destroy()
 		for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)
@@ -243,26 +244,45 @@ player.CharacterAppearanceLoaded:Connect(function(Char)
 				v.Handle.Transparency = 1
 			end
 		end
-		if con ~= nil then
-			con:Disconnect()
-		end
-		con = game:GetService("RunService").Stepped:Connect(function()
-			Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-            Char["Left Arm"].Transparency = 1
-			Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            Char["Right Arm"].Transparency = 1
-            hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
-			hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-            Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+
+		while task.wait() do
+            if RigType.Name == "R6" then
+			    Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                Char["Left Arm"].Transparency = 1
+			    Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                Char["Right Arm"].Transparency = 1
+                hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
+			    hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+            else
+                Char["LeftUpperArm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                Char["LeftUpperArm"].Transparency = 1
+			    Char["RightUpperArm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                Char["RightUpperArm"].Transparency = 1
+                Char["LeftLowerArm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.5
+                Char["LeftLowerArm"].Transparency = 1
+                Char["RightLowerArm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.5   
+                Char["RightLowerArm"].Transparency = 1
+                Char["LeftHand"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.3
+                Char["LeftHand"].Transparency = 1
+                Char["RightHand"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.3
+                Char["RightHand"].Transparency = 1
+                hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65	
+			    hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                hand3.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.5	
+			    hand4.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.5
+                hand5.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.3	
+			    hand6.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.3
+            end
             Char.Head.CFrame = Headpos
 	        clone.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
 	        spawn.CFrame = Headpos - Headpos.UpVector * 2
-			for i,v in pairs(Char:GetDescendants()) do 
-				if v:IsA("BasePart") then
-					v.CFrame = clone[v.Name].CFrame
+	        Char.HumanoidRootPart.CFrame = Headpos - Headpos.UpVector * 1.5
+			for i,v in pairs(Char:GetDescendants()) do   
+				if v:IsA("Accessory") then
+					v.Handle.CFrame = clone[v.Name].Handle.CFrame
 				end
 			end
-		end)	
+		end	
 	end
 end)
 

@@ -142,7 +142,7 @@ mouse = player:GetMouse()
 
 VRService = game:GetService("VRService")
 
-StarterGui:SetCore("VREnableControllerModels", false)
+-- StarterGui:SetCore("VREnableControllerModels", false)
 
 folder = Instance.new("Model", workspace)
 InventoryFake = Instance.new("Folder", game.ReplicatedStorage)

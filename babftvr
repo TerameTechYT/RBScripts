@@ -177,6 +177,7 @@ for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 		lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
 		righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
 		Headpos = workspace.CurrentCamera:GetRenderCFrame()
+		print(lefthandpos, righthandpos)
 	end)
 end
 
@@ -226,7 +227,6 @@ player.CharacterAppearanceLoaded:Connect(function(Chara)
 				-- Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
                 Char.Torso["Left Shoulder"].C0 = Char.Torso["Left Shoulder"].C0 *  (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
 				Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-    
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)

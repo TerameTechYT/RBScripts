@@ -180,7 +180,6 @@ for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 		lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
 		righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
 		Headpos = workspace.CurrentCamera:GetRenderCFrame()
-		-- print(lefthandpos, righthandpos)
 	end)
 end
 
@@ -192,10 +191,12 @@ for i,v in pairs(clone:GetDescendants()) do
 	end
 end
 
+player.CharacterAdded:Connect(function(Character)
+    wait()
+    Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+end)
+
 player.CharacterAppearanceLoaded:Connect(function(Character)
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/reanim'))()
-	wait(0.5)
-	print("Loaded Character Appearance")
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		Char = Character
@@ -207,7 +208,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char["Animate"]:Destroy()
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
-
         for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
 				Network.RetainPart(v)
@@ -218,13 +218,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				v.Handle.Transparency = 1
 			end
 		end
-
-        player.Character = nil
-
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-				-- Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-				-- Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
                 Char.Torso["Left Shoulder"].C0 = Char.Torso["Left Shoulder"].C0 *  (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
 				Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
@@ -239,6 +234,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 			end)
 		end
 	end
+    print("Loaded Character Appearance")
 end)
 
 cooldown = false

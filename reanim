@@ -37,14 +37,14 @@ local settings = {
     ["DV Debounce"] = .05, --[[Quickly switching between moving and standing still
         worsens stability, this tries to minigate it.
     ]]
-    ["Legacy Net"] = false, --[[Legacy net used in first generation of reanimations
+    ["Legacy Net"] = true, --[[Legacy net used in first generation of reanimations
         Sets SimulationRadius to massive number for big simulation radius,
         now server locked into 1000 maximum.
     ]]
     ["Physics Tweaks"] = true, --[[Various physics tweaks which should improve
         netowrk ownership of parts
     ]]
-    ["Fake Char Noclip"] = true --Disable collisions on fake character...
+    ["Fake Char Noclip"] = false --Disable collisions on fake character...
 }
 
 --Project GAY ultimatum settings done!!! -- GAY defining start!!!--

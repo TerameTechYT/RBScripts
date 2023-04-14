@@ -210,7 +210,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
             if Child:IsA("Tool") then
                 Child.Parent = InventoryFake
                 if Child:FindFirstChild("Handle") then
-                    con1 = Child:FindFirstChild("Handle".Touched:Connect(function()
+                    con1 = Child:FindFirstChild("Handle").Touched:Connect(function()
                         Child:Activate()
                         con1:Disconnect()
                     end)
@@ -276,7 +276,7 @@ player.Backpack.ChildAdded:Connect(function(Child)
     if Child:IsA("Tool") then
         Child.Parent = InventoryFake
 		if Child:FindFirstChild("Handle") then
-			con2 = Child:FindFirstChild("Handle".Touched:Connect(function()
+			con2 = Child:FindFirstChild("Handle").Touched:Connect(function()
 				Child:Activate()
 				con2:Disconnect()
 			end)

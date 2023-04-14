@@ -159,8 +159,8 @@ hand2.Name = "Right VR Arm"
 hand1.Parent = folder2
 hand2.Parent = folder2
 
-hand1.Transparency = 1
-hand2.Transparency = 1
+-- hand1.Transparency = 1
+-- hand2.Transparency = 1
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
@@ -208,7 +208,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
         Char.ChildAdded:Connect(function(Child) 
             wait()
             if Child:IsA("Tool") then
-                Child.Parent = InventoryFake
+                Child.Parent = clone
                 if Child:FindFirstChild("Handle") then
                     con1 = Child:FindFirstChild("Handle").Touched:Connect(function()
                         Child:Activate()
@@ -224,6 +224,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char:WaitForChild("Torso").CanCollide = false
 		Char:WaitForChild("Torso").Transparency = 1
 		Char["Animate"]:Destroy()
+        Char["Left Arm"].Transparency = 1
+        Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
         Char["Humanoid"]:Destroy()
@@ -274,7 +276,7 @@ end)
 player.Backpack.ChildAdded:Connect(function(Child) 
     wait()
     if Child:IsA("Tool") then
-        Child.Parent = InventoryFake
+        Child.Parent = clone
 		if Child:FindFirstChild("Handle") then
 			con2 = Child:FindFirstChild("Handle").Touched:Connect(function()
 				Child:Activate()

@@ -141,27 +141,30 @@ mouse = player:GetMouse()
 
 VRService = game:GetService("VRService")
 
-folder = Instance.new("Folder", workspace)
+folder = Instance.new("Model", workspace)
 folder2 = Instance.new("Folder", folder)
 folder.Name = "PlayerClone"
-folder2.Name = "PlayerArms" -- haha yes
+folder2.Name = "VRArms" -- haha yes
 hand1 = player.Character["Left Arm"]:Clone()
 hand2 = player.Character["Right Arm"]:Clone()
 hand1.Anchored = true
 hand2.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
+hand1.Name = "Left VR Arm"
+hand2.Name = "Right VR Arm"
 hand1.Parent = folder2
 hand2.Parent = folder2
 
--- hand1.Transparency = 1
--- hand2.Transparency = 1
+hand1.Transparency = 1
+hand2.Transparency = 1
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
+clone.Name = player.Name.." Clone"
 clone.Parent = folder
 
-player.Character.Humanoid.Health = 0
+player.Character.Torso:Destroy()
 
 player.Character = nil
 
@@ -189,34 +192,35 @@ for i,v in pairs(clone:GetDescendants()) do
 	end
 end
 
-player.CharacterAppearanceLoaded:Connect(function(Chara)
+player.CharacterAppearanceLoaded:Connect(function(Character)
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/reanim'))()
+	wait(0.5)
 	print("Loaded Character Appearance")
 	if player.Character ~= nil then
 		if vbreak == true then return end
-		Char = Chara
-        task.defer(Char["Animate"].Destroy, Char["Animate"])
+		Char = Character
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
-		task.defer(Char["Left Leg"].Destroy, Char["Left Leg"])
-		task.defer(Char["Right Leg"].Destroy, Char["Right Leg"])
-		-- task.defer(Char["Humanoid"].Destroy, Char["Humanoid"])
-		-- task.defer(Char["Torso"].Destroy, Char["Torso"])
-        task.wait()
-        coroutine.wrap(function()
-            for i,v in pairs(Char:GetDescendants()) do
-		    	if v:IsA("BasePart") then
-		    		Network.RetainPart(v)
-		    		v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-		    		v.CanCollide = false
-		    	end
-		    	if v:IsA("Accessory") then
-		    		v.Handle.Transparency = 1
-		    	end
-		    end
-        end)
+		Char:WaitForChild("Torso").CanCollide = false
+		Char:WaitForChild("Torso").Transparency = 1
+		Char["Animate"]:Destroy()
+		Char["Left Leg"]:Destroy()
+		Char["Right Leg"]:Destroy()
+
+        for i,v in pairs(Char:GetDescendants()) do
+			if v:IsA("BasePart") then
+				Network.RetainPart(v)
+				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+				v.CanCollide = false
+			end
+			if v:IsA("Accessory") then
+				v.Handle.Transparency = 1
+			end
+		end
+
         player.Character = nil
-		print(Char.Torso["Left Shoulder"].C0)
+
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
 				-- Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65

@@ -159,8 +159,8 @@ hand2.Name = "Right VR Arm"
 hand1.Parent = folder2
 hand2.Parent = folder2
 
--- hand1.Transparency = 1
--- hand2.Transparency = 1
+hand1.Transparency = 1
+hand2.Transparency = 1
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
@@ -238,20 +238,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 -- end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-                -- if (Char.Head.CFrame.LookVector:Dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
-					-- coroutine.wrap(function()
-					-- 	tooldb = true
-					-- 	Char.Humanoid:UnequipTools()
-					-- 	if toolnumber > 10 then
-					-- 		toolnumber = 1
-					-- 	else
-					-- 		toolnumber += 1
-					-- 	end
-					-- 	Char.Humanoid:EquipTool(player.Backpack[toolnumber])
-					-- 	wait(1)
-					-- 	tooldb = false
-					-- end)()
-				-- end
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
@@ -273,6 +259,12 @@ UserInputService.InputChanged:Connect(function(input)
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
+    if input.KeyCode == Enum.KeyCode.ButtonR2 then
+        if Char:FindFirstChildOfClass("Tool") then
+            Char:FindFirstChildOfClass("Tool"):Activate()
+            return
+        end
+	end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30
 		if -input.Position.X < 0 then
@@ -289,13 +281,4 @@ end)
 Camera:GetPropertyChangedSignal("CameraType"):Connect(function()
 	if vbreak == true then return end
 	Camera.CameraType = Enum.CameraType.Scriptable
-end)
-
-UserInputService.InputBegan:Connect(function(input)
-	if vbreak == true then return end
-	if input.KeyCode == Enum.KeyCode.ButtonR2 then
-        if Char:FindFirstChildOfClass("Tool") then
-            Char:FindFirstChildOfClass("Tool"):Activate()
-        end
-	end
 end)

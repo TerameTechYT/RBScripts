@@ -154,16 +154,23 @@ hand2.CanCollide = true
 hand1.Parent = folder2
 hand2.Parent = folder2
 
--- hand1.Transparency = 1
--- hand2.Transparency = 1
+hand1.Transparency = 1
+hand2.Transparency = 1
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Parent = folder
+
+player.Character.Humanoid.Health = 0
+
 player.Character = nil
+
 Char = nil
+
 Camera.CameraType = Enum.CameraType.Scriptable
+
 Camera.HeadScale = 2
+
 for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 	Event:Connect(function()
 		if vbreak == true then return end
@@ -182,44 +189,53 @@ for i,v in pairs(clone:GetDescendants()) do
 	end
 end
 
-loadstring(game:HttpGet('https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/reanim'))()
-wait(5)
-Char = player.Character
-mouse.TargetFilter = Char
-Char:WaitForChild("Head").CanCollide = false
-Char:WaitForChild("Head").Transparency = 1
-Char["Left Leg"]:Destroy()
-Char["Right Leg"]:Destroy()
-Char["Humanoid"]:Destroy()
-Char["Torso"]:Destroy()
-for i,v in pairs(Char:GetDescendants()) do
-    if v:IsA("BasePart") then
-    	Network.RetainPart(v)
-    	v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-    	v.CanCollide = false
-	end
-	if v:IsA("Accessory") then
-		v.Handle.Transparency = 1
-	end
-end
-player.Character = nil
-for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
-	Event:Connect(function()
-		Char["Left Arm"].CFrame = (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65)--:ToObjectSpace(Headpos - Headpos.UpVector * 1.5) 
-		Char["Right Arm"].CFrame = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65)--:ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-        -- Char.Torso["Left Shoulder"].C0 = Char.Torso["Left Shoulder"].C0 *  (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-		-- Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-        hand1.CFrame = Char["Left Arm"].CFrame
-		hand2.CFrame = Char["Right Arm"].CFrame
-		Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-		clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-		for i,v in pairs(Char:GetDescendants()) do
-			if v:IsA("Accessory") then
-				v.Handle.CFrame = clone[v.Name].Handle.CFrame
-			end
+player.CharacterAppearanceLoaded:Connect(function(Chara)
+	print("Loaded Character Appearance")
+	if player.Character ~= nil then
+		if vbreak == true then return end
+		Char = Chara
+        task.defer(Char["Animate"].Destroy, Char["Animate"])
+		mouse.TargetFilter = Char
+		Char:WaitForChild("Head").CanCollide = false
+		Char:WaitForChild("Head").Transparency = 1
+		task.defer(Char["Left Leg"].Destroy, Char["Left Leg"])
+		task.defer(Char["Right Leg"].Destroy, Char["Right Leg"])
+		task.defer(Char["Humanoid"].Destroy, Char["Humanoid"])
+		task.defer(Char["Torso"].Destroy, Char["Torso"])
+        task.wait()
+        coroutine.wrap(function()
+            for i,v in pairs(Char:GetDescendants()) do
+		    	if v:IsA("BasePart") then
+		    		Network.RetainPart(v)
+		    		v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
+		    		v.CanCollide = false
+		    	end
+		    	if v:IsA("Accessory") then
+		    		v.Handle.Transparency = 1
+		    	end
+		    end
+        end)
+        player.Character = nil
+		print(Char.Torso["Left Shoulder"].C0)
+		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
+			Event:Connect(function()
+				Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+				Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                -- Char.Torso["Left Shoulder"].C0 = Char.Torso["Left Shoulder"].C0 *  (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+				-- Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+                hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+				for i,v in pairs(Char:GetDescendants()) do
+					if v:IsA("Accessory") then
+						v.Handle.CFrame = clone[v.Name].Handle.CFrame
+					end
+				end
+			end)
 		end
-	end)
-end
+	end
+end)
 
 cooldown = false
 

@@ -890,7 +890,7 @@ for e, f in pairs(j.Humanoid:GetAccessories()) do
     end
 end
 game:GetService("StarterGui"):SetCore("VRLaserPointerMode", 0)
-game:GetService("StarterGui"):SetCore("VREnableControllerModels", false)
+
 local function H(I, J)
     local K = Instance.new("Part", workspace)
     K.Size = I

@@ -267,20 +267,11 @@ end)
 
 stop = false
 
--- UserInputService.InputBegan:Connect(function(input)
--- 	if vbreak == true then return end
--- 	if input.KeyCode == Enum.KeyCode.ButtonA and stop == false then
--- 		repeat
--- 			Camera.CFrame += Vector3.new(0, 0.5, 0)
--- 			wait()
--- 		until stop
--- 		stop = false
--- 	end
--- end)
-
--- UserInputService.InputEnded:Connect(function(input)
--- 	if vbreak == true then return end
--- 	if input.KeyCode == Enum.KeyCode.ButtonA then
--- 		stop = true
--- 	end
--- end)
+UserInputService.InputBegan:Connect(function(input)
+	if vbreak == true then return end
+	if input.KeyCode == Enum.KeyCode.ButtonR2 then
+        if Char:FindFirstChildOfClass("Tool") then
+            Char:FindFirstChildOfClass("Tool"):Activate()
+        end
+	end
+end)

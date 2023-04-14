@@ -43,7 +43,7 @@ if not getgenv().Network then
 			end
 			table.insert(Network["BaseParts"],Part)
 			Part.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
-			-- Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
+			Network["Output"].Send(print,"PartOwnership Output : PartOwnership applied to BasePart "..Part:GetFullName()..".")
 			if ReturnFakePart == true then
 				return FakePart
 			end

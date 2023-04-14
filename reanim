@@ -2,11 +2,11 @@
 --[[Project GAY!!!!!! Project GAY!!!! The most gayest reanimation!!!!]]
 
 local settings = {
-    ["Stabilize Method"] = "position", --[[Options: <position, cframe>
+    ["Stabilize Method"] = "cframe", --[[Options: <position, cframe>
         position works muuch better with permanent death, but
         it breaks head in simple method.
     ]]
-    ["Reanim Method"] = "simple", --[[Options: <simple, perma>
+    ["Reanim Method"] = "perma", --[[Options: <simple, perma>
         permanent death (perma): Puts your character into undead state.
         Makes head movement possible.
         simple: Player stays alive, really simple pretty much.

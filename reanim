@@ -1,12 +1,12 @@
 local Global = (getgenv and getgenv()) or shared
 Global.GelatekReanimateConfig = {
     -- [[ Rig Settings ]] --
-    ["AnimationsDisabled"] = false,
+    ["AnimationsDisabled"] = TRUE,
     ["R15ToR6"] = true,
     ["DontBreakHairWelds"] = true,
     ["PermanentDeath"] = false,
     ["Headless"] = false,
-    ["TeleportBackWhenVoided"] = false,
+    ["TeleportBackWhenVoided"] = TRUE,
     
     -- [[ Reanimation Settings ]] --
     ["AlignReanimate"] = true,

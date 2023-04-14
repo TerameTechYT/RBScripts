@@ -9,7 +9,7 @@ xpcall(function()
     
     local voidChar = Character:Clone()
     voidChar.Parent = workspace
-    voidChar.Name = "raycast is god fr"
+    voidChar.Name = "_"..Character.Name
     
     voidChar.Humanoid:Destroy()
     
@@ -98,6 +98,6 @@ xpcall(function()
            end
        end 
     end)
-    end, function(e)
-        print(e)
-    end)
+end, function(e)
+    print(e)
+end)

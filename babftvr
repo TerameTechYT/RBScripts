@@ -134,6 +134,7 @@ wait()
 
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
+
 tooldb = false
 player = game:GetService("Players").LocalPlayer
 Camera = workspace.CurrentCamera

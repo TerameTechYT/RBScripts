@@ -205,19 +205,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		Char = Character
-        Char.ChildAdded:Connect(function(Child) 
-            wait(0.01)
-            if Child:IsA("Tool") then
-                Child.Parent = clone
-				if Child:FindFirstChild("Handle") then
-					Network.RetainPart(Child:FindFirstChild("Handle"))
-					con1 = Child:FindFirstChild("Handle").Touched:Connect(function()
-                        Child:Activate()
-                        con1:Disconnect()
-                    end)
-				end
-            end
-        end)
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
@@ -228,8 +215,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
         Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
-        Char["Humanoid"]:Destroy()
-        Char["Torso"]:Destroy()
+        -- Char["Humanoid"]:Destroy()
+        -- Char["Torso"]:Destroy()
         for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
 				Network.RetainPart(v)
@@ -246,25 +233,25 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				Char["Right Arm"].CFrame = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65)--:ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-                if clone:FindFirstChildOfClass("Tool") and clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
-                    clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame * CFrame.Angles(math.rad(270), 0, 0)+ Vector3.new(0, 0, 1)
-                end
+                -- if Char:FindFirstChildOfClass("Tool") and clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
+                    -- Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame * CFrame.Angles(math.rad(270), 0, 0) + Vector3.new(0, 0, 1)
+                -- end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-                -- if (Char.Head.CFrame.LookVector.dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
-				-- 	coroutine.wrap(function()
-				-- 		tooldb = true
-				-- 		Char.Humanoid:UnequipTools()
-				-- 		if toolnumber > 10 then
-				-- 			toolnumber = 1
-				-- 		else
-				-- 			toolnumber += 1
-				-- 		end
-				-- 		Char.Humanoid:EquipTool(player.Backpack[toolnumber])
-				-- 		wait(1)
-				-- 		tooldb = false
-				-- 	end)()
-				-- end
+                if (Char.Head.CFrame.LookVector:Dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
+					-- coroutine.wrap(function()
+					-- 	tooldb = true
+					-- 	Char.Humanoid:UnequipTools()
+					-- 	if toolnumber > 10 then
+					-- 		toolnumber = 1
+					-- 	else
+					-- 		toolnumber += 1
+					-- 	end
+					-- 	Char.Humanoid:EquipTool(player.Backpack[toolnumber])
+					-- 	wait(1)
+					-- 	tooldb = false
+					-- end)()
+				end
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
@@ -274,13 +261,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		end
 	end
     print("Loaded Character Appearance")
-end)
-
-player.Backpack.ChildAdded:Connect(function(Child) 
-    wait(0.1)
-    if Child:IsA("Tool") then
-        Child.Parent = clone
-     end
 end)
 
 cooldown = false

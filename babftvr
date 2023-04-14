@@ -206,16 +206,16 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		if vbreak == true then return end
 		Char = Character
         Char.ChildAdded:Connect(function(Child) 
-            wait()
+            wait(0.01)
             if Child:IsA("Tool") then
                 Child.Parent = clone
-                if Child:FindFirstChild("Handle") then
-                    con1 = Child:FindFirstChild("Handle").Touched:Connect(function()
-                        Child:Activate()
-                        con1:Disconnect()
-                    end)
-                end
-                clone.Humanoid:EquipTool(Child)
+                -- if Child:FindFirstChild("Handle") then
+                --     con1 = Child:FindFirstChild("Handle").Touched:Connect(function()
+                --         Child:Activate()
+                --         con1:Disconnect()
+                --     end)
+                -- end
+                -- clone.Humanoid:EquipTool(Child)
             end
         end)
 		mouse.TargetFilter = Char
@@ -274,15 +274,15 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 end)
 
 player.Backpack.ChildAdded:Connect(function(Child) 
-    wait()
+    wait(0.01)
     if Child:IsA("Tool") then
         Child.Parent = clone
 		if Child:FindFirstChild("Handle") then
-			con2 = Child:FindFirstChild("Handle").Touched:Connect(function()
-				Child:Activate()
-				con2:Disconnect()
-			end)
-		end
+		-- 	con2 = Child:FindFirstChild("Handle").Touched:Connect(function()
+		-- 		Child:Activate()
+		-- 		con2:Disconnect()
+		-- 	end)
+		-- end
      end
 end)
 

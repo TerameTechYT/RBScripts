@@ -194,7 +194,7 @@ for i,v in pairs(clone:GetDescendants()) do
 	end
 end
 
-con1,con2 = nil, nil
+con1 = nil
 
 player.CharacterAdded:Connect(function(Character)
     wait()
@@ -247,7 +247,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
                 if clone:FindFirstChildOfClass("Tool") and clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
-                    clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame + Vector3.new(0, 0, 1)
+                    clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame * CFrame.Angles(math.rad(270), 0, 0)+ Vector3.new(0, 0, 1)
                 end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
@@ -280,12 +280,6 @@ player.Backpack.ChildAdded:Connect(function(Child)
     wait(0.1)
     if Child:IsA("Tool") then
         Child.Parent = clone
-		if Child:FindFirstChild("Handle") then
-			con2 = Child:FindFirstChild("Handle").Touched:Connect(function()
-				Child:Activate()
-				con2:Disconnect()
-			end)
-		end
      end
 end)
 

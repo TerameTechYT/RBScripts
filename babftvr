@@ -259,8 +259,8 @@ UserInputService = game:GetService("UserInputService")
 UserInputService.InputChanged:Connect(function(input)
 	if vbreak == true then return end
 	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
-		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/1.75)
-		Camera.CFrame += righthandpos.RightVector * (input.Position.X/1.75)
+		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
+		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30

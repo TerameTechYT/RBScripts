@@ -132,10 +132,9 @@ coroutine.resume(Network["PartOwnership"]["Enable"])
 
 wait()
 
-local StarterGui = game:GetService("StarterGui")
-StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
+-- local StarterGui = game:GetService("StarterGui")
+-- StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 
-tooldb = false
 player = game:GetService("Players").LocalPlayer
 Camera = workspace.CurrentCamera
 mouse = player:GetMouse()
@@ -143,8 +142,6 @@ mouse = player:GetMouse()
 VRService = game:GetService("VRService")
 
 folder = Instance.new("Model", workspace)
-InventoryFake = Instance.new("Folder", game.ReplicatedStorage)
-InventoryFake.Name = "InventoryFake"
 folder2 = Instance.new("Folder", folder)
 folder.Name = "PlayerClone"
 folder2.Name = "VRArms" -- haha yes
@@ -159,8 +156,8 @@ hand2.Name = "Right VR Arm"
 hand1.Parent = folder2
 hand2.Parent = folder2
 
--- hand1.Transparency = 1
--- hand2.Transparency = 1
+hand1.Transparency = 1
+hand2.Transparency = 1
 
 player.Character.Archivable = true
 clone = player.Character:Clone()
@@ -176,7 +173,7 @@ Char = nil
 Camera.CameraType = Enum.CameraType.Scriptable
 
 Camera.HeadScale = 2
-
+toolnumber = 1
 for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 	Event:Connect(function()
 		if vbreak == true then return end
@@ -194,42 +191,24 @@ for i,v in pairs(clone:GetDescendants()) do
 	end
 end
 
-con1,con2 = nil, nil
-
 player.CharacterAdded:Connect(function(Character)
     wait()
     Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 end)
 
+tooldb = false
 player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		Char = Character
-        Char.ChildAdded:Connect(function(Child) 
-            wait(0.01)
-            if Child:IsA("Tool") then
-                Child.Parent = clone
-                -- if Child:FindFirstChild("Handle") then
-                --     con1 = Child:FindFirstChild("Handle").Touched:Connect(function()
-                --         Child:Activate()
-                --         con1:Disconnect()
-                --     end)
-                -- end
-                -- clone.Humanoid:EquipTool(Child)
-            end
-        end)
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
 		Char:WaitForChild("Torso").Transparency = 1
 		Char["Animate"]:Destroy()
-        Char["Left Arm"].Transparency = 1
-        Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
-        Char["Humanoid"]:Destroy()
-        Char["Torso"]:Destroy()
         for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
 				Network.RetainPart(v)
@@ -242,26 +221,26 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		end
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-                Char["Left Arm"].CFrame = (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65)--:ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-				Char["Right Arm"].CFrame = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65)--:ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+                Char.Torso["Left Shoulder"].C0 = Char.Torso["Left Shoulder"].C0 *  (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+				Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+				if (Char.Head.LookVector.dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
+					coroutine.wrap(function()
+						tooldb = true
+						Char.Humanoid:UnequipTools()
+						if toolnumber > 10 then
+							toolnumber = 1
+						else
+							toolnumber += 1
+						end
+						Char.Humanoid:EquipTool(player.Backpack[toolnumber])
+						wait(1)
+						tooldb = false
+					end)()
+				end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-                -- if (Char.Head.CFrame.LookVector.dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
-				-- 	coroutine.wrap(function()
-				-- 		tooldb = true
-				-- 		Char.Humanoid:UnequipTools()
-				-- 		if toolnumber > 10 then
-				-- 			toolnumber = 1
-				-- 		else
-				-- 			toolnumber += 1
-				-- 		end
-				-- 		Char.Humanoid:EquipTool(player.Backpack[toolnumber])
-				-- 		wait(1)
-				-- 		tooldb = false
-				-- 	end)()
-				-- end
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
@@ -273,19 +252,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
     print("Loaded Character Appearance")
 end)
 
-player.Backpack.ChildAdded:Connect(function(Child) 
-    wait(0.01)
-    if Child:IsA("Tool") then
-        Child.Parent = clone
-		if Child:FindFirstChild("Handle") then
-		-- 	con2 = Child:FindFirstChild("Handle").Touched:Connect(function()
-		-- 		Child:Activate()
-		-- 		con2:Disconnect()
-		-- 	end)
-		-- end
-     end
-end)
-
 cooldown = false
 
 UserInputService = game:GetService("UserInputService")
@@ -293,8 +259,8 @@ UserInputService = game:GetService("UserInputService")
 UserInputService.InputChanged:Connect(function(input)
 	if vbreak == true then return end
 	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
-		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
-		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
+		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/1.75)
+		Camera.CFrame += righthandpos.RightVector * (input.Position.X/1.75)
 	end
 	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
 		local angle = 30

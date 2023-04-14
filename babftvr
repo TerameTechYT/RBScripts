@@ -238,7 +238,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 -- end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-                if (Char.Head.CFrame.LookVector:Dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
+                -- if (Char.Head.CFrame.LookVector:Dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
 					-- coroutine.wrap(function()
 					-- 	tooldb = true
 					-- 	Char.Humanoid:UnequipTools()
@@ -251,7 +251,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 					-- 	wait(1)
 					-- 	tooldb = false
 					-- end)()
-				end
+				-- end
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame

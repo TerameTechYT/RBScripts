@@ -142,15 +142,17 @@ mouse = player:GetMouse()
 VRService = game:GetService("VRService")
 
 folder = Instance.new("Folder",workspace)
+folder2 = Instance.new("Folder",folder)
 folder.Name = "PlayerClone"
+folder2.Name = "PlayerArms" -- haha yes
 hand1 = player.Character["Left Arm"]:Clone()
 hand2 = player.Character["Right Arm"]:Clone()
 hand1.Anchored = true
 hand2.Anchored = true
 hand1.CanCollide = true
 hand2.CanCollide = true
-hand1.Parent = folder
-hand2.Parent = folder
+hand1.Parent = folder2
+hand2.Parent = folder2
 
 hand1.Transparency = 1
 hand2.Transparency = 1

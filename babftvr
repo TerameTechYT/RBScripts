@@ -246,20 +246,20 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-                if (Char.Head.CFrame.LookVector.dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
-					coroutine.wrap(function()
-						tooldb = true
-						Char.Humanoid:UnequipTools()
-						if toolnumber > 10 then
-							toolnumber = 1
-						else
-							toolnumber += 1
-						end
-						Char.Humanoid:EquipTool(player.Backpack[toolnumber])
-						wait(1)
-						tooldb = false
-					end)()
-				end
+                -- if (Char.Head.CFrame.LookVector.dot(hand1.Position - Char.Head.Position)).Magnitude < -2.5 and not tooldb then
+				-- 	coroutine.wrap(function()
+				-- 		tooldb = true
+				-- 		Char.Humanoid:UnequipTools()
+				-- 		if toolnumber > 10 then
+				-- 			toolnumber = 1
+				-- 		else
+				-- 			toolnumber += 1
+				-- 		end
+				-- 		Char.Humanoid:EquipTool(player.Backpack[toolnumber])
+				-- 		wait(1)
+				-- 		tooldb = false
+				-- 	end)()
+				-- end
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame

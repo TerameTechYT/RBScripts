@@ -177,7 +177,7 @@ for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 		lefthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.LeftHand) - VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.LeftHand).p*Camera.HeadScale)
 		righthandpos = (Camera.CFrame - Camera.CFrame.p) * (VRService:GetUserCFrame(Enum.UserCFrame.RightHand) - VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p) + Camera.CFrame*(VRService:GetUserCFrame(Enum.UserCFrame.RightHand).p*Camera.HeadScale)
 		Headpos = workspace.CurrentCamera:GetRenderCFrame()
-		print(lefthandpos, righthandpos)
+		-- print(lefthandpos, righthandpos)
 	end)
 end
 

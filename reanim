@@ -9,11 +9,11 @@ Global.GelatekReanimateConfig = {
     ["TeleportBackWhenVoided"] = true,
     
     -- [[ Reanimation Settings ]] --
-    ["AlignReanimate"] = false,
+    ["AlignReanimate"] = true,
     ["FullForceAlign"] = true,
     ["FasterHeartbeat"] = true,
-    ["DynamicalVelocity"] = true,
-    ["DisableTweaks"] = true,
+    ["DynamicalVelocity"] = false,
+    ["DisableTweaks"] = false,
     
     -- [[ Optimization ]] --
     ["OptimizeGame"] = false,

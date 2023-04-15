@@ -293,4 +293,4 @@ UserInputService.InputEnded:Connect(function(input)
             Char:FindFirstChildOfClass("Tool"):Activate()
         end
 	end
-end
+end)

@@ -281,7 +281,7 @@ UserInputService.InputChanged:Connect(function(input)
 		cooldown = false
 	end
     if Char.Humanoid.Sit then
-        Camera.CFrame = Char.Head.CFrame
+        Camera.Position = Char.Head.Position
     end
 end)
 

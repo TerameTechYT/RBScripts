@@ -146,7 +146,8 @@ Camera.CameraType = Enum.CameraType.Scriptable
 Camera.HeadScale = 2
 
 function resetCamRot()
-    Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z) * CFrame.Angles(0, Camera.CFrame.Rotation.Y, 0)
+    local prev = Camera.CFrame.Rotation.Y
+    Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z) * CFrame.Angles(0, prev, 0)
 end
 
 for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
@@ -167,10 +168,12 @@ for i,v in pairs(clone:GetDescendants()) do
 		v.Transparency = 0
 	end
 end
+
 player.CharacterAdded:Connect(function(Character)
 	wait()
 	Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 end)
+local touchcon = nil
 player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
@@ -187,6 +190,20 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
         		Track:Stop()
         	end
         end
+        Char.ChildAdded:Connect(function(Child)
+            wait()
+            if Child:IsA("Tool") and Child:FindFirstChild("Handle") --[[and getgenv().AutoActivate]] then
+                touchcon = Child:FindFirstChild("Handle").Touched:Connect(function(Hit)
+                    Child:Activate()
+                    touchcon:Disconnect()
+                end)
+            end
+        end)
+        Char.ChildRemoved:Connect(function(Child)
+            if Child:IsA("Tool") and Child:FindFirstChild("Handle") --[[and getgenv().AutoActivate]] then
+                touchcon:Disconnect()
+            end
+        end)
         Char["Left Arm"].Transparency = 1
         Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
@@ -227,11 +244,11 @@ cooldown = false
 UserInputService = game:GetService("UserInputService")
 UserInputService.InputChanged:Connect(function(input)
 	if vbreak == true then return end
-	if input.KeyCode == Enum.KeyCode.Thumbstick2 and not Char.Humanoid.Sit then
+	if input.KeyCode == Enum.KeyCode.Thumbstick2 and Char:FindFirstChild("Humanoid") and not Char.Humanoid.Sit then
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
-	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false and not Char.Humanoid.Sit then
+	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false and Char:FindFirstChild("Humanoid") and not Char.Humanoid.Sit then
 		local angle = 30
 		if -input.Position.X < 0 then
 			angle = -30
@@ -241,8 +258,9 @@ UserInputService.InputChanged:Connect(function(input)
 		wait(0.4)
 		cooldown = false
 	end
-    if Char.Humanoid.Sit then
-        Camera.CFrame = CFrame.new(Char.Head.CFrame.X, Char.Head.CFrame.Y, Char.Head.CFrame.Z) * CFrame.Angles(0, Char.Head.CFrame.Rotation.Y, 0)
+    if Char:FindFirstChild("Humanoid") and Char.Humanoid.Sit then
+        local old CFrame.new(Char.Head.CFrame.X, Char.Head.CFrame.Y, Char.Head.CFrame.Z) * CFrame.Angles(0, Char.Head.CFrame.Rotation.Y, 0)
+        Camera.CFrame = Char.Head.CFrame
     end
 end)
 

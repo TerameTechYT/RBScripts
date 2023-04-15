@@ -139,7 +139,7 @@ player.Character.Archivable = true
 clone = player.Character:Clone()
 clone.Name = player.Name.." Clone"
 clone.Parent = folder
-player.Character.Torso:Destroy()
+player.Character.Humanoid.Health = 0
 player.Character = nil
 Char = nil
 Camera.CameraType = Enum.CameraType.Scriptable
@@ -175,6 +175,8 @@ player.CharacterAdded:Connect(function(Character)
 end)
 local touchcon = nil
 player.CharacterAppearanceLoaded:Connect(function(Character)
+    -- loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/reanim"))()
+    -- wait(0.2222)
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		Char = Character
@@ -193,6 +195,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
         Char.ChildAdded:Connect(function(Child)
             wait()
             if Child:IsA("Tool") and Child:FindFirstChild("Handle") --[[and getgenv().AutoActivate]] then
+                Network.RetainPart(Child:FindFirstChild("Handle"))
                 touchcon = Child:FindFirstChild("Handle").Touched:Connect(function(Hit)
                     Child:Activate()
                     touchcon:Disconnect()
@@ -210,6 +213,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char["Right Leg"]:Destroy()
         for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
+                Network.RetainPart(v)
 				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
 				v.CanCollide = false
 			end
@@ -221,11 +225,14 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 			Event:Connect(function()
                 clone["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				clone["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                Char.Torso["Left Shoulder"].C0 =  Char.Torso["Left Shoulder"].C0 * (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
+				Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
                 Char.Humanoid.PlatformStand = true
                 if Char:FindFirstChildOfClass("Tool") then
 					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
                         Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Anchored = false
-						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position + Vector3.new(-1, 0, 0)
+						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position + Vector3.new(0, -1, 0)
+						-- Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Rotation = clone["Right Arm"].CFrame.Rotation + Vector3.new(270, 0, 0)
 					end
                 end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
@@ -244,11 +251,11 @@ cooldown = false
 UserInputService = game:GetService("UserInputService")
 UserInputService.InputChanged:Connect(function(input)
 	if vbreak == true then return end
-	if input.KeyCode == Enum.KeyCode.Thumbstick2 and Char:FindFirstChild("Humanoid") and not Char.Humanoid.Sit then
+	if Char and input.KeyCode == Enum.KeyCode.Thumbstick2 and Char:FindFirstChild("Humanoid") and not Char.Humanoid.Sit then
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
-	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false and Char:FindFirstChild("Humanoid") and not Char.Humanoid.Sit then
+	if Char and input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false and Char:FindFirstChild("Humanoid") and not Char.Humanoid.Sit then
 		local angle = 30
 		if -input.Position.X < 0 then
 			angle = -30
@@ -258,8 +265,8 @@ UserInputService.InputChanged:Connect(function(input)
 		wait(0.4)
 		cooldown = false
 	end
-    if Char:FindFirstChild("Humanoid") and Char.Humanoid.Sit then
-        local old CFrame.new(Char.Head.CFrame.X, Char.Head.CFrame.Y, Char.Head.CFrame.Z) * CFrame.Angles(0, Char.Head.CFrame.Rotation.Y, 0)
+    if Char and Char:FindFirstChild("Humanoid") and Char.Humanoid.Sit then
+        local old = CFrame.new(Char.Head.CFrame.X, Char.Head.CFrame.Y, Char.Head.CFrame.Z) * CFrame.Angles(0, Char.Head.CFrame.Rotation.Y, 0)
         Camera.CFrame = Char.Head.CFrame
     end
 end)

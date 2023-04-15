@@ -164,19 +164,36 @@ for i,v in pairs(clone:GetDescendants()) do
 		v.CanCollide = false
         v.Anchored = true
 	end
-    if v:IsA("BasePart") and v.Name:find("Arm") then
-		v.Transparency = 0
-	end
 end
 
 player.CharacterAdded:Connect(function(Character)
 	wait()
 	Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 end)
+
+function Join(Part0, Part1, Type)
+	local method = Instance.new("RopeConstraint", player.Character.Torso)
+	method.Length = -math.huge
+	method.Attachment0 = Instance.new("Attachment", Part0)
+	method.Attachment1 = Instance.new("Attachment", Part1)
+	coroutine.wrap(function()
+		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
+			Event:Connect(function()
+                if Type == "Left Arm" then
+                    Part0.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                end
+                if Type == "Right Arm" then
+                    Part0.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                end
+		    end)
+        end
+	end)()
+    return method
+end
+
+
 local touchcon = nil
 player.CharacterAppearanceLoaded:Connect(function(Character)
-    -- loadstring(game:HttpGet("https://raw.githubusercontent.com/TerameTechYT/RBScripts/development/reanim"))()
-    -- wait(0.2222)
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		Char = Character
@@ -214,21 +231,22 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 			if v:IsA("Accessory") then
 				v.Handle.Transparency = 1
 			end
-		end
+		end        
+        rope1 = Join(Char["Left Arm"], Char["Torso"], "Left Arm")
+        rope2 = Join(Char["Right Arm"], Char["Torso"], "Right Arm")
+
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
                 clone["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				clone["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-                Char.Torso["Left Shoulder"].C0 =  Char.Torso["Left Shoulder"].C0 * (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
-				Char.Torso["Right Shoulder"].C0 = Char.Torso["Right Shoulder"].C0 * (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5)
                 Char.Humanoid.PlatformStand = true
                 if Char:FindFirstChildOfClass("Tool") then
 					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
                         Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Anchored = false
 						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position + Vector3.new(0, 1, 0)
-						-- Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Rotation = clone["Right Arm"].CFrame.Rotation + Vector3.new(270, 0, 0)
 					end
                 end
+                
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do

@@ -299,10 +299,10 @@ Camera:GetPropertyChangedSignal("CameraType"):Connect(function()
 	Camera.CameraType = Enum.CameraType.Scriptable
 end)
 
-UserInputService.InputEnded:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.ButtonR2 then
-        if Char:FindFirstChildOfClass("Tool") then
-            Char:FindFirstChildOfClass("Tool"):Activate()
-        end
-	end
-end)
+-- UserInputService.InputEnded:Connect(function(input)
+--     if input.KeyCode == Enum.KeyCode.ButtonR2 then
+--         if Char:FindFirstChildOfClass("Tool") then
+--             Char:FindFirstChildOfClass("Tool"):Activate()
+--         end
+-- 	end
+-- end)

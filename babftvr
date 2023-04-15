@@ -98,7 +98,7 @@ if not getgenv().Network then
 									Network["Output"].Send(warn,"PartOwnership Warning : PartOwnership not applied to BasePart "..Part:GetFullName()..", as the LocalPlayer Character's PrimaryPart does not exist.")
 								end
 							end
-							Part.Velocity = Network["Velocity"] + Vector3.new(0,math.cos(tick()*10)/100,0) --keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
+							Part.Velocity = Network["Velocity"] * (math.random() / 2) --keep network by sending physics packets of 30 magnitude + an everchanging addition in the y level so roblox doesnt get triggered and fuck your ownership
 						else
 							Network["RemovePart"](Part)
 						end
@@ -130,7 +130,7 @@ end
 
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
-wait(1)
+wait()
 local StarterGui = game:GetService("StarterGui")
 -- StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 StarterGui:SetCore("VREnableControllerModels", false)
@@ -141,22 +141,8 @@ mouse = player:GetMouse()
 
 VRService = game:GetService("VRService")
 
-folder = Instance.new("Model", workspace)
-InventoryFake = Instance.new("Folder", game.ReplicatedStorage)
-InventoryFake.Name = "InventoryFake"
-folder2 = Instance.new("Folder", folder)
-folder.Name = "PlayerClone"
-folder2.Name = "VRArms" -- haha yes
-hand1 = player.Character["Left Arm"]:Clone()
-hand2 = player.Character["Right Arm"]:Clone()
-hand1.Anchored = true
-hand2.Anchored = true
-hand1.CanCollide = true
-hand2.CanCollide = true
-hand1.Name = "Left VR Arm"
-hand2.Name = "Right VR Arm"
-hand1.Parent = folder2
-hand2.Parent = folder2
+folder = Instance.new("Folder", workspace)
+folder.Name = "VRStuff"
 
 -- hand1.Transparency = 1
 -- hand2.Transparency = 1
@@ -176,14 +162,6 @@ Camera.CameraType = Enum.CameraType.Scriptable
 
 Camera.HeadScale = 2
 
-local function weld(p1, p2)
-	local weld = Instance.new("Weld")
-	weld.Part0 = p1
-	weld.Part1 = p2
-	weld.Parent = p2 or p1
-	return weld
-end
-
 Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
 for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 	Event:Connect(function()
@@ -196,9 +174,12 @@ end
 
 for i,v in pairs(clone:GetDescendants()) do
 	if v:IsA("BasePart") then
-		v.Transparency = 1
-		v.Anchored = true
+        v.Transparency = 1
 		v.CanCollide = false
+        v.Anchored = true
+	end
+    if v:IsA("BasePart") and v.Name:find("Arm") then
+		v.Transparency = 0
 	end
 end
 welddb = false
@@ -211,25 +192,20 @@ end)
 player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
-		welddb = false
 		Char = Character
-		Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
 		Char:WaitForChild("Torso").Transparency = 1
 		Char["Animate"]:Destroy()
-		Char["Left Arm"].Transparency = 1
-		Char["Right Arm"].Transparency = 1
+        Char["Left Arm"].Transparency = 1
+        Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
-		Char.Torso["Left Shoulder"]:Destroy()
-		Char.Torso["Right Shoulder"]:Destroy()
-		leftarmweld, rightarmweld = nil, nil
-		for i,v in pairs(Char:GetDescendants()) do
+        for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
-				Network.RetainPart(v)
 				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
 				v.CanCollide = false
 			end
@@ -239,34 +215,27 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		end
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-				if not leftarmweld then
-					leftarmweld = weld(Char["Left Arm"], Char["Torso"])
-				end
-				if not rightarmweld then
-					rightarmweld = weld(Char["Right Arm"], Char["Torso"])
-				end
-				Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-				Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-				hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-				if Char:FindFirstChildOfClass("Tool") then
-					if Char["Right Arm"]:FindFirstChild("RightGrip") then
-						Char["Right Arm"].RightGrip:Destroy()
+                clone["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+				clone["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                Char.Humanoid.PlatformStand = true
+                if Char:FindFirstChildOfClass("Tool") then
+					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
+                        Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Anchored = false
+						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position
+                        -- Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Rotation = Vector3.new(0, 90, 0)
 					end
-				end
+                end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+				clone:SetPrimaryPartCFrame(Char:GetPrimaryPartCFrame())
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
 					end
 				end
-				leftarmweld:Destroy()
-				rightarmweld:Destroy()
 			end)
 		end
 	end
-	print("Loaded Character Appearance")
+    print("Loaded Character Appearance")
 end)
 
 cooldown = false
@@ -290,20 +259,12 @@ UserInputService.InputChanged:Connect(function(input)
 		wait(0.4)
 		cooldown = false
 	end
-	if Char.Humanoid.Sit then
-		Camera.CFrame = Char.Head.CFrame
-	end
+    if Char.Humanoid.Sit then
+        Camera.CFrame = Char.Head.CFrame
+    end
 end)
 
 Camera:GetPropertyChangedSignal("CameraType"):Connect(function()
 	if vbreak == true then return end
 	Camera.CameraType = Enum.CameraType.Scriptable
 end)
-
--- UserInputService.InputEnded:Connect(function(input)
---     if input.KeyCode == Enum.KeyCode.ButtonR2 then
---         if Char:FindFirstChildOfClass("Tool") then
---             Char:FindFirstChildOfClass("Tool"):Activate()
---         end
--- 	end
--- end)

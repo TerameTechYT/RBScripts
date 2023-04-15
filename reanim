@@ -4,12 +4,12 @@ Global.GelatekReanimateConfig = {
     ["AnimationsDisabled"] = true,
     ["R15ToR6"] = true,
     ["DontBreakHairWelds"] = true,
-    ["PermanentDeath"] = true,
+    ["PermanentDeath"] = false,
     ["Headless"] = false,
     ["TeleportBackWhenVoided"] = true,
     
     -- [[ Reanimation Settings ]] --
-    ["AlignReanimate"] = true,
+    ["AlignReanimate"] = false,
     ["FullForceAlign"] = true,
     ["FasterHeartbeat"] = true,
     ["DynamicalVelocity"] = true,

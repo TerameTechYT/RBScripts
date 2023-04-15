@@ -130,7 +130,7 @@ end
 
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
-wait()
+wait(1)
 local StarterGui = game:GetService("StarterGui")
 -- StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 StarterGui:SetCore("VREnableControllerModels", false)
@@ -177,10 +177,11 @@ Camera.CameraType = Enum.CameraType.Scriptable
 Camera.HeadScale = 2
 
 local function weld(p1, p2)
-	local weld = Instance.new("WeldConstraint")
+	local weld = Instance.new("Weld")
 	weld.Part0 = p1
 	weld.Part1 = p2
 	weld.Parent = p2 or p1
+	return weld
 end
 
 Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
@@ -196,36 +197,37 @@ end
 for i,v in pairs(clone:GetDescendants()) do
 	if v:IsA("BasePart") then
 		v.Transparency = 1
-        v.Anchored = true
+		v.Anchored = true
 		v.CanCollide = false
 	end
 end
-
-con1 = nil
+welddb = false
 
 player.CharacterAdded:Connect(function(Character)
-    wait()
-    Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
+	wait()
+	Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 end)
 
 player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
+		welddb = false
 		Char = Character
-        Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
+		Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
 		mouse.TargetFilter = Char
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
 		Char:WaitForChild("Torso").Transparency = 1
 		Char["Animate"]:Destroy()
-        Char["Left Arm"].Transparency = 1
-        Char["Right Arm"].Transparency = 1
+		Char["Left Arm"].Transparency = 1
+		Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
-		-- weld(Char["Left Arm"], Char["Torso"])
-		-- weld(Char["Right Arm"], Char["Torso"])
-        for i,v in pairs(Char:GetDescendants()) do
+		Char.Torso["Left Shoulder"]:Destroy()
+		Char.Torso["Right Shoulder"]:Destroy()
+		leftarmweld, rightarmweld = nil, nil
+		for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
 				Network.RetainPart(v)
 				v.CustomPhysicalProperties = PhysicalProperties.new(0,0,0,0,0)
@@ -237,19 +239,21 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		end
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-                -- Char["Left Arm"].CFrame = (lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5) + Vector3.new(0, math.random(), 0)
-				-- Char["Right Arm"].CFrame = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5) + Vector3.new(0, math.random(), 0)
-                hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+				if not leftarmweld then
+					leftarmweld = weld(Char["Left Arm"], Char["Torso"])
+				end
+				if not rightarmweld then
+					rightarmweld = weld(Char["Right Arm"], Char["Torso"])
+				end
+				Char["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+				Char["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+				hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-                if Char:FindFirstChildOfClass("Tool") then
-                    if Char["Right Arm"].RightGrip then
+				if Char:FindFirstChildOfClass("Tool") then
+					if Char["Right Arm"]:FindFirstChild("RightGrip") then
 						Char["Right Arm"].RightGrip:Destroy()
 					end
-					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
-						Network.RetainPart(Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle"))
-						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame + Vector3.new(0, 1, 0)
-					end
-                end
+				end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do
@@ -257,10 +261,12 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
 					end
 				end
+				leftarmweld:Destroy()
+				rightarmweld:Destroy()
 			end)
 		end
 	end
-    print("Loaded Character Appearance")
+	print("Loaded Character Appearance")
 end)
 
 cooldown = false
@@ -284,9 +290,9 @@ UserInputService.InputChanged:Connect(function(input)
 		wait(0.4)
 		cooldown = false
 	end
-    if Char.Humanoid.Sit then
-        Camera.CFrame = Char.Head.CFrame
-    end
+	if Char.Humanoid.Sit then
+		Camera.CFrame = Char.Head.CFrame
+	end
 end)
 
 Camera:GetPropertyChangedSignal("CameraType"):Connect(function()

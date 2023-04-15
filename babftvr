@@ -131,18 +131,15 @@ end
 coroutine.resume(Network["PartOwnership"]["Enable"])
 
 wait()
-
--- local StarterGui = game:GetService("StarterGui")
+local StarterGui = game:GetService("StarterGui")
 -- StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
-
+StarterGui:SetCore("VREnableControllerModels", false)
 tooldb = false
 player = game:GetService("Players").LocalPlayer
 Camera = workspace.CurrentCamera
 mouse = player:GetMouse()
 
 VRService = game:GetService("VRService")
-
--- StarterGui:SetCore("VREnableControllerModels", false)
 
 folder = Instance.new("Model", workspace)
 InventoryFake = Instance.new("Folder", game.ReplicatedStorage)
@@ -251,7 +248,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
                 if Char:FindFirstChildOfClass("Tool") then
-                    if Char["Right Arm"]:FindFirstChild("RightGrip") then
+                    if Char["Right Arm"].RightGrip then
 						Char["Right Arm"].RightGrip:Destroy()
 					end
 					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then

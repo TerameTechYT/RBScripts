@@ -261,7 +261,7 @@ end)
 
 cooldown = false
 
-UserInputService = game:GetService("UserInputService")
+UserInputService = game:GetService("UserInputService"
 
 UserInputService.InputChanged:Connect(function(input)
 	if vbreak == true then return end

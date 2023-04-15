@@ -161,8 +161,8 @@ hand2.Name = "Right VR Arm"
 hand1.Parent = folder2
 hand2.Parent = folder2
 
-hand1.Transparency = 1
-hand2.Transparency = 1
+-- hand1.Transparency = 1
+-- hand2.Transparency = 1
 
 player.Character.Archivable = true
 clone = player.Character:Clone()

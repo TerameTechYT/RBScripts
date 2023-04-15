@@ -6,7 +6,7 @@ Global.GelatekReanimateConfig = {
     ["DontBreakHairWelds"] = true,
     ["PermanentDeath"] = false,
     ["Headless"] = false,
-    ["TeleportBackWhenVoided"] = true,
+    ["TeleportBackWhenVoided"] = false,
     
     -- [[ Reanimation Settings ]] --
     ["AlignReanimate"] = true,

@@ -186,12 +186,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
 		Char:WaitForChild("Torso").Transparency = 1
-		if Char:FindFirstChild("Animate") then
-        	Char:FindFirstChild("Animate").Disabled = true
-        	for _, Track in next, Char.Humanoid:GetPlayingAnimationTracks() do
-        		Track:Stop()
-        	end
-        end
         Char.ChildAdded:Connect(function(Child)
             wait()
             if Child:IsA("Tool") and Child:FindFirstChild("Handle") --[[and getgenv().AutoActivate]] then
@@ -242,6 +236,12 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
 					end
 				end
+                if Char:FindFirstChild("Animate") then
+                	Char:FindFirstChild("Animate").Disabled = true
+                	for _, Track in next, Char.Humanoid:GetPlayingAnimationTracks() do
+                		Track:Stop()
+                	end
+                end
 			end)
 		end
 	end

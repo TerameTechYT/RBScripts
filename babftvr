@@ -21,7 +21,6 @@ if not getgenv().Network then
 		};
 		CharacterRelative = false;
 	}
-
 	Network["Output"].Send(print,": Loading.")
 	Network["Velocity"] = Vector3.new(14.46262424,14.46262424,14.46262424); --exactly 25.1 magnitude
 	Network["RetainPart"] = function(Part,ReturnFakePart) --function for retaining ownership of unanchored parts
@@ -52,7 +51,6 @@ if not getgenv().Network then
 			return false
 		end
 	end
-
 	Network["RemovePart"] = function(Part) --function for removing ownership of unanchored part
 		assert(typeof(Part) == "Instance" and Part:IsA("BasePart"),Network["Output"].Prefix.."RemovePart Error : Invalid syntax: Arg1 (Part) must be a BasePart.")
 		local Index = table.find(Network["BaseParts"],Part)
@@ -63,14 +61,12 @@ if not getgenv().Network then
 			Network["Output"].Send(warn,"RemovePart Warning : BasePart "..Part:GetFullName().." not found in BaseParts table.")
 		end
 	end
-
 	Network["SuperStepper"] = Instance.new("BindableEvent") --make super fast event to connect to
 	for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 		Event:Connect(function()
 			return Network["SuperStepper"]:Fire(Network["SuperStepper"],tick())
 		end)
 	end
-
 	Network["PartOwnership"] = {};
 	Network["PartOwnership"]["PreMethodSettings"] = {};
 	Network["PartOwnership"]["Enabled"] = false;
@@ -128,9 +124,9 @@ if not getgenv().Network then
 	Network["Output"].Send(print,": Loaded.")
 end
 coroutine.resume(Network["PartOwnership"]["Enable"])
+
 wait()
 local StarterGui = game:GetService("StarterGui")
--- StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 StarterGui:SetCore("VREnableControllerModels", false)
 tooldb = false
 player = game:GetService("Players").LocalPlayer
@@ -150,7 +146,7 @@ Camera.CameraType = Enum.CameraType.Scriptable
 Camera.HeadScale = 2
 
 function resetCamRot()
-    Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
+    Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z) * CFrame.Angles(0, Camera.CFrame.Rotation.Y, 0)
 end
 
 for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
@@ -175,7 +171,6 @@ player.CharacterAdded:Connect(function(Character)
 	wait()
 	Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 end)
-
 player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
@@ -226,7 +221,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 			end)
 		end
 	end
-    print("Loaded Character Appearance")
 end)
 
 cooldown = false

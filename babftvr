@@ -179,6 +179,13 @@ Camera.CameraType = Enum.CameraType.Scriptable
 
 Camera.HeadScale = 2
 
+local function weld(p1, p2)
+	local weld = Instance.new("WeldConstraint")
+	weld.Part0 = p1
+	weld.Part1 = p2
+	weld.Parent = p2 or p1
+end
+
 for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 	Event:Connect(function()
 		if vbreak == true then return end
@@ -217,6 +224,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
         Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
+		weld(Char["Left Arm"], Char["Torso"])
+		weld(Char["Right Arm"], Char["Torso"])
         Char.Torso["Left Shoulder"]:Destroy()
         Char.Torso["Right Shoulder"]:Destroy()
         for i,v in pairs(Char:GetDescendants()) do

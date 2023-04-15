@@ -243,9 +243,9 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				-- Char["Right Arm"].CFrame = (righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65):ToObjectSpace(Headpos - Headpos.UpVector * 1.5) + Vector3.new(0, math.random(), 0)
                 hand1.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
 				hand2.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-                if Char:FindFirstChildOfClass("Tool") and clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
-                    Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame * CFrame.Angles(math.rad(270), 0, 0) + Vector3.new(0, 0, 1)
-                end
+                -- if Char:FindFirstChildOfClass("Tool") and clone:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
+                --     Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame * CFrame.Angles(math.rad(270), 0, 0) + Vector3.new(0, 0, 1)
+                -- end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do

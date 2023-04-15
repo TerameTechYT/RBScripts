@@ -215,7 +215,14 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then
 		if vbreak == true then return end
 		Char = Character
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
 		mouse.TargetFilter = Char
+        Char.ChildAdded(function(Child)
+            wait()
+            if Child:IsA("Tool") and Child:FindFirstChild("Handle") then
+                Network.RetainPart(Child:FindFirstChild("Handle"))
+            end
+        end)
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
@@ -281,7 +288,7 @@ UserInputService.InputChanged:Connect(function(input)
 		cooldown = false
 	end
     if Char.Humanoid.Sit then
-        Camera.Position = Char.Head.Position
+        Camera.CFrame = Char.Head.CFrame
     end
 end)
 

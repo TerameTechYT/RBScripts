@@ -265,11 +265,11 @@ UserInputService = game:GetService("UserInputService")
 
 UserInputService.InputChanged:Connect(function(input)
 	if vbreak == true then return end
-	if input.KeyCode == Enum.KeyCode.Thumbstick2 then
+	if input.KeyCode == Enum.KeyCode.Thumbstick2 and not Char.Humanoid.Sit then
 		Camera.CFrame += righthandpos.LookVector * (input.Position.Y/2)
 		Camera.CFrame += righthandpos.RightVector * (input.Position.X/2)
 	end
-	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false then
+	if input.KeyCode == Enum.KeyCode.Thumbstick1 and cooldown == false and not Char.Humanoid.Sit then
 		local angle = 30
 		if -input.Position.X < 0 then
 			angle = -30
@@ -280,6 +280,9 @@ UserInputService.InputChanged:Connect(function(input)
 		wait(0.4)
 		cooldown = false
 	end
+    if Char.Humanoid.Sit then
+        Camera.CFrame = Char.Head.CFrame
+    end
 end)
 
 Camera:GetPropertyChangedSignal("CameraType"):Connect(function()

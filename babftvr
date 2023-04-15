@@ -217,7 +217,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char = Character
         Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
 		mouse.TargetFilter = Char
-        Char.ChildAdded(function(Child)
+        Char.ChildAdded:Connect(function(Child)
             wait()
             if Child:IsA("Tool") and Child:FindFirstChild("Handle") then
                 Network.RetainPart(Child:FindFirstChild("Handle"))

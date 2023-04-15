@@ -214,12 +214,6 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char = Character
         Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z)
 		mouse.TargetFilter = Char
-        Char.ChildAdded:Connect(function(Child)
-            wait()
-            if Child:IsA("Tool") and Child:FindFirstChild("Handle") then
-                Network.RetainPart(Child:FindFirstChild("Handle"))
-            end
-        end)
 		Char:WaitForChild("Head").CanCollide = false
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
@@ -252,7 +246,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 						Char["Right Arm"].RightGrip:Destroy()
 					end
 					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
-						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = CFrame.new(hand2.CFrame.Position.X, hand2.CFrame.Position.Y+1, hand2.CFrame.Position.Z)
+						Network.RetainPart(Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle"))
+						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").CFrame = hand2.CFrame + Vector3.new(0, 1, 0)
 					end
                 end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)

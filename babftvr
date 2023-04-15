@@ -199,7 +199,12 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char:WaitForChild("Head").Transparency = 1
 		Char:WaitForChild("Torso").CanCollide = false
 		Char:WaitForChild("Torso").Transparency = 1
-		Char["Animate"]:Destroy()
+		if Char:FindFirstChild("Animate") then
+        	Char:FindFirstChild("Animate").Disabled = true
+        	for _, Track in next, Char.Humanoid:GetPlayingAnimationTracks() do
+        		Track:Stop()
+        	end
+        end
         Char["Left Arm"].Transparency = 1
         Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
@@ -221,12 +226,11 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 if Char:FindFirstChildOfClass("Tool") then
 					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
                         Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Anchored = false
-						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position
-                        -- Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Rotation = Vector3.new(0, 90, 0)
+						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position + Vector3.new(-1, 0, 0)
 					end
                 end
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
-				clone:SetPrimaryPartCFrame(Char:GetPrimaryPartCFrame())
+				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do
 					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame

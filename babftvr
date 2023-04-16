@@ -175,27 +175,6 @@ player.CharacterAdded:Connect(function(Character)
 	Character:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 end)
 
-function Join(Part0, Part1, Type)
-	local method = Instance.new("RopeConstraint", player.Character.Torso)
-	method.Length = math.huge
-	method.Attachment0 = Instance.new("Attachment", Part0)
-	method.Attachment1 = Instance.new("Attachment", Part1)
-	coroutine.wrap(function()
-		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
-			Event:Connect(function()
-                if Type == "Left" then
-                    Part0.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-                end
-                if Type == "Right" then
-                    Part0.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-                end
-		    end)
-        end
-	end)()
-    return method
-end
-
-
 local touchcon = nil
 player.CharacterAppearanceLoaded:Connect(function(Character)
 	if player.Character ~= nil then

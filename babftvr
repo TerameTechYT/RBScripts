@@ -147,6 +147,7 @@ Camera.HeadScale = 2
 
 function resetCamRot()
     local prev = Camera.CFrame.Rotation.Y
+	print(prev)
     Camera.CFrame = CFrame.new(Camera.CFrame.Position.X, Camera.CFrame.Position.Y, Camera.CFrame.Position.Z) * CFrame.Angles(0, prev, 0)
 end
 

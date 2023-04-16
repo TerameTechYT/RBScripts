@@ -234,7 +234,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				if hatcount < 2 then
                     hatcount += 1
                     v.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
-                    v.Handle.Size = Vector3.new(1, 2, 1)
+                    v.Handle.Size = Vector3.new(0.5, 1, 0.5)
                     table.insert(hats, v.Handle)
                 end
                 v.Handle.Transparency = 1
@@ -253,7 +253,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 else
                     if sentmsg == false then
                         sentmsg = true
-                        game:GetService("StarterGui"):SetCore("SendNotification",{
+                        game:GetService("StarterGui"):SetCore("SendNotification", {
                         	Title = "ERROR!",
                         	Text = "You dont have at least 2 hats!"
                         })
@@ -270,7 +270,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do
-					if v:IsA("Accessory") and (v.Handle ~= hands[1] or v.Handle ~= hands[2]) then
+					if v:IsA("Accessory") then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
 					end
 				end

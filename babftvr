@@ -222,8 +222,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                 touchcon:Disconnect()
             end
         end)
-        Char["Left Arm"].Transparency = 1
-        Char["Right Arm"].Transparency = 1
+        Char["Left Arm"]:Destroy()
+        Char["Right Arm"]:Destroy()
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
         hatcount = 0
@@ -240,20 +240,18 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
                     hatcount += 1
                     v.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
                     v.Handle.Size = Vector3.new(1, 2, 1)
-                    table.insert(hats, v.Handle)
+                    table.insert(hats, v)
                 end
 			end
 		end
-        Char["Left Arm"]:Destroy()
-        Char["Right Arm"]:Destroy()
         local sentmsg = false
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-                clone["Left Arm"].CFrame =  lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-                clone["Right Arm"].CFrame =  righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
-                if #hats == 2 then
-                    hats[1].CFrame =  lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-                    hats[2].CFrame =  righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                clone["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                clone["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                if #hats >= 2 then
+                    hats[1].Handle.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                    hats[2].Handle.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
                 else
                     if sentmsg == false then
                         sentmsg = true
@@ -274,7 +272,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do
-					if v:IsA("Accessory") then
+					if v:IsA("Accessory") and v ~= hats[1] and v ~= hats[2] then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
 					end
 				end

@@ -173,16 +173,16 @@ end)
 
 function Join(Part0, Part1, Type)
 	local method = Instance.new("RopeConstraint", player.Character.Torso)
-	method.Length = -math.huge
+	method.Length = math.huge
 	method.Attachment0 = Instance.new("Attachment", Part0)
 	method.Attachment1 = Instance.new("Attachment", Part1)
 	coroutine.wrap(function()
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-                if Type == "Left Arm" then
+                if Type == "Left" then
                     Part0.CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
                 end
-                if Type == "Right Arm" then
+                if Type == "Right" then
                     Part0.CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
                 end
 		    end)
@@ -205,7 +205,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 		Char:WaitForChild("Torso").Transparency = 1
         Char.ChildAdded:Connect(function(Child)
             wait()
-            if Child:IsA("Tool") and Child:FindFirstChild("Handle") --[[and getgenv().AutoActivate]] then
+            if Child:IsA("Tool") and Child:FindFirstChild("Handle") then
                 Network.RetainPart(Child:FindFirstChild("Handle"))
                 touchcon = Child:FindFirstChild("Handle").Touched:Connect(function(Hit)
                     Child:Activate()
@@ -214,7 +214,7 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
             end
         end)
         Char.ChildRemoved:Connect(function(Child)
-            if Child:IsA("Tool") and Child:FindFirstChild("Handle") --[[and getgenv().AutoActivate]] then
+            if Child:IsA("Tool") and Child:FindFirstChild("Handle") then
                 touchcon:Disconnect()
             end
         end)
@@ -222,6 +222,8 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
         Char["Right Arm"].Transparency = 1
 		Char["Left Leg"]:Destroy()
 		Char["Right Leg"]:Destroy()
+        hatcount = 0
+        hats = {}
         for i,v in pairs(Char:GetDescendants()) do
 			if v:IsA("BasePart") then
                 Network.RetainPart(v)
@@ -229,28 +231,46 @@ player.CharacterAppearanceLoaded:Connect(function(Character)
 				v.CanCollide = false
 			end
 			if v:IsA("Accessory") then
-				v.Handle.Transparency = 1
+				if hatcount < 2 then
+                    hatcount += 1
+                    v.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
+                    v.Handle.Size = Vector3.new(1, 2, 1)
+                    table.insert(hats, v.Handle)
+                end
+                v.Handle.Transparency = 1
 			end
-		end        
-        rope1 = Join(Char["Left Arm"], Char["Torso"], "Left Arm")
-        rope2 = Join(Char["Right Arm"], Char["Torso"], "Right Arm")
-
+		end
+        Char["Left Arm"]:Destroy()
+        Char["Right Arm"]:Destroy()
+        local sentmsg = false
 		for _,Event in pairs({RunService.Stepped,RunService.Heartbeat}) do
 			Event:Connect(function()
-                clone["Left Arm"].CFrame = lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
-				clone["Right Arm"].CFrame = righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                hats[1].CFrame =  lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                hats[2].CFrame =  righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                if #hats == 2 then
+                    hats[1].CFrame =  lefthandpos * CFrame.Angles(math.rad(90),0,0) - lefthandpos.LookVector * 0.65
+                    hats[2].CFrame =  righthandpos * CFrame.Angles(math.rad(90),0,0) - righthandpos.LookVector * 0.65
+                else
+                    if sentmsg == false then
+                        sentmsg = true
+                        game:GetService("StarterGui"):SetCore("SendNotification",{
+                        	Title = "ERROR!",
+                        	Text = "You dont have at least 2 hats!"
+                        })
+                    end
+                end
                 Char.Humanoid.PlatformStand = true
                 if Char:FindFirstChildOfClass("Tool") then
-					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") then
+					if Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle") and hats[2] then
                         Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Anchored = false
-						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = clone["Right Arm"].Position + Vector3.new(0, 1, 0)
+						Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Position = hats[2].CFrame.Position + Vector3.new(0, 0, -1)
+                        Char:FindFirstChildOfClass("Tool"):FindFirstChild("Handle").Rotation = Vector3.new(0, 0, 0)
 					end
                 end
-                
 				Char:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				clone:SetPrimaryPartCFrame(Headpos - Headpos.UpVector * 1.5)
 				for i,v in pairs(Char:GetDescendants()) do
-					if v:IsA("Accessory") then
+					if v:IsA("Accessory") and (v.Handle ~= hands[1] or v.Handle ~= hands[2]) then
 						v.Handle.CFrame = clone[v.Name].Handle.CFrame
 					end
 				end

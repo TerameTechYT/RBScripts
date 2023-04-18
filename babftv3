@@ -26,14 +26,14 @@ end
 local blockC = 1
 workspace.ChildAdded:Connect(function(possibleBlock)
 	wait()
-    coroutine.wrap(function() 
+    -- coroutine.wrap(function() 
         if possibleBlock:FindFirstChild("Tag") and possibleBlock.Tag.Value == game.Players.LocalPlayer.Name then
-		    table.insert(Parts, {possibleBlock})
             print("Added your part LN:", debug.traceback())
             found[blockC] = true
             blockC+=1
+            table.insert(Parts, {possibleBlock})
 	    end
-    end)()
+    -- end)()
 end)
 
 if Mode == "manual" then
@@ -79,13 +79,13 @@ if Mode == "manual" then
                 coroutine.wrap(function()
                     Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), PositionToPlace, true, 1);
                 end)()
-                repeat wait() until found[i]
+                repeat wait() until found[index] == true
                 if PartClass == "Part" then
-                   table.insert(Parts[i], {PartSize, PartColor})       
+                   table.insert(Parts[index], {PartSize, PartColor})       
                 elseif PartClass == "WedgePart" then
-                    table.insert(Parts[i], {wedgeSize, PartColor})
+                    table.insert(Parts[index], {wedgeSize, PartColor})
                 else
-                   table.insert(Parts[i], {PartSize, PartColor})
+                   table.insert(Parts[index], {PartSize, PartColor})
                 end
             elseif PartShape == Enum.PartType.Cylinder then
                 local cylinderRadius = math.max(PartSize.X, PartSize.Y, PartSize.Z) / 2
@@ -100,8 +100,8 @@ if Mode == "manual" then
                     coroutine.wrap(function()
                         Build:InvokeServer(BlockToChoose, PartCount, workspace:FindFirstChild(tostring(game.Players.LocalPlayer.TeamColor).."Zone"), CylPos, true, 1);
                     end)()
-                    repeat wait() until found[i]
-                    table.insert(Parts[i], {CylSize, PartColor})
+                    repeat wait() until found[index]
+                    table.insert(Parts[index], {CylSize, PartColor})
                 end
             end
         end)()

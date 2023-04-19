@@ -1,6 +1,7 @@
 local Build = game.Players.LocalPlayer.Backpack.BuildingTool:FindFirstChild("RF");
 local Paint = game.Players.LocalPlayer.Backpack.PaintingTool:FindFirstChild("RF");
 local Scale = game.Players.LocalPlayer.Backpack.ScalingTool:FindFirstChild("RF");
+local Property = game.Players.LocalPlayer.Backpack.PropertiesTool:FindFirstChild("SetPropertieRF");
 local InsertService = game:GetService("InsertService")
 local modelId = getgenv().modelId
 local MaterialList = getgenv().MaterialList
@@ -20,9 +21,11 @@ local BlockToChoose = "WoodBlock"
 local Parts = {}
 local List = getgenv().ManualTable
 local found = {}
-for i,c in pairs(getconnections(workspace.ChildAdded)) do
-    c:Disconnect()
-end
+
+-- for i,c in pairs(getconnections(workspace.ChildAdded)) do
+--     c:Disconnect()
+-- end
+
 local blockC = 1
 workspace.ChildAdded:Connect(function(possibleBlock)
 	wait()
@@ -113,9 +116,17 @@ if Mode == "manual" then
         local Part = Parts[i][1]
         local Size = Parts[i][2][1]
         local Color = Parts[i][2][2]
+        -- local Anchored = [i][3][1]
+        -- local Collision = [i][3][2]
+        -- local CastShadow = [i][3][3]
+        -- local Transperency = [i][3][4]
         coroutine.wrap(function()
             coroutine.wrap(function()
                 Scale:InvokeServer(Part, Size, Part.PrimaryPart.CFrame)
+                -- Property:InvokeServer("Anchored", {Part,{false}})
+                -- Property:InvokeServer("Collision",{Part,{false}})
+                -- Property:InvokeServer("Cast Shadow", {Part,{false}})
+                -- Property:InvokeServer("Transparency", {Part,{0.1}})
             end)()
             Paint:InvokeServer({{Part, Color}})
         end)()

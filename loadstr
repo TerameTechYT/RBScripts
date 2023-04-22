@@ -5329,7 +5329,8 @@ _G.loadstr = function(source)
 	string.gsub(source, "loadstring", "_G.loadstr")
 	string.gsub(source, "getgenv()", "_G")
 	string.gsub(source, "game:HttpGet", "_G.httpget")
-	string.gsub(source, "game:HttpGetAsync","_G.httpget")
+	string.gsub(source, "game:HttpGetAsync", "_G.httpget")
+	wait()
 	local executable
 	local env = getfenv(2)
 	local name = "ZechAPI"

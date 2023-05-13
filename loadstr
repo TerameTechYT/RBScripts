@@ -5370,3 +5370,5 @@ _G.loadstr = function(source)
 		error(failureReason)
 	end
 end
+
+print("loadstr initalized")
